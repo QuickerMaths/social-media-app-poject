@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import InputField from "../../components/inputField/InputField";
 
 const Login = () => {
   return (
@@ -9,28 +10,9 @@ const Login = () => {
         </Link>
         <h2 className="login__title">LogIn</h2>
         <form className="login__form">
-          <div className="login__form-element">
-            <label htmlFor="username" className="login__label">
-              Username
-            </label>
-            <input
-              type="username"
-              name="username"
-              id="username"
-              className="login__input"
-            />
-          </div>
-          <div className="login__form-element">
-            <label htmlFor="password" className="login__label">
-              Password
-            </label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              className="login__input"
-            />
-          </div>
+          <InputField type="username" label="Username" className="login" />
+          <InputField type="password" label="Password" className="login" />
+
           <button type="submit" className="login__button">
             Login
           </button>
