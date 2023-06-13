@@ -1,0 +1,38 @@
+.sidebar {
+  @include flex-column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-grow: 0.5;
+  min-width: 250px;
+  background-color: var(--primary);
+  @include container-padding;
+
+  &__navigation-list {
+    @include flex-column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  &__navigation-link {
+    color: black;
+    font-size: 2rem;
+    @media (min-width: 1025px) {
+      position: relative;
+
+      &::after {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        content: "";
+        width: 0%;
+        height: 2px;
+        background-color: white;
+        transition: width 0.3s ease-in-out;
+      }
+
+      &:hover::after {
+        width: 100%;
+      }
+    }
+  }
+}

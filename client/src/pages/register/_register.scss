@@ -1,0 +1,54 @@
+.register {
+  @include full-background;
+  @include flex-center;
+
+  &__container {
+    @include container-box-shadow;
+    @include container-padding;
+    @include flex-column;
+    gap: 20px;
+    min-width: 30%;
+    max-width: 90%;
+    position: relative;
+  }
+
+  &__home-page-button {
+    position: absolute;
+    top: -50px;
+  }
+
+  &__title {
+    @include form-title;
+  }
+
+  &__form {
+    justify-content: flex-end;
+    @include flex-column;
+    gap: 20px;
+    width: 100%;
+  }
+
+  &__form {
+    @include flex-column;
+    gap: 20px;
+    width: 100%;
+  }
+
+  &__form-element {
+    @include flex-column;
+    gap: 20px;
+
+    @media (min-width: 768px) {
+      flex-direction: row;
+    }
+  }
+
+  &__label {
+    font-size: 1.3rem;
+    font-weight: 600;
+  }
+
+  &__button {
+    @include button-secondary;
+  }
+}
