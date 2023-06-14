@@ -13,8 +13,22 @@ const Register = () => {
         confirmPassword: "",
       },
       validationSchema: registerSchema,
-      onSubmit: (values) => {
-        alert(JSON.stringify(values, null, 2));
+      onSubmit: async (values) => {
+        try {
+          await fetch("http://localhost:5000/register", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              username: values.username,
+              email: values.email,
+              password: values.password,
+            }),
+          });
+        } catch (err) {
+          console.log(err);
+        }
       },
     });
 

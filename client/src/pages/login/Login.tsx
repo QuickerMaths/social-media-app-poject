@@ -11,8 +11,24 @@ const Login = () => {
         password: "",
       },
       validationSchema: loginSchema,
-      onSubmit: (values) => {
-        alert(JSON.stringify(values, null, 2));
+      onSubmit: async (values) => {
+        try {
+          await fetch("http://localhost:5000/auth", {
+            method: "POST",
+            mode: "cors",
+            credentials: "include",
+            headers: {
+              "Access-Control-Allow-Origin": "http://localhost:5000",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              username: values.username,
+              password: values.password,
+            }),
+          });
+        } catch (error) {
+          console.log(error);
+        }
       },
     });
 
