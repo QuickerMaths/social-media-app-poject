@@ -1,17 +1,20 @@
 import { useFormik } from "formik";
 import { Link } from "react-router-dom";
 import InputField from "../../components/inputField/InputField";
+import loginSchema from "../../validation/loginValidation";
 
 const Login = () => {
-  const { handleChange, values, handleSubmit } = useFormik({
-    initialValues: {
-      username: "",
-      password: "",
-    },
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-    },
-  });
+  const { handleChange, handleBlur, errors, touched, values, handleSubmit } =
+    useFormik({
+      initialValues: {
+        username: "",
+        password: "",
+      },
+      validationSchema: loginSchema,
+      onSubmit: (values) => {
+        alert(JSON.stringify(values, null, 2));
+      },
+    });
 
   return (
     <section className="login">
@@ -24,15 +27,23 @@ const Login = () => {
           <InputField
             type="username"
             label="Username"
+            name="username"
             className="login"
+            touched={touched.username}
+            error={errors.username}
             onChange={handleChange}
+            onBlur={handleBlur}
             value={values.username}
           />
           <InputField
             type="password"
             label="Password"
+            name="password"
             className="login"
+            touched={touched.password}
+            error={errors.password}
             onChange={handleChange}
+            onBlur={handleBlur}
             value={values.password}
           />
           <button type="submit" className="login__button">
