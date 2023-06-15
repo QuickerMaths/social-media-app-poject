@@ -24,7 +24,6 @@ const userSchema = new Schema(
     lastName: {
       type: String,
     },
-    posts: [{ type: mongoose.Types.ObjectId, ref: "Post" }],
     refreshToken: String,
   },
   { timestamps: true }

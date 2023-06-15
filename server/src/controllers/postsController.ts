@@ -3,7 +3,7 @@ import Post from "../models/Posts";
 import User from "../models/Users";
 
 export const getPosts = async (req: Request, res: Response) => {
-  const posts = await Post.find();
+  const posts = await Post.find().populate("user");
 
   if (!posts) return res.status(204).json({ message: "No posts found" });
 
@@ -19,10 +19,6 @@ export const createPost = async (req: Request, res: Response) => {
   const post = await Post.create({
     postBody,
     user: userId,
-  });
-
-  await User.findByIdAndUpdate(userId, {
-    $push: { posts: post._id },
   });
 
   res.status(201).json(post);
