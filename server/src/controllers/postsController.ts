@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import Post from "../models/Posts";
-import User from "../models/Users";
 
 export const getPosts = async (req: Request, res: Response) => {
   const posts = await Post.find().populate("user");
