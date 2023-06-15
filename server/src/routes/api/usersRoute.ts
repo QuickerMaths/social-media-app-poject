@@ -10,4 +10,5 @@ import {
 router.route("/").get(getUsers).put(updateUser).delete(deleteUser);
 
 router.route("/:id").get(getUserById);
+
 export default router;

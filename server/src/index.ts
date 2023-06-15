@@ -7,7 +7,7 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
-import credentials from "./middlewares/credentials";
+// import credentials from "./middlewares/credentials";
 import usersRoute from "./routes/api/usersRoute";
 import registerRoute from "./routes/api/registerRoute";
 import loginRoute from "./routes/api/loginRoute";
