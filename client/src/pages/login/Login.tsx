@@ -4,6 +4,8 @@ import InputField from "../../components/inputField/InputField";
 import loginSchema from "../../validation/loginValidation";
 
 const Login = () => {
+  // TODO: refactor fetch to rtkQuery and formik hooks to formik components
+
   const { handleChange, handleBlur, errors, touched, values, handleSubmit } =
     useFormik({
       initialValues: {
