@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import InputField from "../../components/inputField/InputField";
 import { getAuth } from "../../features/authSlice/authSlice";
 import { useAppDispatch } from "../../hooks/reduxHooks";
@@ -7,6 +7,7 @@ import loginSchema from "../../validation/loginValidation";
 
 const Login = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   // TODO: refactor fetch to rtkQuery and formik hooks to formik components
 
   const { handleChange, handleBlur, errors, touched, values, handleSubmit } =
@@ -32,6 +33,7 @@ const Login = () => {
             }),
           });
           dispatch(getAuth(values.username));
+          navigate("/");
         } catch (error) {
           console.log(error);
         }
