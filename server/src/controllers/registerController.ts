@@ -19,6 +19,7 @@ export const handleRegister = async (req: Request, res: Response) => {
     });
     res.status(201).json(newUser);
   } catch (err: any) {
+    console.log(err);
     res.status(500).send({ message: err.message });
   }
 };

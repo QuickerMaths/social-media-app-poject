@@ -27,6 +27,7 @@ const app = express();
 // app.use(credentials);
 app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(helmet());
 app.use(morgan("common"));
@@ -35,6 +36,7 @@ app.use(morgan("common"));
 
 app.use("/users", usersRoute);
 app.use("/posts", postsRoute);
+//TODO: implement comments route
 app.use("/register", registerRoute);
 app.use("/auth", loginRoute);
 app.use("/refresh", refreshRoute);
