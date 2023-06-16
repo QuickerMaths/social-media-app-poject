@@ -1,16 +1,24 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-const initialState = {};
+import { IAuthSliceState } from "./types";
+
+const initialState: IAuthSliceState = {
+  //TODO: figure out how store image in redux
+  username: null,
+};
 
 export const authSlice = createSlice({
   name: "authSlice",
   initialState,
   reducers: {
-    auth: (state, action: PayloadAction) => {
-      return;
+    getAuth: (state, action: PayloadAction<string>) => {
+      state.username = action.payload;
+    },
+    logOut: (state) => {
+      state.username = null;
     },
   },
 });
 
-export const { auth } = authSlice.actions;
+export const { getAuth, logOut } = authSlice.actions;
 export default authSlice.reducer;

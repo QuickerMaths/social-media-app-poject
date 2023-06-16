@@ -29,6 +29,8 @@ const Register = () => {
               password: values.password,
             }),
           });
+
+          //TODO: navigate to register success page but first create it
         } catch (err: any) {
           //TODO: refactor error handling to make it work
           if (err.status === 400) console.log(err.response.data);
