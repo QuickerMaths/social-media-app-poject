@@ -1,4 +1,5 @@
 import { useFormik } from "formik";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import InputField from "../../components/inputField/InputField";
 import registerSchema from "../../validation/registerValidation";
@@ -28,8 +29,9 @@ const Register = () => {
               password: values.password,
             }),
           });
-        } catch (err) {
-          console.log(err);
+        } catch (err: any) {
+          //TODO: refactor error handling to make it work
+          if (err.status === 400) console.log(err.response.data);
         }
       },
     });
