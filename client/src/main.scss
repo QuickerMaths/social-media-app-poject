@@ -1,10 +1,17 @@
+// Utils
+
 @import "scss/global";
 @import "scss/vars";
 @import "scss/mixins";
 @import "scss/errors";
-@import "pages/shared-layout/shared-layout";
+
+//Components
 @import "components/header/header";
 @import "components/sidebar/sidebar";
+@import "components/post/post";
+
+//Pages
+@import "pages/shared-layout/shared-layout";
 @import "pages/home-page/home-page";
 @import "pages/login/login";
 @import "pages/register/register";
