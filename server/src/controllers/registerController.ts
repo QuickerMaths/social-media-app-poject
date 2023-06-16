@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import User from "../models/Users";
 import bcrypt from "bcrypt";
+import errorHandler from "../utils/errorHandler";
 
 export const handleRegister = async (req: Request, res: Response) => {
   const { username, email, password } = req.body;
@@ -18,8 +19,7 @@ export const handleRegister = async (req: Request, res: Response) => {
       password: hashedPwd,
     });
     res.status(201).json(newUser);
-  } catch (err: any) {
-    console.log(err);
-    res.status(500).send({ message: err.message });
+  } catch (error) {
+    return errorHandler(error, res);
   }
 };

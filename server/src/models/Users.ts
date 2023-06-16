@@ -11,7 +11,7 @@ const userSchema = new Schema(
       minlength: [4, "Username must be at least 3 characters long"],
       maxlength: [20, "Username must be less than 20 characters long"],
       validate: [
-        validator.isAlphanumerics,
+        validator.isAlphanumeric,
         "Username can only contain letters and numbers",
       ],
     },
@@ -25,7 +25,6 @@ const userSchema = new Schema(
       type: String,
       require: [true, "Password is required"],
       minlength: [6, "Password must be at least 6 characters long"],
-      maxlength: [24, "Password must be less than 24 characters long"],
     },
     firstName: {
       type: String,

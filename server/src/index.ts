@@ -44,23 +44,9 @@ app.use("/logout", logoutRoute);
 
 // starting to listen only id connected to database
 
-mongoose.connection
-  .once("open", () => {
-    console.log("Connected to database");
-    app.listen(process.env.PORT, () =>
-      console.log(`Server running on port ${process.env.PORT}`)
-    );
-  })
-  .on("open", async () => {
-    // find user with posts
-    // const user = await User.findOne({ username: "Juby23" }).populate("posts");
-    // create new post
-    // const post = await Post.create({
-    //   user: user?._id,
-    //   postBody: "This is a test post910",
-    // });
-    // add posts to user
-    // await user?.updateOne({ $push: { posts: post?._id } });
-    // const userWithPosts = await User.findOne({ username: "juby1" });
-    // console.log(userWithPosts);
-  });
+mongoose.connection.once("open", () => {
+  console.log("Connected to database");
+  app.listen(process.env.PORT, () =>
+    console.log(`Server running on port ${process.env.PORT}`)
+  );
+});
