@@ -34,6 +34,7 @@ app.use(morgan("common"));
 
 //routes
 
+//TODO: implement verify token middleware
 app.use("/users", usersRoute);
 app.use("/posts", postsRoute);
 //TODO: implement comments route
