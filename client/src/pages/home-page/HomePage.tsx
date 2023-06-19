@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Post from "../../components/post/Post";
+import TextArea from "../../components/textArea/TextArea";
 
 const HomePage = () => {
   //TODO: refactor to Rtk query
@@ -28,6 +29,7 @@ const HomePage = () => {
 
   return (
     <section className="home-page">
+      <TextArea />
       <ul className="home-page__posts-list">
         {posts.map((post: any) => (
           <Post key={post._id} post={post} />

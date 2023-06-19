@@ -209,6 +209,38 @@ input {
   cursor: pointer;
 }
 
+.feed__form {
+  width: 80%;
+  display: flex;
+  gap: 20px;
+}
+.feed__textarea {
+  width: 100%;
+  resize: none;
+  padding: 10px 20px;
+  font-family: "Oswald", sans-serif;
+  border: 1px solid black;
+  border-radius: 15px;
+}
+.feed__button {
+  background-color: var(--secondary);
+  color: white;
+  border: none;
+  border-radius: 15px;
+  padding: 5px 20px;
+  font-size: 1.6rem;
+  cursor: pointer;
+}
+@media (min-width: 1025px) {
+  .feed__button {
+    transition: filter, color, 0.3s ease-in-out;
+  }
+  .feed__button:hover {
+    filter: brightness(120%);
+    color: black;
+  }
+}
+
 .main {
   display: flex;
   flex-wrap: nowrap;
@@ -217,9 +249,10 @@ input {
 
 .home-page {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  align-items: flex-start;
+  justify-content: flex-start;
   flex-grow: 6;
   padding: 50px 0px;
 }
@@ -231,10 +264,12 @@ input {
   align-items: flex-start;
   gap: 25px;
   width: 90%;
+  margin-top: 30px;
 }
 @media (min-width: 768px) {
   .home-page__posts-list {
     width: 80%;
+    margin-top: 50px;
   }
 }
 

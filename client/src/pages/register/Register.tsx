@@ -1,5 +1,4 @@
 import { useFormik } from "formik";
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import InputField from "../../components/inputField/InputField";
 import registerSchema from "../../validation/registerValidation";
