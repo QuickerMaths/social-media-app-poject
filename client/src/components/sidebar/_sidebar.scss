@@ -1,11 +1,16 @@
 .sidebar {
   @include flex-column;
+  display: none;
   justify-content: flex-start;
   align-items: flex-start;
   flex-grow: 0.5;
   min-width: 250px;
   background-color: var(--primary);
   @include container-padding;
+
+  @media (min-width: 768px) {
+    display: flex;
+  }
 
   &__navigation-list {
     @include flex-column;

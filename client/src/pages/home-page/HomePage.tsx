@@ -32,7 +32,7 @@ const HomePage = () => {
       <TextArea />
       <ul className="home-page__posts-list">
         {posts.map((post: any) => (
-          <Post key={post._id} post={post} />
+          <Post key={post._id} post={post} /> //TODO: while refactor to rktquery switch sorting posts using entity adapter
         ))}
       </ul>
     </section>

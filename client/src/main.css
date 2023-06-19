@@ -115,6 +115,7 @@ input {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  display: none;
   justify-content: flex-start;
   align-items: flex-start;
   flex-grow: 0.5;
@@ -125,6 +126,11 @@ input {
 @media (min-width: 768px) {
   .sidebar {
     padding: 20px 40px;
+  }
+}
+@media (min-width: 768px) {
+  .sidebar {
+    display: flex;
   }
 }
 .sidebar__navigation-list {
@@ -244,7 +250,7 @@ input {
 .main {
   display: flex;
   flex-wrap: nowrap;
-  height: 100%;
+  max-height: 90%;
 }
 
 .home-page {
@@ -255,6 +261,7 @@ input {
   justify-content: flex-start;
   flex-grow: 6;
   padding: 50px 0px;
+  overflow-y: scroll;
 }
 .home-page__posts-list {
   display: flex;
