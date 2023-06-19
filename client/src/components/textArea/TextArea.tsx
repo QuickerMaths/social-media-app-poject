@@ -1,7 +1,12 @@
 import axios from "axios";
 import { useFormik } from "formik";
 
-const TextArea = () => {
+interface Props {
+  reRender: boolean;
+  setRerender: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const TextArea: React.FC<Props> = ({ reRender, setRerender }) => {
   // TODO: refactor fetch to rtkQuery and formik hooks to formik components
   const { handleChange, values, handleSubmit } = useFormik({
     initialValues: {
@@ -9,12 +14,12 @@ const TextArea = () => {
     },
     onSubmit: async (values) => {
       try {
-        const res = await axios.post(`http://localhost:5000/posts`, {
+        await axios.post(`http://localhost:5000/posts`, {
           postBody: values.postBody,
           username: "Juby23",
           userId: "6489a3a42e13d432e3b5f447",
         });
-        console.log(res);
+        setRerender(!reRender);
       } catch (err) {
         console.log(err);
       }
