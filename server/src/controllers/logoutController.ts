@@ -10,7 +10,7 @@ export const handleLogout = async (req: any, res: any) => {
   const user = await User.findOne({ refreshToken }).exec();
 
   if (!user) {
-    res.clearCookies(`${process.env.FRONTEND_DOMAIN}_refresh`, {
+    res.clearCookie(`${process.env.FRONTEND_DOMAIN}_refresh`, {
       httpOnly: true,
     });
     return res.sendStatus(204);
@@ -18,8 +18,9 @@ export const handleLogout = async (req: any, res: any) => {
 
   await user.updateOne({ refreshToken: "" }).exec();
 
-  res.clearCookies(`${process.env.FRONTEND_DOMAIN}_refresh`, {
+  res.clearCookie(`${process.env.FRONTEND_DOMAIN}_refresh`, {
     httpOnly: true,
   });
+  console.log("Logout successful");
   return res.sendStatus(204);
 };

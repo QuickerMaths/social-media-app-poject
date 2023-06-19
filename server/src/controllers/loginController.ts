@@ -29,8 +29,8 @@ export const handleLogin = async (req: any, res: any) => {
     //Saving refreshToken in database
     await user.updateOne({ refreshToken }).exec();
 
-    // Sending tokens to client in httpOnly cookies
-    res.cookie(`${process.env.FRONTEND_DOMAIN}_token`, token, {
+    // Sending token to client in httpOnly cookies
+    res.cookie(`${process.env.FRONTEND_DOMAIN}_refresh`, refreshToken, {
       httpOnly: true,
       sameSite: "none",
       secure: true,

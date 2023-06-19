@@ -24,12 +24,7 @@ export const handleRefreshToken = async (req: Request, res: Response) => {
         expiresIn: "10min",
       });
 
-      res.cookie(`${process.env.FRONTEND_DOMAIN}_token`, token, {
-        httpOnly: true,
-        sameSite: "none",
-        secure: true,
-        maxAge: 1000 * 60 * 60 * 24,
-      });
+      res.json(token);
     }
   );
 };

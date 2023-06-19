@@ -15,7 +15,7 @@ import postsRoute from "./routes/api/postsRoute";
 import registerRoute from "./routes/api/registerRoute";
 import loginRoute from "./routes/api/loginRoute";
 import refreshRoute from "./routes/api/refreshRoute";
-import logoutRoute from "./routes/api/loginRoute";
+import logoutRoute from "./routes/api/logoutRoute";
 
 //connect to database
 connectDB();
