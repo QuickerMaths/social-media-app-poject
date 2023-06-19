@@ -1,12 +1,19 @@
 import User from "./Users";
 import Comment from "./Comments";
-import validator from "validator";
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const postSchema = new Schema(
   {
-    user: { type: mongoose.Types.ObjectId, ref: User, required: true },
+    ownerId: {
+      type: mongoose.Types.ObjectId,
+      ref: User,
+      required: [true, "Post owner is required"],
+    },
+    ownerName: {
+      type: String,
+      required: [true, "Post owner is required"],
+    },
     postBody: {
       type: String,
       required: [true, "Post body is required"],

@@ -18,7 +18,7 @@ const Register = () => {
       validationSchema: registerSchema,
       onSubmit: async (values) => {
         try {
-          await fetch("http://localhost:5000/register", {
+          await fetch(`${import.meta.env.BACKEND_URL}/register`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

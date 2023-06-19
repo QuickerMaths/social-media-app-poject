@@ -9,12 +9,12 @@ const Header = () => {
 
   const handleLogOut = async () => {
     try {
-      await fetch("http://localhost:5000/logout", {
+      await fetch(`${import.meta.env.BACKEND_URL}/logout`, {
         method: "GET",
         mode: "cors",
         credentials: "include",
         headers: {
-          "Access-Control-Allow-Origin": "http://localhost:5000",
+          "Access-Control-Allow-Origin": `${import.meta.env.BACKEND_URL}`,
           "Content-Type": "application/json",
         },
       });
