@@ -54,12 +54,6 @@ input {
   text-transform: capitalize;
 }
 
-.main {
-  display: flex;
-  flex-wrap: nowrap;
-  height: 100%;
-}
-
 .header {
   background-color: var(--secondary);
   width: 100%;
@@ -164,11 +158,84 @@ input {
   }
 }
 
+.post {
+  min-width: 100%;
+  padding: 10px 20px;
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: 0px 8px 22px -14px rgb(66, 68, 90);
+}
+@media (min-width: 768px) {
+  .post {
+    padding: 20px 40px;
+  }
+}
+.post__top-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.post_owner-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+.post__profile-img {
+  border-radius: 100%;
+}
+@media (min-width: 768px) {
+  .post__profile-img {
+    cursor: pointer;
+  }
+}
+@media (min-width: 1024px) {
+  .post__owner {
+    cursor: pointer;
+  }
+  .post__owner:hover {
+    text-decoration: underline;
+  }
+}
+.post__createdAt {
+  font-size: 0.8rem;
+  color: gray;
+}
+.post__body {
+  margin-top: 20px;
+}
+.post__likes {
+  margin-top: 25px;
+  cursor: pointer;
+}
+
+.main {
+  display: flex;
+  flex-wrap: nowrap;
+  height: 100%;
+}
+
 .home-page {
   display: flex;
   justify-content: center;
   align-items: center;
+  align-items: flex-start;
   flex-grow: 6;
+  padding: 50px 0px;
+}
+.home-page__posts-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-items: flex-start;
+  gap: 25px;
+  width: 90%;
+}
+@media (min-width: 768px) {
+  .home-page__posts-list {
+    width: 80%;
+  }
 }
 
 .login {

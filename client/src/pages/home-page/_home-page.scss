@@ -1,4 +1,17 @@
 .home-page {
   @include flex-center;
+  align-items: flex-start;
   flex-grow: 6;
+  padding: 50px 0px;
+
+  &__posts-list {
+    @include flex-column;
+    align-items: flex-start;
+    gap: 25px;
+    width: 90%;
+
+    @media (min-width: 768px) {
+      width: 80%;
+    }
+  }
 }

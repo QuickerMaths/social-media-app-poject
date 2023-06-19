@@ -1,0 +1,46 @@
+.post {
+  min-width: 100%;
+  @include container-padding;
+  @include container-box-shadow;
+
+  &__top-container {
+    @include flex-between;
+  }
+
+  &_owner-wrapper {
+    @include flex-center;
+    gap: 15px;
+  }
+
+  &__profile-img {
+    border-radius: 100%;
+
+    @media (min-width: 768px) {
+      cursor: pointer;
+    }
+  }
+
+  &__owner {
+    @media (min-width: 1024px) {
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &__createdAt {
+    font-size: 0.8rem;
+    color: gray;
+  }
+
+  &__body {
+    margin-top: 20px;
+  }
+
+  &__likes {
+    margin-top: 25px;
+    cursor: pointer;
+  }
+}
