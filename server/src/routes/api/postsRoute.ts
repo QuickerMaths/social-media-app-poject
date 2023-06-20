@@ -13,8 +13,8 @@ router
   .route("/")
   .get(getPosts)
   .post(verifyJWT, createPost)
-  .put(updatePost)
-  .delete(deletePost);
+  .put(verifyJWT, updatePost)
+  .delete(verifyJWT, deletePost);
 
 router.route("/:id").get(getPostsByUser);
 

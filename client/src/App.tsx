@@ -1,6 +1,8 @@
-import { lazy } from "react";
+import { useEffect, lazy } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import { useAppDispatch } from "./hooks/reduxHooks";
+import { getAuth } from "./features/authSlice/authSlice";
 
 // components imports
 
@@ -13,6 +15,31 @@ const Login = lazy(() => import("./pages/login/Login"));
 const Register = lazy(() => import("./pages/register/Register"));
 
 function App() {
+  //check if user is already loggedin
+
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    const checkLoggedIn = async () => {
+      try {
+        const res = await fetch(`http://localhost:5000/auth/me`, {
+          method: "GET",
+          mode: "cors",
+          credentials: "include",
+          headers: {
+            "Access-Control-Allow-Origin": `http://localhost:5000`,
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await res.json();
+        dispatch(getAuth(data));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    checkLoggedIn();
+  }, []);
+
   return (
     <>
       <BrowserRouter>

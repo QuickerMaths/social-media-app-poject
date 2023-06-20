@@ -2,6 +2,21 @@ import User from "../models/Users";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+export const handleUserAuth = async (req: any, res: any) => {
+  const cookie = req.cookies[`${process.env.FRONTEND_DOMAIN}`];
+
+  if (!cookie) return;
+
+  jwt.verify(
+    cookie,
+    process.env.JTW_REFRESH_SECRET!,
+    (err: any, decoded: any) => {
+      if (err) return res.sendStatus(403);
+      res.status(200).json(decoded.username);
+    }
+  );
+};
+
 export const handleLogin = async (req: any, res: any) => {
   const { username, password } = req.body;
 
