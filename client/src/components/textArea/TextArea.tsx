@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useFormik } from "formik";
 import { useAppSelector } from "../../hooks/reduxHooks";
+import useToastCreator from "../../hooks/useToastCreator";
 import { RootState } from "../../redux/store";
 
 interface Props {
@@ -29,7 +30,10 @@ const TextArea: React.FC<Props> = ({ reRender, setRerender }) => {
           }
         );
         setRerender(!reRender);
-      } catch (err) {
+      } catch (err: any) {
+        if (err.response.status === 403) {
+          useToastCreator("You must be logged in to post", "error");
+        }
         console.log(err);
       }
     },
