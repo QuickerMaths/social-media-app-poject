@@ -30,6 +30,7 @@ const TextArea: React.FC<Props> = ({ reRender, setRerender }) => {
           }
         );
         setRerender(!reRender);
+        values.postBody = "";
       } catch (err: any) {
         if (err.response.status === 403) {
           useToastCreator("You must be logged in to post", "error");

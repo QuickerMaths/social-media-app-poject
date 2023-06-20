@@ -9,6 +9,7 @@ import { getAuth } from "./features/authSlice/authSlice";
 
 import SharedLayout from "./pages/shared-layout/SharedLayout";
 import HomePage from "./pages/home-page/HomePage";
+import RegisterSuccess from "./pages/register-success/RegisterSuccess";
 
 // components lazy imports
 
@@ -56,6 +57,7 @@ function App() {
           </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/register-success" element={<RegisterSuccess />} />
         </Routes>
       </BrowserRouter>
       <ToastContainer

@@ -1,0 +1,24 @@
+.register-success {
+  @include flex-center;
+  @include full-background;
+
+  &__container {
+    @include flex-column;
+    @include container-padding;
+    @include container-box-shadow;
+  }
+
+  &__navigate {
+    margin-top: 25px;
+    text-decoration: underline;
+
+    @media (min-width: 1025px) {
+      cursor: pointer;
+      transition: color, 0.3s ease-in-out;
+
+      &:hover {
+        color: blue;
+      }
+    }
+  }
+}

@@ -1,9 +1,10 @@
 import { useFormik } from "formik";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import InputField from "../../components/inputField/InputField";
 import registerSchema from "../../validation/registerValidation";
 
 const Register = () => {
+  const navigate = useNavigate();
   // TODO: refactor fetch to rtkQuery and formik hooks to formik components
 
   const { handleChange, handleBlur, errors, touched, values, handleSubmit } =
@@ -17,7 +18,7 @@ const Register = () => {
       validationSchema: registerSchema,
       onSubmit: async (values) => {
         try {
-          await fetch(`${import.meta.env.BACKEND_URL}/register`, {
+          await fetch(`http://localhost:5000/register`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -29,7 +30,7 @@ const Register = () => {
             }),
           });
 
-          //TODO: navigate to register success page but first create it
+          navigate("/register-success");
         } catch (err: any) {
           //TODO: refactor error handling to make it work
           if (err.status === 400) console.log(err.response.data);
