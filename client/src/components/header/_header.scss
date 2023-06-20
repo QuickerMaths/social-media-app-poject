@@ -14,9 +14,14 @@
     color: white;
   }
 
-  &__user-logged {
+  &__user-logged,
+  &__user-link {
     @include flex-center;
     gap: 20px;
+  }
+
+  &__user-img {
+    border-radius: 100%;
   }
 
   &__user-profile {

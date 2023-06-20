@@ -90,11 +90,14 @@ input {
   font-weight: 600;
   color: white;
 }
-.header__user-logged {
+.header__user-logged, .header__user-link {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 20px;
+}
+.header__user-img {
+  border-radius: 100%;
 }
 .header__user-profile {
   border: none;

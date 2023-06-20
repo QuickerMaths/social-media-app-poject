@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { logOut } from "../../features/authSlice/authSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
+import defaultImg from "../../assets/images/default_img.png";
 
 const Header = () => {
   const dispatch = useAppDispatch();
@@ -35,7 +36,14 @@ const Header = () => {
           </Link>
         ) : (
           <div className="header__user-logged">
-            <Link to="/profile">
+            <Link to="/profile" className="header__user-link">
+              <img
+                src={defaultImg}
+                alt="profile picture"
+                width={50}
+                height={50}
+                className="header__user-img"
+              />
               <button className="header__user-profile">
                 Welcome, {username}
               </button>
