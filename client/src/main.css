@@ -284,6 +284,35 @@ input {
 .user-details__title {
   text-align: left;
   text-decoration: underline;
+  font-size: 1.8rem;
+}
+.user-details__info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  font-size: 1rem;
+}
+.user-details__edit-button {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 20px;
+  font-size: 1.6rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+@media (min-width: 1025px) {
+  .user-details__edit-button {
+    transition: filter, color, 0.3s ease-in-out;
+  }
+  .user-details__edit-button:hover {
+    filter: brightness(120%);
+    color: black;
+  }
 }
 
 .user-friends {

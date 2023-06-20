@@ -8,5 +8,17 @@
   &__title {
     text-align: left;
     text-decoration: underline;
+    font-size: 1.8rem;
+  }
+
+  &__info {
+    @include flex-column;
+    gap: 10px;
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  &__edit-button {
+    @include button-primary;
   }
 }

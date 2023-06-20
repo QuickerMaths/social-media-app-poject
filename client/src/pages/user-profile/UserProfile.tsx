@@ -29,6 +29,7 @@ const UserProfile = () => {
           },
         });
         const data = await res.json();
+        console.log(data);
         setUser(data);
       } catch (error) {
         console.log(error);
@@ -83,7 +84,7 @@ const UserProfile = () => {
       </div>
       <div className="user-profile__main">
         <div className="user-profile__main-left">
-          <UserDetails />
+          <UserDetails createdAt={user.createdAt} address={user.address} />
           <UserFriends />
         </div>
         <div className="user-profile__main-right">
