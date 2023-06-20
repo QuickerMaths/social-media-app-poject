@@ -1,0 +1,5 @@
+.user-profile {
+  @include full-background;
+  @include flex-column;
+  align-items: flex-start;
+}

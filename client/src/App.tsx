@@ -10,6 +10,7 @@ import { getAuth } from "./features/authSlice/authSlice";
 import SharedLayout from "./pages/shared-layout/SharedLayout";
 import HomePage from "./pages/home-page/HomePage";
 import RegisterSuccess from "./pages/register-success/RegisterSuccess";
+import UserProfile from "./pages/user-profile/UserProfile";
 
 // components lazy imports
 
@@ -54,6 +55,7 @@ function App() {
         <Routes>
           <Route path="/" element={<SharedLayout />}>
             <Route index element={<HomePage />} />
+            <Route path="/user/:userId" element={<UserProfile />} />
           </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

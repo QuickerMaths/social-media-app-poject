@@ -2,6 +2,7 @@ import React from "react";
 import moment from "moment";
 import defaultImg from "../../assets/images/default_img.png";
 import { IPost } from "./types";
+import { Link } from "react-router-dom";
 
 interface Props {
   post: IPost;
@@ -13,9 +14,10 @@ const Post: React.FC<Props> = ({
   return (
     <li className="post">
       <div className="post__top-container">
-        <div
+        <Link
+          to={`/user/${ownerId}`}
+          state={{ ownerId }}
           className="post_owner-wrapper"
-          onClick={() => console.log(ownerId)} //TODO: redirect to user profile and fetch user data
         >
           <img
             className="post__profile-img"
@@ -24,7 +26,7 @@ const Post: React.FC<Props> = ({
             height={50}
           />
           <h3 className="post__owner">{ownerName}</h3>
-        </div>
+        </Link>
         <p className="post__createdAt">{moment(createdAt).fromNow()}</p>
       </div>
       <p className="post__body">{postBody}</p>

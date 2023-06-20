@@ -544,4 +544,15 @@ input {
   .register-success__navigate:hover {
     color: blue;
   }
+}
+
+.user-profile {
+  width: 100%;
+  height: 100%;
+  background-color: var(--third);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-items: flex-start;
 }/*# sourceMappingURL=main.css.map */
