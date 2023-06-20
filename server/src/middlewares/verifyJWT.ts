@@ -12,6 +12,7 @@ export const verifyJWT = (req: any, res: any, next: any) => {
     (err: any, decoded: any) => {
       if (err) return res.sendStatus(403);
       req.user = decoded.username;
+      req.userId = decoded.userId;
       next();
     }
   );

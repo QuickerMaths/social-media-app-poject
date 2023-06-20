@@ -19,6 +19,7 @@ function App() {
 
   const dispatch = useAppDispatch();
   useEffect(() => {
+    //TODO: refactor fetch to rtkQuery
     const checkLoggedIn = async () => {
       try {
         const res = await fetch(`http://localhost:5000/auth/me`, {
@@ -31,7 +32,12 @@ function App() {
           },
         });
         const data = await res.json();
-        dispatch(getAuth(data));
+        dispatch(
+          getAuth({
+            username: data.username,
+            userId: data.userId,
+          })
+        );
       } catch (error) {
         console.log(error);
       }

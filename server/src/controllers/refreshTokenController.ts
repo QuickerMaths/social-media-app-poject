@@ -19,9 +19,13 @@ export const handleRefreshToken = async (req: Request, res: Response) => {
 
       const { username } = decoded;
 
-      const token = jwt.sign({ username }, process.env.JWT_SECRET!, {
-        expiresIn: "10min",
-      });
+      const token = jwt.sign(
+        { username, userId: user._id },
+        process.env.JWT_SECRET!,
+        {
+          expiresIn: "10min",
+        }
+      );
 
       res.json(token);
     }

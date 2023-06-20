@@ -6,7 +6,6 @@ import { RootState } from "../../redux/store";
 const Header = () => {
   const dispatch = useAppDispatch();
   const { username } = useAppSelector((state: RootState) => state.auth);
-  console.log(username);
 
   const handleLogOut = async () => {
     try {
