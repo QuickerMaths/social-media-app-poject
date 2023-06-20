@@ -1,11 +1,19 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import defaultImg from "../../assets/images/default_img.png";
+import TextArea from "../../components/textArea/TextArea";
+import Post from "../../components/post/Post";
+import { IPost } from "../../components/post/types";
 
 const UserProfile = () => {
   //getting id from url to enable fetching user data even if opened in new tab
   const { userId } = useParams();
+
+  const [reRender, setRerender] = useState<boolean>(false);
+
+  //TODO: refactor fetch to rtkQuery
   const [user, setUser] = useState<any>({});
+  const [userPosts, setUserPosts] = useState<any>({});
   useEffect(() => {
     const getUser = async (userId: string) => {
       try {
@@ -19,14 +27,32 @@ const UserProfile = () => {
           },
         });
         const data = await res.json();
-        console.log(data);
         setUser(data);
       } catch (error) {
         console.log(error);
       }
     };
 
+    const getUsersPosts = async (userId: string) => {
+      try {
+        const res = await fetch(`http://localhost:5000/api/posts/${userId}`, {
+          method: "GET",
+          mode: "cors",
+          credentials: "include",
+          headers: {
+            "Access-Control-Allow-Origin": `http://localhost:5000`,
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await res.json();
+        setUserPosts(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     getUser(userId as string);
+    getUsersPosts(userId as string);
   }, []);
   return (
     <section className="user-profile">
@@ -35,8 +61,38 @@ const UserProfile = () => {
           src={defaultImg}
           alt="user profile image"
           className="user-profile__img"
+          width={150}
+          height={150}
         />
-        <h2 className="user-profile__username">{user.username}</h2>
+        <div className="user-profile__info">
+          <h2 className="user-profile__username">{user.username}</h2>
+          <h3 className="user-profile__full-name">
+            {user.firstName} {user.lastName}
+          </h3>
+        </div>
+      </div>
+      <div className="user-profile__main">
+        <div className="user-profile__main-left">
+          <div className="user-profile__details">
+            <h4 className="user-profile__details-title">Details</h4>
+          </div>
+          <div className="user-profile__friends">
+            <h4 className="user-profile__friends-title">Friends</h4>
+          </div>
+        </div>
+        <div className="user-profile__main-right">
+          <TextArea reRender={reRender} setRerender={setRerender} />
+
+          <ul className="user-profile__posts-list">
+            {userPosts.length > 0 ? (
+              userPosts.map((post: IPost) => (
+                <Post key={post._id} post={post} />
+              ))
+            ) : (
+              <p className="user-profile__no-posts-msg">No posts yet...</p>
+            )}
+          </ul>
+        </div>
       </div>
     </section>
   );

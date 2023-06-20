@@ -1,5 +1,58 @@
 .user-profile {
-  @include full-background;
+  width: 100%;
   @include flex-column;
-  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 25px 0px;
+
+  &__presentation {
+    @include flex-center;
+    gap: 50px;
+  }
+
+  &__img {
+    border-radius: 100%;
+  }
+
+  &__main {
+    @include flex-between;
+    width: 100%;
+    flex-wrap: nowrap;
+    gap: 25px;
+    margin-top: 25px;
+    padding: 0px 25px;
+  }
+
+  &__main-left {
+    @include flex-column;
+    gap: 25px;
+    flex-grow: 2;
+  }
+
+  &__friends,
+  &__details {
+    @include container-padding;
+    @include container-box-shadow;
+    @include flex-column;
+    gap: 20px;
+    width: 100%;
+  }
+
+  &__details-title,
+  &__friends-title {
+    text-align: left;
+    text-decoration: underline;
+  }
+
+  &__main-right {
+    @include flex-column;
+    flex-grow: 4;
+  }
+
+  &__posts-list {
+    margin-top: 25px;
+  }
+
+  &__no-posts-msg {
+    font-size: 2.5rem;
+  }
 }

@@ -74,9 +74,9 @@ export const deletePost = async (req: Request, res: Response) => {
 };
 
 export const getPostsByUser = async (req: Request, res: Response) => {
-  const posts = await Post.find({ user: req.params.id });
+  const posts = await Post.find({ ownerId: req.params.id });
 
   if (!posts) return res.status(204).json({ message: "No posts found" });
 
-  res.status(200).json(posts);
+  res.status(200).json({ posts });
 };
