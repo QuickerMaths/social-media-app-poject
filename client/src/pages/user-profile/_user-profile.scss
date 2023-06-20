@@ -15,11 +15,15 @@
 
   &__main {
     @include flex-between;
-    width: 100%;
+    align-items: flex-start;
     flex-wrap: nowrap;
     gap: 25px;
+    width: 100%;
     margin-top: 25px;
     padding: 0px 25px;
+    max-height: 90%;
+    //TODO: figure out better way to handle overflow
+    overflow-y: scroll;
   }
 
   &__main-left {
@@ -49,7 +53,16 @@
   }
 
   &__posts-list {
-    margin-top: 25px;
+    @include flex-column;
+    align-items: flex-start;
+    gap: 25px;
+    width: 90%;
+    margin-top: 30px;
+
+    @media (min-width: 768px) {
+      width: 80%;
+      margin-top: 50px;
+    }
   }
 
   &__no-posts-msg {

@@ -4,6 +4,8 @@ import defaultImg from "../../assets/images/default_img.png";
 import TextArea from "../../components/textArea/TextArea";
 import Post from "../../components/post/Post";
 import { IPost } from "../../components/post/types";
+import UserDetails from "../../components/user-details/UserDetails";
+import UserFriends from "../../components/user-friends/UserFriends";
 
 const UserProfile = () => {
   //getting id from url to enable fetching user data even if opened in new tab
@@ -13,7 +15,7 @@ const UserProfile = () => {
 
   //TODO: refactor fetch to rtkQuery
   const [user, setUser] = useState<any>({});
-  const [userPosts, setUserPosts] = useState<any>({});
+  const [userPosts, setUserPosts] = useState<any>(null);
   useEffect(() => {
     const getUser = async (userId: string) => {
       try {
@@ -33,6 +35,10 @@ const UserProfile = () => {
       }
     };
 
+    getUser(userId as string);
+  }, []);
+
+  useEffect(() => {
     const getUsersPosts = async (userId: string) => {
       try {
         const res = await fetch(`http://localhost:5000/api/posts/${userId}`, {
@@ -51,9 +57,13 @@ const UserProfile = () => {
       }
     };
 
-    getUser(userId as string);
     getUsersPosts(userId as string);
-  }, []);
+  }, [reRender]);
+
+  //TODO: refactor loading to spinner and use react suspense instead of something like this
+
+  if (!userPosts) return <div>Loading...</div>;
+
   return (
     <section className="user-profile">
       <div className="user-profile__presentation">
@@ -73,21 +83,17 @@ const UserProfile = () => {
       </div>
       <div className="user-profile__main">
         <div className="user-profile__main-left">
-          <div className="user-profile__details">
-            <h4 className="user-profile__details-title">Details</h4>
-          </div>
-          <div className="user-profile__friends">
-            <h4 className="user-profile__friends-title">Friends</h4>
-          </div>
+          <UserDetails />
+          <UserFriends />
         </div>
         <div className="user-profile__main-right">
           <TextArea reRender={reRender} setRerender={setRerender} />
 
           <ul className="user-profile__posts-list">
-            {userPosts.length > 0 ? (
-              userPosts.map((post: IPost) => (
-                <Post key={post._id} post={post} />
-              ))
+            {userPosts.posts.length > 0 ? (
+              userPosts.posts
+                .map((post: IPost) => <Post key={post._id} post={post} />)
+                .reverse()
             ) : (
               <p className="user-profile__no-posts-msg">No posts yet...</p>
             )}

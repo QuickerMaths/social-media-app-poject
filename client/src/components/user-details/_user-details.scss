@@ -1,0 +1,12 @@
+.user-details {
+  @include container-padding;
+  @include container-box-shadow;
+  @include flex-column;
+  gap: 20px;
+  width: 100%;
+
+  &__title {
+    text-align: left;
+    text-decoration: underline;
+  }
+}
