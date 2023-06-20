@@ -12,7 +12,7 @@ export const handleUserAuth = async (req: any, res: any) => {
     process.env.JTW_REFRESH_SECRET!,
     (err: any, decoded: any) => {
       if (err) return res.sendStatus(403);
-      res.status(200).json({ 
+      res.status(200).json({
         username: decoded.username,
         userId: decoded.userId,
       });
@@ -35,9 +35,13 @@ export const handleLogin = async (req: any, res: any) => {
   const match = await bcrypt.compare(password, user.password!);
   if (match) {
     //Create JWTs
-    const token = jwt.sign({ username, userId: user._id }, process.env.JWT_SECRET!, {
-      expiresIn: "10min",
-    });
+    const token = jwt.sign(
+      { username, userId: user._id },
+      process.env.JWT_SECRET!,
+      {
+        expiresIn: "10min",
+      }
+    );
     const refreshToken = jwt.sign(
       { username, userId: user._id },
       process.env.JTW_REFRESH_SECRET!,
@@ -54,6 +58,9 @@ export const handleLogin = async (req: any, res: any) => {
       secure: true,
       maxAge: 1000 * 60 * 60,
     });
-    res.status(200).json(token);
+    res.status(200).json({
+      username,
+      userId: user._id,
+    });
   }
 };

@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import InputField from "../../components/inputField/InputField";
 import { getAuth } from "../../features/authSlice/authSlice";
 import { useAppDispatch } from "../../hooks/reduxHooks";
+import useToastCreator from "../../hooks/useToastCreator";
 import loginSchema from "../../validation/loginValidation";
 
 const Login = () => {
@@ -19,7 +20,7 @@ const Login = () => {
       validationSchema: loginSchema,
       onSubmit: async (values) => {
         try {
-          await fetch(`http://localhost:5000/auth`, {
+          const result = await fetch(`http://localhost:5000/auth`, {
             method: "POST",
             mode: "cors",
             credentials: "include",
@@ -32,7 +33,16 @@ const Login = () => {
               password: values.password,
             }),
           });
-          dispatch(getAuth(values.username));
+
+          const { username, userId } = await result.json();
+
+          dispatch(
+            getAuth({
+              username,
+              userId,
+            })
+          );
+          useToastCreator("You have been logged in successfully", "success");
           navigate("/");
         } catch (error) {
           console.log(error);
