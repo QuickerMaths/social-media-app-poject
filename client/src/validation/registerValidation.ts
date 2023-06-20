@@ -17,6 +17,8 @@ const registerSchema = yup.object().shape({
     )
     .max(24)
     .required("This field is required"),
+  firstName: yup.string().min(2).max(20).required("This field is required"),
+  lastName: yup.string().min(2).max(20).required("This field is required"),
   confirmPassword: yup
     .string()
     .oneOf([yup.ref("password"), undefined], "Passwords must match")

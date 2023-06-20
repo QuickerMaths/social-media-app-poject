@@ -10,6 +10,8 @@ const Register = () => {
   const { handleChange, handleBlur, errors, touched, values, handleSubmit } =
     useFormik({
       initialValues: {
+        firstName: "",
+        lastName: "",
         username: "",
         email: "",
         password: "",
@@ -18,7 +20,7 @@ const Register = () => {
       validationSchema: registerSchema,
       onSubmit: async (values) => {
         try {
-          await fetch(`http://localhost:5000/register`, {
+           await fetch(`http://localhost:5000/register`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -26,6 +28,8 @@ const Register = () => {
             body: JSON.stringify({
               username: values.username,
               email: values.email,
+              firstName: values.firstName,
+              lastName: values.lastName,
               password: values.password,
             }),
           });
@@ -33,6 +37,7 @@ const Register = () => {
           navigate("/register-success");
         } catch (err: any) {
           //TODO: refactor error handling to make it work
+          console.log(err);
           if (err.status === 400) console.log(err.response.data);
         }
       },
@@ -46,6 +51,28 @@ const Register = () => {
         </Link>
         <h2 className="register__title">SignIn</h2>
         <form className="register__form" onSubmit={handleSubmit}>
+          <InputField
+            type="firstName"
+            label="First Name"
+            name="firstName"
+            className="register"
+            touched={touched.firstName}
+            error={errors.firstName}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            value={values.firstName}
+          />
+          <InputField
+            type="lastName"
+            label="Last Name"
+            name="lastName"
+            className="register"
+            touched={touched.lastName}
+            error={errors.lastName}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            value={values.lastName}
+          />
           <InputField
             type="username"
             label="Username"

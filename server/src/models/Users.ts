@@ -29,12 +29,10 @@ const userSchema = new Schema(
     firstName: {
       type: String,
       require: [true, "FirstName is required"],
-      validate: [validator.isAlpha, "First name can only contain letters"],
     },
     lastName: {
       type: String,
       require: [true, "LastName is required"],
-      validate: [validator.isAlpha, "First name can only contain letters"],
     },
     profilePicture: {
       type: String,
