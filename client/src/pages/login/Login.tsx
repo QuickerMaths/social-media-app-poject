@@ -19,12 +19,12 @@ const Login = () => {
       validationSchema: loginSchema,
       onSubmit: async (values) => {
         try {
-          await fetch(`${import.meta.env.BACKEND_URL}/auth`, {
+          await fetch(`http://localhost:5000/auth`, {
             method: "POST",
             mode: "cors",
             credentials: "include",
             headers: {
-              "Access-Control-Allow-Origin": `${import.meta.env.BACKEND_URL}`,
+              "Access-Control-Allow-Origin": `http://localhost:5000`,
               "Content-Type": "application/json",
             },
             body: JSON.stringify({

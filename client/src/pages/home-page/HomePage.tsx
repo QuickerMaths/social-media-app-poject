@@ -11,7 +11,7 @@ const HomePage = () => {
     // fetch posts
     const fetchPosts = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/posts`, {
+        const response = await fetch(`http://localhost:5000/api/posts`, {
           method: "GET",
           mode: "cors",
           credentials: "include",
@@ -28,7 +28,6 @@ const HomePage = () => {
     };
     fetchPosts();
   }, [reRender]);
-
 
   return (
     <section className="home-page">

@@ -6,9 +6,13 @@ export const verifyJWT = (req: any, res: any, next: any) => {
 
   const token = authHeader.split(" ")[1];
 
-  jwt.verify(token, process.env.JWT_SECRET!, (err: any, decoded: any) => {
-    if (err) return res.sendStatus(403);
-    req.user = decoded.username;
-    next();
-  });
+  jwt.verify(
+    token,
+    process.env.JTW_REFRESH_SECRET!,
+    (err: any, decoded: any) => {
+      if (err) return res.sendStatus(403);
+      req.user = decoded.username;
+      next();
+    }
+  );
 };

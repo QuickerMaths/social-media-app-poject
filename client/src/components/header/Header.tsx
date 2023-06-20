@@ -6,15 +6,16 @@ import { RootState } from "../../redux/store";
 const Header = () => {
   const dispatch = useAppDispatch();
   const { username } = useAppSelector((state: RootState) => state.auth);
+  console.log(username);
 
   const handleLogOut = async () => {
     try {
-      await fetch(`${import.meta.env.BACKEND_URL}/logout`, {
+      await fetch(`http://localhost:5000/api/logout`, {
         method: "GET",
         mode: "cors",
         credentials: "include",
         headers: {
-          "Access-Control-Allow-Origin": `${import.meta.env.BACKEND_URL}`,
+          "Access-Control-Allow-Origin": `http://localhost:5000`,
           "Content-Type": "application/json",
         },
       });
@@ -34,12 +35,19 @@ const Header = () => {
             <button className="header__login-button">LogIn</button>
           </Link>
         ) : (
-          <button
-            className="header__login-button"
-            onClick={() => handleLogOut()}
-          >
-            LogOut
-          </button>
+          <div className="header__user-logged">
+            <Link to="/profile">
+              <button className="header__user-profile">
+                Welcome, {username}
+              </button>
+            </Link>
+            <button
+              className="header__login-button"
+              onClick={() => handleLogOut()}
+            >
+              LogOut
+            </button>
+          </div>
         )}
       </div>
     </header>

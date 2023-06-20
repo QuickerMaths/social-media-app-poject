@@ -4,10 +4,9 @@ import jwt from "jsonwebtoken";
 
 export const handleRefreshToken = async (req: Request, res: Response) => {
   const cookies = req.cookies;
-  if (!cookies[`${process.env.FRONTEND_DOMAIN}_refresh`])
-    return res.sendStatus(401);
+  if (!cookies[`${process.env.FRONTEND_DOMAIN}`]) return res.sendStatus(401);
 
-  const refreshToken = cookies[`${process.env.FRONTEND_DOMAIN}_refresh`];
+  const refreshToken = cookies[`${process.env.FRONTEND_DOMAIN}`];
 
   const user = await User.findOne({ refreshToken: refreshToken }).exec();
   if (!user) return res.sendStatus(403);

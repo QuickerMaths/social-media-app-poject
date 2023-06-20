@@ -14,11 +14,17 @@ const TextArea: React.FC<Props> = ({ reRender, setRerender }) => {
     },
     onSubmit: async (values) => {
       try {
-        await axios.post(`http://localhost:5000/posts`, {
-          postBody: values.postBody,
-          username: "Juby23",
-          userId: "6489a3a42e13d432e3b5f447",
-        });
+        await axios.post(
+          `http://localhost:5000/api/posts`,
+          {
+            postBody: values.postBody,
+            username: "Juby23",
+            userId: "6489a3a42e13d432e3b5f447",
+          },
+          {
+            withCredentials: true,
+          }
+        );
         setRerender(!reRender);
       } catch (err) {
         console.log(err);

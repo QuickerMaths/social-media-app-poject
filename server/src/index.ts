@@ -8,6 +8,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 // import credentials from "./middlewares/credentials";
+import { setBearer } from "./middlewares/setBearer";
 
 // Routes imports
 import usersRoute from "./routes/api/usersRoute";
@@ -32,16 +33,18 @@ app.use(cookieParser());
 app.use(helmet());
 app.use(morgan("common"));
 
+// set auth header from jwt cookie
+app.use(setBearer);
+
 //routes
 
-//TODO: implement verify token middleware
-app.use("/users", usersRoute);
-app.use("/posts", postsRoute);
+app.use("/api/users", usersRoute);
+app.use("/api/posts", postsRoute);
 //TODO: implement comments route
 app.use("/register", registerRoute);
 app.use("/auth", loginRoute);
-app.use("/refresh", refreshRoute);
-app.use("/logout", logoutRoute);
+app.use("/api/refresh", refreshRoute);
+app.use("/api/logout", logoutRoute);
 
 // starting to listen only id connected to database
 

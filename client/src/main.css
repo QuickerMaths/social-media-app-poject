@@ -90,6 +90,20 @@ input {
   font-weight: 600;
   color: white;
 }
+.header__user-logged {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+.header__user-profile {
+  border: none;
+  background-color: transparent;
+  font-family: "Oswald", sans-serif;
+  color: white;
+  font-size: 1.6rem;
+  cursor: pointer;
+}
 .header__login-button {
   background-color: var(--primary);
   color: white;

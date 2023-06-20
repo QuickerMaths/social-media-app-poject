@@ -7,11 +7,12 @@ import {
   deletePost,
   getPostsByUser,
 } from "../../controllers/postsController";
+import { verifyJWT } from "../../middlewares/verifyJWT";
 
 router
   .route("/")
   .get(getPosts)
-  .post(createPost)
+  .post(verifyJWT, createPost)
   .put(updatePost)
   .delete(deletePost);
 
