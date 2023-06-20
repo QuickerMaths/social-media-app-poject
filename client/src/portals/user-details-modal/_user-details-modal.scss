@@ -1,0 +1,13 @@
+.user-details-modal {
+  @include modal-container;
+
+  &__overlay {
+    @include modal-overlay;
+  }
+
+  &__content {
+    @include container-padding;
+    @include container-box-shadow;
+    z-index: 101;
+  }
+}
