@@ -1,5 +1,7 @@
 import axios from "axios";
 import { useFormik } from "formik";
+import { useAppSelector } from "../../hooks/reduxHooks";
+import { RootState } from "../../redux/store";
 
 interface Props {
   reRender: boolean;
@@ -7,6 +9,7 @@ interface Props {
 }
 
 const TextArea: React.FC<Props> = ({ reRender, setRerender }) => {
+  const { username, userId } = useAppSelector((state: RootState) => state.auth);
   // TODO: refactor fetch to rtkQuery and formik hooks to formik components
   const { handleChange, values, handleSubmit } = useFormik({
     initialValues: {
@@ -18,8 +21,8 @@ const TextArea: React.FC<Props> = ({ reRender, setRerender }) => {
           `http://localhost:5000/api/posts`,
           {
             postBody: values.postBody,
-            username: "Juby23",
-            userId: "6489a3a42e13d432e3b5f447",
+            username: username,
+            userId: userId,
           },
           {
             withCredentials: true,
