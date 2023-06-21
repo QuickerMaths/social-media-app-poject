@@ -84,7 +84,11 @@ const UserProfile = () => {
       </div>
       <div className="user-profile__main">
         <div className="user-profile__main-left">
-          <UserDetails createdAt={user.createdAt} address={user.address} />
+          <UserDetails
+            createdAt={user.createdAt}
+            address={user.address}
+            userId={userId as string}
+          />
           <UserFriends />
         </div>
         <div className="user-profile__main-right">

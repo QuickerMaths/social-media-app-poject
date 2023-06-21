@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import moment from "moment";
 import UserDetailsModal from "../../portals/user-details-modal/UserDetailsModal";
+import { RootState } from "../../redux/store";
+import { useAppSelector } from "../../hooks/reduxHooks";
 
 interface Props {
   createdAt: string;
@@ -10,12 +12,18 @@ interface Props {
     state: string;
     zip: string;
   };
+  userId: string;
 }
 
 const UserDetails: React.FC<Props> = ({
   createdAt,
   address: { street, city, state, zip },
+  userId,
 }) => {
+  const { userId: activeUserId } = useAppSelector(
+    (state: RootState) => state.auth
+  );
+
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
@@ -38,12 +46,14 @@ const UserDetails: React.FC<Props> = ({
             Socialy member since: {moment(createdAt).format("MMMM Do YYYY")}
           </li>
         </ul>
-        <button
-          className="user-details__edit-button"
-          onClick={() => setIsOpen(true)}
-        >
-          Edit
-        </button>
+        {activeUserId === userId && activeUserId && (
+          <button
+            className="user-details__edit-button"
+            onClick={() => setIsOpen(true)}
+          >
+            Edit
+          </button>
+        )}
       </section>
       <UserDetailsModal isOpen={isOpen} setIsOpen={setIsOpen} />
     </>
