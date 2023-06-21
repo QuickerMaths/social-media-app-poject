@@ -42,3 +42,21 @@ export const getUserById = async (req: Request, res: Response) => {
 
   res.status(200).json(user);
 };
+
+export const uploadUserImage = async (req: Request, res: Response) => {
+  const user = await User.findById(req.params.id);
+
+  if (!user)
+    return res.status(204).json({ message: "No user with matching ID" });
+
+  if (!req?.body?.path)
+    return res.status(400).json({ message: "Image is required" });
+
+  await user
+    .updateOne({
+      profilePicture: req?.body?.path,
+    })
+    .exec();
+
+  res.status(201).json(user);
+};
