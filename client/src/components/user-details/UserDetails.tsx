@@ -1,25 +1,18 @@
 import React, { useState } from "react";
 import moment from "moment";
-import UserDetailsModal from "../../portals/user-details-modal/UserDetailsModal";
 import { RootState } from "../../redux/store";
 import { useAppSelector } from "../../hooks/reduxHooks";
+import UserDetailsModal from "../../portals/user-details-modal/UserDetailsModal";
+import { IUserAddress } from "./types";
 
 interface Props {
   createdAt: string;
-  address: {
-    street: string;
-    city: string;
-    state: string;
-    zip: string;
-  };
+  address: IUserAddress;
   userId: string;
 }
 
-const UserDetails: React.FC<Props> = ({
-  createdAt,
-  address: { street, city, state, zip },
-  userId,
-}) => {
+const UserDetails: React.FC<Props> = ({ createdAt, address, userId }) => {
+  const { street, city, state, zip } = address;
   const { userId: activeUserId } = useAppSelector(
     (state: RootState) => state.auth
   );
@@ -55,7 +48,12 @@ const UserDetails: React.FC<Props> = ({
           </button>
         )}
       </section>
-      <UserDetailsModal isOpen={isOpen} setIsOpen={setIsOpen} />
+      <UserDetailsModal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        userId={userId}
+        address={address}
+      />
     </>
     //TODO: create modal with form to edit user details
   );

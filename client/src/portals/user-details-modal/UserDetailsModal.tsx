@@ -1,16 +1,25 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { useParams } from "react-router-dom";
+import InputField from "../../components/inputField/InputField";
+import { IUserAddress } from "../../components/user-details/types";
 
 interface Props {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  userId: string;
+  address: IUserAddress;
 }
 
-const UserDetailsModal: React.FC<Props> = ({ isOpen, setIsOpen }) => {
+const UserDetailsModal: React.FC<Props> = ({
+  isOpen,
+  setIsOpen,
+  userId,
+  address,
+}) => {
   if (!isOpen) return null;
-  const { userId } = useParams();
+  // const { street, city, state, zip } = address;
   console.log(userId);
+  //TODO: swap X with icon
   return ReactDOM.createPortal(
     <div className="user-details-modal">
       <div className="user-details-modal__overlay"></div>
