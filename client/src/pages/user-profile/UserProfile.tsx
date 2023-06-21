@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import defaultImg from "../../assets/images/default_img.png";
+import useMediaQuery from "../../hooks/useMediaQuery";
+import { IPost } from "../../components/post/types";
 import TextArea from "../../components/textArea/TextArea";
 import Post from "../../components/post/Post";
-import { IPost } from "../../components/post/types";
 import UserDetails from "../../components/user-details/UserDetails";
 import UserFriends from "../../components/user-friends/UserFriends";
+import UserProfileMobileNavigation from "../../components/user-profile-mobile-navigation/UserProfileMobileNavigation";
 
 const UserProfile = () => {
+  const isMobile = useMediaQuery("(max-width: 1025px)");
+  const [activePage, setActivePage] = useState<"posts" | "details">("posts");
   //getting id from url to enable fetching user data even if opened in new tab
   const { userId } = useParams();
 
@@ -82,7 +86,13 @@ const UserProfile = () => {
           </h3>
         </div>
       </div>
-      <div className="user-profile__main">
+      {isMobile && (
+        <UserProfileMobileNavigation
+          setActivePage={setActivePage}
+          activePage={activePage}
+        />
+      )}
+      {/* <div className="user-profile__main">
         <div className="user-profile__main-left">
           <UserDetails
             createdAt={user.createdAt}
@@ -106,7 +116,7 @@ const UserProfile = () => {
             )}
           </ul>
         </div>
-      </div>
+      </div> */}
     </section>
   );
 };

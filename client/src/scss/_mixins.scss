@@ -10,6 +10,12 @@
   align-items: center;
 }
 
+@mixin flex-around {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
 @mixin flex-column {
   display: flex;
   flex-direction: column;
@@ -73,6 +79,14 @@
       color: black;
     }
   }
+}
+
+@mixin button-reset {
+  font-family: "Oswald", sans-serif;
+  font-size: 1.2rem;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
 }
 
 @mixin container-box-shadow {
