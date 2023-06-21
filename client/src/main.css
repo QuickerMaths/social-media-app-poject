@@ -169,7 +169,7 @@ input {
     padding: 20px 40px;
   }
 }
-@media (min-width: 768px) {
+@media (min-width: 1400px) {
   .sidebar {
     display: flex;
   }
@@ -257,9 +257,19 @@ input {
 }
 
 .feed__form {
-  width: 80%;
+  width: 90%;
   display: flex;
   gap: 20px;
+}
+@media (min-width: 480px) {
+  .feed__form {
+    width: 75%;
+  }
+}
+@media (min-width: 768px) {
+  .feed__form {
+    width: 80%;
+  }
 }
 .feed__textarea {
   width: 100%;
@@ -388,6 +398,16 @@ input {
 @media (min-width: 768px) {
   .user-profile-mobile-navigation {
     padding: 20px 40px;
+  }
+}
+@media (min-width: 480px) {
+  .user-profile-mobile-navigation {
+    width: 75%;
+  }
+}
+@media (min-width: 768px) {
+  .user-profile-mobile-navigation {
+    width: 80%;
   }
 }
 .user-profile-mobile-navigation__list {
@@ -761,7 +781,17 @@ input {
   justify-content: center;
   align-items: center;
   gap: 25px;
-  flex-grow: 2;
+  width: 75%;
+}
+@media (min-width: 768px) {
+  .user-profile__main-left {
+    width: 80%;
+  }
+}
+@media (min-width: 1025px) {
+  .user-profile__main-left {
+    width: 50%;
+  }
 }
 .user-profile__friends, .user-profile__details {
   padding: 10px 20px;
@@ -773,7 +803,6 @@ input {
   justify-content: center;
   align-items: center;
   gap: 20px;
-  width: 100%;
 }
 @media (min-width: 768px) {
   .user-profile__friends, .user-profile__details {
@@ -789,7 +818,7 @@ input {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  flex-grow: 4;
+  width: 100%;
 }
 .user-profile__posts-list {
   display: flex;

@@ -10,7 +10,8 @@ import UserFriends from "../../components/user-friends/UserFriends";
 import UserProfileMobileNavigation from "../../components/user-profile-mobile-navigation/UserProfileMobileNavigation";
 
 const UserProfile = () => {
-  const isMobile = useMediaQuery("(max-width: 1025px)");
+  const isMobile = useMediaQuery("(max-width: 1024px)");
+  const isDesktop = useMediaQuery("(min-width: 1025px)");
   const [activePage, setActivePage] = useState<"posts" | "details">("posts");
   //getting id from url to enable fetching user data even if opened in new tab
   const { userId } = useParams();
@@ -92,17 +93,7 @@ const UserProfile = () => {
           activePage={activePage}
         />
       )}
-      {/* <div className="user-profile__main">
-        <div className="user-profile__main-left">
-          <UserDetails
-            createdAt={user.createdAt}
-            address={user.address}
-            userId={userId as string}
-            reRenderAddress={reRenderAddress}
-            setRerenderAddress={setRerenderAddress}
-          />
-          <UserFriends />
-        </div>
+      {isMobile && activePage === "posts" ? (
         <div className="user-profile__main-right">
           <TextArea reRender={reRender} setRerender={setRerender} />
 
@@ -116,7 +107,46 @@ const UserProfile = () => {
             )}
           </ul>
         </div>
-      </div> */}
+      ) : isMobile && activePage === "details" ? (
+        <div className="user-profile__main-left">
+          <UserDetails
+            createdAt={user.createdAt}
+            address={user.address}
+            userId={userId as string}
+            reRenderAddress={reRenderAddress}
+            setRerenderAddress={setRerenderAddress}
+          />
+          <UserFriends />
+        </div>
+      ) : (
+        isDesktop && (
+          <div className="user-profile__main">
+            <div className="user-profile__main-left">
+              <UserDetails
+                createdAt={user.createdAt}
+                address={user.address}
+                userId={userId as string}
+                reRenderAddress={reRenderAddress}
+                setRerenderAddress={setRerenderAddress}
+              />
+              <UserFriends />
+            </div>
+            <div className="user-profile__main-right">
+              <TextArea reRender={reRender} setRerender={setRerender} />
+
+              <ul className="user-profile__posts-list">
+                {userPosts.posts.length > 0 ? (
+                  userPosts.posts
+                    .map((post: IPost) => <Post key={post._id} post={post} />)
+                    .reverse()
+                ) : (
+                  <p className="user-profile__no-posts-msg">No posts yet...</p>
+                )}
+              </ul>
+            </div>
+          </div>
+        )
+      )}
     </section>
   );
 };
