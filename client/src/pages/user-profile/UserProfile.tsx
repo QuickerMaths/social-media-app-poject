@@ -2,12 +2,9 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import defaultImg from "../../assets/images/default_img.png";
 import useMediaQuery from "../../hooks/useMediaQuery";
-import { IPost } from "../../components/post/types";
-import TextArea from "../../components/textArea/TextArea";
-import Post from "../../components/post/Post";
-import UserDetails from "../../components/user-details/UserDetails";
-import UserFriends from "../../components/user-friends/UserFriends";
 import UserProfileMobileNavigation from "../../components/user-profile-mobile-navigation/UserProfileMobileNavigation";
+import MainLeft from "./subcomponents/MainLeft";
+import MainRight from "./subcomponents/MainRight";
 
 const UserProfile = () => {
   const isMobile = useMediaQuery("(max-width: 1024px)");
@@ -94,56 +91,34 @@ const UserProfile = () => {
         />
       )}
       {isMobile && activePage === "posts" ? (
-        <div className="user-profile__main-right">
-          <TextArea reRender={reRender} setRerender={setRerender} />
-
-          <ul className="user-profile__posts-list">
-            {userPosts.posts.length > 0 ? (
-              userPosts.posts
-                .map((post: IPost) => <Post key={post._id} post={post} />)
-                .reverse()
-            ) : (
-              <p className="user-profile__no-posts-msg">No posts yet...</p>
-            )}
-          </ul>
-        </div>
+        <MainRight
+          userPosts={userPosts}
+          reRender={reRender}
+          setRerender={setRerender}
+        />
       ) : isMobile && activePage === "details" ? (
-        <div className="user-profile__main-left">
-          <UserDetails
-            createdAt={user.createdAt}
-            address={user.address}
-            userId={userId as string}
-            reRenderAddress={reRenderAddress}
-            setRerenderAddress={setRerenderAddress}
-          />
-          <UserFriends />
-        </div>
+        <MainLeft
+          createdAt={user.createdAt}
+          address={user.address}
+          userId={userId as string}
+          reRenderAddress={reRenderAddress}
+          setRerenderAddress={setRerenderAddress}
+        />
       ) : (
         isDesktop && (
           <div className="user-profile__main">
-            <div className="user-profile__main-left">
-              <UserDetails
-                createdAt={user.createdAt}
-                address={user.address}
-                userId={userId as string}
-                reRenderAddress={reRenderAddress}
-                setRerenderAddress={setRerenderAddress}
-              />
-              <UserFriends />
-            </div>
-            <div className="user-profile__main-right">
-              <TextArea reRender={reRender} setRerender={setRerender} />
-
-              <ul className="user-profile__posts-list">
-                {userPosts.posts.length > 0 ? (
-                  userPosts.posts
-                    .map((post: IPost) => <Post key={post._id} post={post} />)
-                    .reverse()
-                ) : (
-                  <p className="user-profile__no-posts-msg">No posts yet...</p>
-                )}
-              </ul>
-            </div>
+            <MainLeft
+              createdAt={user.createdAt}
+              address={user.address}
+              userId={userId as string}
+              reRenderAddress={reRenderAddress}
+              setRerenderAddress={setRerenderAddress}
+            />
+            <MainRight
+              userPosts={userPosts}
+              reRender={reRender}
+              setRerender={setRerender}
+            />
           </div>
         )
       )}
