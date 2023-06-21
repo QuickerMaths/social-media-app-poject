@@ -730,9 +730,60 @@ input {
   border-radius: 20px;
   box-shadow: 0px 8px 22px -14px rgb(66, 68, 90);
   z-index: 101;
+  position: relative;
 }
 @media (min-width: 768px) {
   .user-details-modal__content {
     padding: 20px 40px;
+  }
+}
+.user-details-modal__close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+}
+.user-details-modal__title {
+  margin-bottom: 10px;
+  letter-spacing: 2px;
+  text-decoration: underline;
+  font-size: 2.5rem;
+  text-align: center;
+}
+.user-details-modal__form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.user-details-modal__form-element {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.user-details-modal__label {
+  text-decoration: underline;
+}
+.user-details-modal__input {
+  margin-top: 15px;
+}
+.user-details-modal__button {
+  background-color: var(--secondary);
+  color: white;
+  border: none;
+  border-radius: 15px;
+  padding: 5px 20px;
+  font-size: 1.6rem;
+  cursor: pointer;
+  margin-top: 25px;
+}
+@media (min-width: 1025px) {
+  .user-details-modal__button {
+    transition: filter, color, 0.3s ease-in-out;
+  }
+  .user-details-modal__button:hover {
+    filter: brightness(120%);
+    color: black;
   }
 }/*# sourceMappingURL=main.css.map */

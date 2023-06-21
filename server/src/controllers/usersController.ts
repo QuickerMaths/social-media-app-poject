@@ -10,21 +10,26 @@ export const getUsers = async (req: Request, res: Response) => {
 };
 
 export const updateUser = async (req: Request, res: Response) => {
-  if (!req?.body?.id)
+  if (!req?.body?.userId)
     return res.status(400).json({ message: "Id is required" });
 
-  const updateUser = await User.findByIdAndUpdate(req?.body?.id, {
-    $set: req.body,
+  const updateUser = await User.findByIdAndUpdate(req?.body?.userId, {
+    address: {
+      street: req?.body?.street,
+      city: req?.body?.city,
+      state: req?.body?.state,
+      zip: req?.body?.zip,
+    },
   }).exec();
 
   res.status(201).json(updateUser);
 };
 
 export const deleteUser = async (req: Request, res: Response) => {
-  if (!req?.body?.id)
+  if (!req?.body?.userId)
     return res.status(400).json({ message: "Id is required" });
 
-  const deleteUser = await User.findByIdAndDelete(req?.body?.id).exec();
+  const deleteUser = await User.findByIdAndDelete(req?.body?.userId).exec();
 
   res.status(204).json(deleteUser);
 };

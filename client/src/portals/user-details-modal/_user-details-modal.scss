@@ -9,5 +9,39 @@
     @include container-padding;
     @include container-box-shadow;
     z-index: 101;
+    position: relative;
+  }
+
+  &__close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+  }
+
+  &__title {
+    @include form-title;
+    text-align: center;
+  }
+
+  &__form {
+    @include flex-column;
+  }
+
+  &__form-element {
+    @include flex-column;
+  }
+
+  &__label {
+    text-decoration: underline;
+  }
+
+  &__input {
+    margin-top: 15px;
+  }
+
+  &__button {
+    @include button-secondary;
+    margin-top: 25px;
   }
 }

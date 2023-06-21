@@ -12,17 +12,16 @@ const UserProfile = () => {
   const { userId } = useParams();
 
   const [reRender, setRerender] = useState<boolean>(false);
+  const [reRenderAddress, setRerenderAddress] = useState<boolean>(false);
 
   //TODO: refactor fetch to rtkQuery
-  const [user, setUser] = useState<any>({});
+  const [user, setUser] = useState<any>(null);
   const [userPosts, setUserPosts] = useState<any>(null);
   useEffect(() => {
     const getUser = async (userId: string) => {
       try {
         const res = await fetch(`http://localhost:5000/api/users/${userId}`, {
           method: "GET",
-          mode: "cors",
-          credentials: "include",
           headers: {
             "Access-Control-Allow-Origin": `http://localhost:5000`,
             "Content-Type": "application/json",
@@ -37,7 +36,7 @@ const UserProfile = () => {
     };
 
     getUser(userId as string);
-  }, []);
+  }, [reRenderAddress, userId]);
 
   useEffect(() => {
     const getUsersPosts = async (userId: string) => {
@@ -59,11 +58,12 @@ const UserProfile = () => {
     };
 
     getUsersPosts(userId as string);
-  }, [reRender]);
+  }, [reRender, userId]);
 
   //TODO: refactor loading to spinner and use react suspense instead of something like this
 
   if (!userPosts) return <div>Loading...</div>;
+  if (!user) return <div>Loading...</div>;
 
   return (
     <section className="user-profile">
@@ -88,6 +88,8 @@ const UserProfile = () => {
             createdAt={user.createdAt}
             address={user.address}
             userId={userId as string}
+            reRenderAddress={reRenderAddress}
+            setRerenderAddress={setRerenderAddress}
           />
           <UserFriends />
         </div>

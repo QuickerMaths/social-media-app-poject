@@ -9,9 +9,17 @@ interface Props {
   createdAt: string;
   address: IUserAddress;
   userId: string;
+  setRerenderAddress: React.Dispatch<React.SetStateAction<boolean>>;
+  reRenderAddress: boolean;
 }
 
-const UserDetails: React.FC<Props> = ({ createdAt, address, userId }) => {
+const UserDetails: React.FC<Props> = ({
+  createdAt,
+  address,
+  userId,
+  reRenderAddress,
+  setRerenderAddress,
+}) => {
   const { street, city, state, zip } = address;
   const { userId: activeUserId } = useAppSelector(
     (state: RootState) => state.auth
@@ -52,7 +60,8 @@ const UserDetails: React.FC<Props> = ({ createdAt, address, userId }) => {
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         userId={userId}
-        address={address}
+        reRenderAddress={reRenderAddress}
+        setRerenderAddress={setRerenderAddress}
       />
     </>
     //TODO: create modal with form to edit user details
