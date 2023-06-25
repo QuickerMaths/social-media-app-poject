@@ -21,7 +21,7 @@ interface Props {
 }
 
 const Post: React.FC<Props> = ({
-  post: { owner, createdAt, postBody, likes, _id: postId },
+  post: { owner, createdAt, postBody, likedBy, _id: postId },
   setReRender,
   reRender,
 }) => {
@@ -37,6 +37,18 @@ const Post: React.FC<Props> = ({
       });
 
       setReRender(!reRender);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleLikePost = async (postId: string, userId: string) => {
+    try {
+      const result = await axios.put("http://localhost:5000/api/posts", {
+        postId,
+        userId,
+      });
+      console.log(result);
     } catch (err) {
       console.log(err);
     }
@@ -80,8 +92,12 @@ const Post: React.FC<Props> = ({
       </div>
       <p className="post__body">{postBody}</p>
       <div className="post__bottom-container">
-        <button className="post__action-button">
-          <AiOutlineLike className="post__action-icon" /> {likes}
+        <button
+          className="post__action-button"
+          disabled={userId === null}
+          onClick={() => handleLikePost(postId, userId as string)}
+        >
+          <AiOutlineLike className="post__action-icon" /> {likedBy.length}
         </button>
         <button className="post__action-button">
           <AiOutlineComment className="post__action-icon" /> 0
