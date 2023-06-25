@@ -251,7 +251,12 @@ input {
 .post__body {
   margin-top: 20px;
 }
-.post__likes {
+.post__bottom-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.post__action {
   font-family: "Oswald", sans-serif;
   font-size: 1.2rem;
   border: none;
@@ -264,7 +269,7 @@ input {
   margin-top: 25px;
   cursor: pointer;
 }
-.post__likes-icon {
+.post__action-icon {
   width: 20px;
   height: 20px;
 }

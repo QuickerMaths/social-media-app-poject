@@ -39,7 +39,11 @@
     margin-top: 20px;
   }
 
-  &__likes {
+  &__bottom-container {
+    @include flex-around;
+  }
+
+  &__action {
     @include button-reset;
     @include flex-center;
     gap: 10px;
@@ -47,7 +51,7 @@
     cursor: pointer;
   }
 
-  &__likes-icon {
+  &__action-icon {
     width: 20px;
     height: 20px;
   }

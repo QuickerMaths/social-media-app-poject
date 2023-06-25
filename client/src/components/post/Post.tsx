@@ -1,5 +1,6 @@
 import React from "react";
-import { AiOutlineLike } from "react-icons/ai";
+import { AiOutlineLike, AiOutlineComment } from "react-icons/ai";
+import { BiRepost } from "react-icons/bi";
 import moment from "moment";
 import defaultImg from "../../assets/images/default_img.png";
 import { IPost } from "./types";
@@ -37,9 +38,17 @@ const Post: React.FC<Props> = ({
         <p className="post__createdAt">{moment(createdAt).fromNow()}</p>
       </div>
       <p className="post__body">{postBody}</p>
-      <button className="post__likes">
-        <AiOutlineLike className="post__likes-icon" /> {likes}
-      </button>
+      <div className="post__bottom-container">
+        <button className="post__action">
+          <AiOutlineLike className="post__action-icon" /> {likes}
+        </button>
+        <button className="post__action">
+          <AiOutlineComment className="post__action-icon" /> 0
+        </button>
+        <button className="post__action">
+          <BiRepost className="post__action-icon" /> 0
+        </button>
+      </div>
     </li>
   );
 };
