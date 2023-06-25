@@ -13,7 +13,7 @@ interface Props {
 const Post: React.FC<Props> = ({
   post: { owner, createdAt, postBody, likes },
 }) => {
-  const { userImg } = useAppSelector((state: RootState) => state.auth);
+  const { userId, userImg } = useAppSelector((state: RootState) => state.auth);
   return (
     <li className="post">
       <div className="post__top-container">
@@ -22,7 +22,7 @@ const Post: React.FC<Props> = ({
             className="post__profile-img"
             //TODO: figure out how to display userImg even if its null (displaying after img removal without need to reload the page)
             src={
-              userImg
+              userImg && userId === owner._id
                 ? userImg
                 : owner.profilePicture
                 ? owner.profilePicture
