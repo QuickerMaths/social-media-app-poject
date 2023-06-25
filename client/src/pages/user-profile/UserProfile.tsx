@@ -58,7 +58,7 @@ const UserProfile = () => {
           <>
             <img
               src={
-                userImg
+                userImg && activeUserId === userId
                   ? userImg
                   : user.profilePicture
                   ? user.profilePicture
@@ -81,13 +81,7 @@ const UserProfile = () => {
           <ProfileImage userId={userId} />
         ) : (
           <img
-            src={
-              userImg
-                ? userImg
-                : user.profilePicture
-                ? user.profilePicture
-                : defaultImg
-            }
+            src={user.profilePicture ? user.profilePicture : defaultImg}
             alt="user profile image"
             className="user-profile__img"
             width={150}
