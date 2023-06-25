@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import { useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import axios from "axios";
+import useToastCreator from "../../hooks/useToastCreator";
 
 interface Props {
   post: IPost;
@@ -94,8 +95,14 @@ const Post: React.FC<Props> = ({
       <div className="post__bottom-container">
         <button
           className="post__action-button"
-          disabled={userId === null}
-          onClick={() => handleLikePost(postId, userId as string)}
+          onClick={() => {
+            userId === null
+              ? useToastCreator(
+                  "You have to be logged in to like this post",
+                  "error"
+                )
+              : handleLikePost(postId, userId);
+          }}
         >
           <AiOutlineLike className="post__action-icon" /> {likedBy.length}
         </button>

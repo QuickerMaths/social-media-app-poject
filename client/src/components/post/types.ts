@@ -1,6 +1,6 @@
 export type IPost = {
   createdAt: string;
-  likes: number;
+  likedBy: string[];
   owner: {
     _id: string;
     profilePicture: string;
