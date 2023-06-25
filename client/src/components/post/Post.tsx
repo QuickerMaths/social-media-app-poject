@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   AiOutlineLike,
   AiOutlineComment,
@@ -14,6 +14,7 @@ import { useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import axios from "axios";
 import useToastCreator from "../../hooks/useToastCreator";
+import PostEditModal from "../../portals/post-edit-modal/PostEditModal";
 
 interface Props {
   post: IPost;
@@ -27,6 +28,8 @@ const Post: React.FC<Props> = ({
   reRender,
 }) => {
   const { userId, userImg } = useAppSelector((state: RootState) => state.auth);
+
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const handlePostDelete = async (userId: string, postId: string) => {
     try {
@@ -76,18 +79,24 @@ const Post: React.FC<Props> = ({
           <h3 className="post__owner">{owner.username}</h3>
         </Link>
         {owner._id === userId ? (
-          <div className="post__edit-wrapper">
-            <button className="post__edit-button">
-              <AiOutlineEdit className="post__edit-icon" />
-            </button>
-            <button
-              className="post__edit-button"
-              onClick={() => handlePostDelete(userId, postId)}
-            >
-              <AiOutlineDelete className="post__edit-icon" />
-            </button>
-            <p className="post__createdAt">{moment(createdAt).fromNow()}</p>
-          </div>
+          <>
+            <div className="post__edit-wrapper">
+              <button
+                className="post__edit-button"
+                onClick={() => setIsOpen(true)}
+              >
+                <AiOutlineEdit className="post__edit-icon" />
+              </button>
+              <button
+                className="post__edit-button"
+                onClick={() => handlePostDelete(userId, postId)}
+              >
+                <AiOutlineDelete className="post__edit-icon" />
+              </button>
+              <p className="post__createdAt">{moment(createdAt).fromNow()}</p>
+            </div>
+            <PostEditModal isOpen={isOpen} setIsOpen={setIsOpen} />
+          </>
         ) : (
           <p className="post__createdAt">{moment(createdAt).fromNow()}</p>
         )}

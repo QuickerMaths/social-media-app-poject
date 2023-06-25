@@ -15,6 +15,7 @@ const postSchema = new Schema(
       required: [true, "Post body is required"],
       maxlength: [500, "Post body must be less than 500 characters long"],
     },
+    //TODO: add max and min size of images and style it on frontend to make fully responsive
     postImage: {
       type: String || null,
       default: null,

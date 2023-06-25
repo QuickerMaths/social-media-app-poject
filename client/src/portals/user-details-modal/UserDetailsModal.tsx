@@ -1,8 +1,8 @@
+import React from "react";
+import ReactDOM from "react-dom";
 import axios from "axios";
 import { useFormik } from "formik";
 import { AiOutlineClose } from "react-icons/ai";
-import React from "react";
-import ReactDOM from "react-dom";
 import InputField from "../../components/inputField/InputField";
 import addressValidation from "../../validation/addressValidation";
 
