@@ -59,7 +59,7 @@ const Post: React.FC<Props> = ({
   return (
     <li className="post">
       <div className="post__top-container">
-        <Link to={`/user/${owner._id}`} className="post_owner-wrapper">
+        <Link to={`/user/${owner._id}`} className="post__owner-wrapper">
           <img
             className="post__profile-img"
             //TODO: figure out how to display userImg even if its null (displaying after img its removal without need to reloading the page)
