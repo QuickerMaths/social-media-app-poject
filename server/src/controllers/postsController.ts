@@ -26,6 +26,25 @@ export const createPost = async (req: Request, res: Response) => {
   res.status(201).json(post);
 };
 
+export const likePost = async (req: Request, res: Response) => {
+  const { postId, userId } = req.body;
+
+  if (!postId || !userId)
+    return res
+      .status(400)
+      .json({ message: "Post Id and user Id are required" });
+
+  const likedPost = await Post.findByIdAndUpdate(
+    { _id: postId },
+    { $addToSet: { likedBy: userId } },
+    { new: true }
+  ).exec();
+
+  if (!likedPost) return res.status(404).json({ message: "Post not found!" });
+
+  return res.status(201).json(likedPost);
+};
+
 export const updatePost = async (req: Request, res: Response) => {
   const { postId, postBody, userId } = req.body;
 
@@ -40,7 +59,7 @@ export const updatePost = async (req: Request, res: Response) => {
     return res.status(204).json({ message: "No post with matching id" });
 
   if (post.owner!.toString() !== userId)
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(403).json({ message: "Unauthorized" });
 
   const updatedPost = await post.updateOne({ $set: { postBody } });
 
@@ -59,7 +78,7 @@ export const deletePost = async (req: Request, res: Response) => {
     return res.status(204).json({ message: "No post with matching Id" });
 
   if (post.owner!.toString() !== userId)
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(403).json({ message: "Unauthorized" });
 
   const deletedPost = await post.deleteOne();
 
