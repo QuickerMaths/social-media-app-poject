@@ -35,7 +35,12 @@ const HomePage = () => {
       <ul className="home-page__posts-list">
         {posts
           .map((post: any) => (
-            <Post key={post._id} post={post} /> //TODO: while refactor to rktquery switch sorting posts using entity adapter
+            <Post
+              key={post._id}
+              post={post}
+              setReRender={setReRender}
+              reRender={reRender}
+            /> //TODO: while refactor to rktquery switch sorting posts using entity adapter
           ))
           .reverse()}
       </ul>

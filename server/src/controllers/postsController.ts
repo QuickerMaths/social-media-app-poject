@@ -29,7 +29,6 @@ export const createPost = async (req: Request, res: Response) => {
 };
 
 export const updatePost = async (req: Request, res: Response) => {
-  //TODO: figure out how to protect this route to only allow the user who created the post to update it
   const { postId, postBody, userId } = req.body;
 
   if (!postId || !postBody || !userId)
@@ -42,10 +41,7 @@ export const updatePost = async (req: Request, res: Response) => {
   if (!post)
     return res.status(204).json({ message: "No post with matching id" });
 
-  //TODO: figure out why post.ownerID is possibly undefined
-  //@ts-ignore
-
-  if (post.owner.toString() !== userId)
+  if (post.owner!.toString() !== userId)
     return res.status(401).json({ message: "Unauthorized" });
 
   const updatedPost = await post.updateOne({ $set: { postBody } });
@@ -58,16 +54,14 @@ export const deletePost = async (req: Request, res: Response) => {
   const { postId, userId } = req.body;
 
   if (!postId || !userId)
-    return res.status(400).json({ message: "Id and userId required" });
+    return res.status(400).json({ message: "Post Id and user Id required" });
 
   const post = await Post.findById(postId);
 
   if (!post)
-    return res.status(204).json({ message: "No post with matching id" });
+    return res.status(204).json({ message: "No post with matching Id" });
 
-  //TODO: figure out why post.ownerID is possibly undefined
-  //@ts-ignore
-  if (post.owner.toString() !== userId)
+  if (post.owner!.toString() !== userId)
     return res.status(401).json({ message: "Unauthorized" });
 
   const deletedPost = await post.deleteOne();

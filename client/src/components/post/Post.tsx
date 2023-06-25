@@ -12,15 +12,36 @@ import { IPost } from "./types";
 import { Link } from "react-router-dom";
 import { useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
+import axios from "axios";
 
 interface Props {
   post: IPost;
+  reRender: boolean;
+  setReRender: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Post: React.FC<Props> = ({
-  post: { owner, createdAt, postBody, likes },
+  post: { owner, createdAt, postBody, likes, _id: postId },
+  setReRender,
+  reRender,
 }) => {
   const { userId, userImg } = useAppSelector((state: RootState) => state.auth);
+
+  const handlePostDelete = async (userId: string, postId: string) => {
+    try {
+      await axios.delete("http://localhost:5000/api/posts", {
+        data: {
+          userId,
+          postId,
+        },
+      });
+
+      setReRender(!reRender);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <li className="post">
       <div className="post__top-container">
@@ -45,7 +66,10 @@ const Post: React.FC<Props> = ({
             <button className="post__edit-button">
               <AiOutlineEdit className="post__edit-icon" />
             </button>
-            <button className="post__edit-button">
+            <button
+              className="post__edit-button"
+              onClick={() => handlePostDelete(userId, postId)}
+            >
               <AiOutlineDelete className="post__edit-icon" />
             </button>
             <p className="post__createdAt">{moment(createdAt).fromNow()}</p>
