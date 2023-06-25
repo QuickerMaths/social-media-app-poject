@@ -286,8 +286,11 @@ input {
 }
 
 .feed__form {
-  width: 90%;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
   gap: 20px;
 }
 @media (min-width: 480px) {
@@ -299,6 +302,11 @@ input {
   .feed__form {
     width: 80%;
   }
+}
+.feed__main {
+  width: 100%;
+  display: flex;
+  gap: 20px;
 }
 .feed__textarea {
   width: 100%;
@@ -333,6 +341,24 @@ input {
     filter: brightness(120%);
     color: black;
   }
+}
+.feed__attachment {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: 0px 8px 22px -14px rgb(66, 68, 90);
+  gap: 20px;
+  width: 100%;
+  padding: 10px;
+}
+.feed__attachment-icon {
+  width: 25px;
+  height: 25px;
+}
+.feed__image-input {
+  border: none;
 }
 
 .user-details {

@@ -3,6 +3,7 @@ import { useFormik } from "formik";
 import { useAppSelector } from "../../hooks/reduxHooks";
 import useToastCreator from "../../hooks/useToastCreator";
 import { RootState } from "../../redux/store";
+import { GrAttachment } from "react-icons/gr";
 
 interface Props {
   reRender: boolean;
@@ -42,17 +43,29 @@ const TextArea: React.FC<Props> = ({ reRender, setRerender }) => {
 
   return (
     <form className="feed__form" onSubmit={handleSubmit}>
-      <textarea
-        name="postBody"
-        id="postBody"
-        placeholder="Say something..."
-        className="feed__textarea"
-        onChange={handleChange}
-        value={values.postBody}
-      />
-      <button type="submit" className="feed__button">
-        Public
-      </button>
+      <div className="feed__main">
+        <textarea
+          name="postBody"
+          id="postBody"
+          placeholder="Say something..."
+          className="feed__textarea"
+          onChange={handleChange}
+          value={values.postBody}
+        />
+        <button type="submit" className="feed__button">
+          Public
+        </button>
+      </div>
+      <div className="feed__attachment">
+        <GrAttachment className="feed__attachment-icon" />
+        <input
+          type="file"
+          name="image"
+          id="image"
+          accept=".jpg, .png, .jpeg"
+          className="feed__image-input"
+        />
+      </div>
     </form>
   );
 };

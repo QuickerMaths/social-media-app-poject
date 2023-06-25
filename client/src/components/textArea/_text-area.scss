@@ -1,7 +1,7 @@
 .feed {
   &__form {
+    @include flex-column;
     width: 90%;
-    display: flex;
     gap: 20px;
 
     @media (min-width: 480px) {
@@ -11,6 +11,12 @@
     @media (min-width: 768px) {
       width: 80%;
     }
+  }
+
+  &__main {
+    width: 100%;
+    display: flex;
+    gap: 20px;
   }
 
   &__textarea {
@@ -24,5 +30,22 @@
 
   &__button {
     @include button-secondary;
+  }
+
+  &__attachment {
+    @include flex-center;
+    @include container-box-shadow;
+    gap: 20px;
+    width: 100%;
+    padding: 10px;
+  }
+
+  &__attachment-icon {
+    width: 25px;
+    height: 25px;
+  }
+
+  &__image-input {
+    border: none;
   }
 }
