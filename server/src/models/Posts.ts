@@ -7,7 +7,7 @@ const postSchema = new Schema(
   {
     owner: {
       type: mongoose.Types.ObjectId,
-      ref: User,
+      ref: "User",
       required: [true, "Post owner is required"],
     },
     postBody: {
@@ -18,10 +18,12 @@ const postSchema = new Schema(
     imageUrl: {
       type: String,
     },
-    likes: {
-      type: Number,
-      default: 0,
-    },
+    likedBy: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     // comments: [{ type: mongoose.Types.ObjectId, ref: Comment }],
   },
   { timestamps: true }

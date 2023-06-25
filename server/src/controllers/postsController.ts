@@ -13,12 +13,10 @@ export const getPosts = async (req: Request, res: Response) => {
 };
 
 export const createPost = async (req: Request, res: Response) => {
-  const { postBody, userId, username } = req.body;
+  const { postBody, userId } = req.body;
 
-  if (!postBody || !userId || !username)
-    return res
-      .status(400)
-      .json({ message: "Post body, userId and username required" });
+  if (!postBody || !userId)
+    return res.status(400).json({ message: "Post body and userId required" });
 
   const post = await Post.create({
     postBody,
@@ -50,7 +48,6 @@ export const updatePost = async (req: Request, res: Response) => {
 };
 
 export const deletePost = async (req: Request, res: Response) => {
-  //TODO: figure out how to protect this route to only allow the user who created the post to delete it
   const { postId, userId } = req.body;
 
   if (!postId || !userId)

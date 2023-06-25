@@ -9,12 +9,9 @@ import {
 } from "../../controllers/postsController";
 import { verifyJWT } from "../../middlewares/verifyJWT";
 
-router
-  .route("/")
-  .get(getPosts)
-  .post(verifyJWT, createPost)
-  .put(updatePost)
-  .delete(deletePost);
+router.route("/").get(getPosts).post(verifyJWT, createPost).delete(deletePost);
+
+router.route("/edit/:id").put(updatePost);
 
 router.route("/:id").get(getPostsByUser);
 
