@@ -56,7 +56,13 @@ const UserProfile = () => {
         {activeUserId === userId && userImg ? (
           <>
             <img
-              src={userImg ? userImg : defaultImg}
+              src={
+                userImg
+                  ? userImg
+                  : user.profilePicture
+                  ? user.profilePicture
+                  : defaultImg
+              }
               alt="user profile image"
               className="user-profile__img"
               width={150}
@@ -74,7 +80,13 @@ const UserProfile = () => {
           <ProfileImage userId={userId} />
         ) : (
           <img
-            src={userImg ? userImg : defaultImg}
+            src={
+              userImg
+                ? userImg
+                : user.profilePicture
+                ? user.profilePicture
+                : defaultImg
+            }
             alt="user profile image"
             className="user-profile__img"
             width={150}

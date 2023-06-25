@@ -20,7 +20,14 @@ const Post: React.FC<Props> = ({
         <Link to={`/user/${owner._id}`} className="post_owner-wrapper">
           <img
             className="post__profile-img"
-            src={userImg ? userImg : defaultImg}
+            //TODO: figure out how to display userImg even if its null (displaying after img removal without need to reload the page)
+            src={
+              userImg
+                ? userImg
+                : owner.profilePicture
+                ? owner.profilePicture
+                : defaultImg
+            }
             width={50}
             height={50}
           />
