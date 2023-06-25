@@ -22,7 +22,7 @@ interface Props {
 }
 
 const Post: React.FC<Props> = ({
-  post: { owner, createdAt, postBody, likedBy, _id: postId },
+  post: { owner, createdAt, postBody, likedBy, _id: postId, postImage },
   setReRender,
   reRender,
 }) => {
@@ -93,7 +93,9 @@ const Post: React.FC<Props> = ({
         )}
       </div>
       <p className="post__body">{postBody}</p>
-      {/* <img src={} alt="" /> */}
+      {postImage && (
+        <img src={postImage} alt="post image" className="post__image" />
+      )}
       <div className="post__bottom-container">
         <button
           className={`post__action-button ${

@@ -39,6 +39,10 @@
     margin-top: 20px;
   }
 
+  &__image {
+    margin-top: 20px;
+  }
+
   &__edit-wrapper {
     @include flex-center;
     gap: 10px;
