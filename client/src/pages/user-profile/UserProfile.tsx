@@ -9,6 +9,7 @@ import MainLeft from "./subcomponents/MainLeft";
 import MainRight from "./subcomponents/MainRight";
 import ProfileImage from "./subcomponents/ProfileImage";
 import UserProfileImgModal from "../../portals/user-profile-img-modal/UserProfileImgModal";
+import { IUser } from "./types";
 
 const UserProfile = () => {
   const isMobile = useMediaQuery("(max-width: 1024px)");
@@ -24,7 +25,7 @@ const UserProfile = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   //TODO: refactor fetch to rtkQuery
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<IUser | null>(null);
 
   useEffect(() => {
     const getUser = async (userId: string) => {
