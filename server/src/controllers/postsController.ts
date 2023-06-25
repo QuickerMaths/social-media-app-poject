@@ -45,7 +45,7 @@ export const updatePost = async (req: Request, res: Response) => {
   //TODO: figure out why post.ownerID is possibly undefined
   //@ts-ignore
 
-  if (post.ownerId.toString() !== userId)
+  if (post.owner.toString() !== userId)
     return res.status(401).json({ message: "Unauthorized" });
 
   const updatedPost = await post.updateOne({ $set: { postBody } });
@@ -67,7 +67,7 @@ export const deletePost = async (req: Request, res: Response) => {
 
   //TODO: figure out why post.ownerID is possibly undefined
   //@ts-ignore
-  if (post.ownerId.toString() !== userId)
+  if (post.owner.toString() !== userId)
     return res.status(401).json({ message: "Unauthorized" });
 
   const deletedPost = await post.deleteOne();

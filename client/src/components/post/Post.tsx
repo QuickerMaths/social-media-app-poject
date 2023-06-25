@@ -1,5 +1,10 @@
 import React from "react";
-import { AiOutlineLike, AiOutlineComment } from "react-icons/ai";
+import {
+  AiOutlineLike,
+  AiOutlineComment,
+  AiOutlineEdit,
+  AiOutlineDelete,
+} from "react-icons/ai";
 import { BiRepost } from "react-icons/bi";
 import moment from "moment";
 import defaultImg from "../../assets/images/default_img.png";
@@ -35,17 +40,29 @@ const Post: React.FC<Props> = ({
           />
           <h3 className="post__owner">{owner.username}</h3>
         </Link>
-        <p className="post__createdAt">{moment(createdAt).fromNow()}</p>
+        {owner._id === userId ? (
+          <div className="post__edit-wrapper">
+            <button className="post__edit-button">
+              <AiOutlineEdit className="post__edit-icon" />
+            </button>
+            <button className="post__edit-button">
+              <AiOutlineDelete className="post__edit-icon" />
+            </button>
+            <p className="post__createdAt">{moment(createdAt).fromNow()}</p>
+          </div>
+        ) : (
+          <p className="post__createdAt">{moment(createdAt).fromNow()}</p>
+        )}
       </div>
       <p className="post__body">{postBody}</p>
       <div className="post__bottom-container">
-        <button className="post__action">
+        <button className="post__action-button">
           <AiOutlineLike className="post__action-icon" /> {likes}
         </button>
-        <button className="post__action">
+        <button className="post__action-button">
           <AiOutlineComment className="post__action-icon" /> 0
         </button>
-        <button className="post__action">
+        <button className="post__action-button">
           <BiRepost className="post__action-icon" /> 0
         </button>
       </div>
