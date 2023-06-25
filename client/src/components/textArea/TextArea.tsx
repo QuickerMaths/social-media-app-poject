@@ -1,9 +1,10 @@
 import axios from "axios";
-import { useFormik } from "formik";
-import { useAppSelector } from "../../hooks/reduxHooks";
-import useToastCreator from "../../hooks/useToastCreator";
-import { RootState } from "../../redux/store";
 import { GrAttachment } from "react-icons/gr";
+import { useFormik } from "formik";
+import { useConvertToBase64 } from "../../hooks/useConvertToBase64";
+import { useAppSelector } from "../../hooks/reduxHooks";
+import { RootState } from "../../redux/store";
+import useToastCreator from "../../hooks/useToastCreator";
 
 interface Props {
   reRender: boolean;
@@ -13,9 +14,10 @@ interface Props {
 const TextArea: React.FC<Props> = ({ reRender, setRerender }) => {
   const { username, userId } = useAppSelector((state: RootState) => state.auth);
   // TODO: refactor fetch to rtkQuery and formik hooks to formik components
-  const { handleChange, values, handleSubmit } = useFormik({
+  const { handleChange, values, handleSubmit, setFieldValue } = useFormik({
     initialValues: {
       postBody: "",
+      image: null,
     },
     onSubmit: async (values) => {
       try {
@@ -25,6 +27,9 @@ const TextArea: React.FC<Props> = ({ reRender, setRerender }) => {
             postBody: values.postBody,
             username: username,
             userId: userId,
+            postImage: values.image
+              ? await useConvertToBase64(values.image)
+              : null,
           },
           {
             withCredentials: true,
@@ -64,6 +69,9 @@ const TextArea: React.FC<Props> = ({ reRender, setRerender }) => {
           id="image"
           accept=".jpg, .png, .jpeg"
           className="feed__image-input"
+          onChange={(e) => {
+            setFieldValue("image", e.target.files![0]);
+          }}
         />
       </div>
     </form>

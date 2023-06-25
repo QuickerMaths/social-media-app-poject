@@ -13,7 +13,7 @@ export const getPosts = async (req: Request, res: Response) => {
 };
 
 export const createPost = async (req: Request, res: Response) => {
-  const { postBody, userId } = req.body;
+  const { postBody, postImage, userId } = req.body;
 
   if (!postBody || !userId)
     return res.status(400).json({ message: "Post body and userId required" });
@@ -21,6 +21,7 @@ export const createPost = async (req: Request, res: Response) => {
   const post = await Post.create({
     postBody,
     owner: userId,
+    postImage,
   });
 
   res.status(201).json(post);

@@ -93,6 +93,7 @@ const Post: React.FC<Props> = ({
         )}
       </div>
       <p className="post__body">{postBody}</p>
+      {/* <img src={} alt="" /> */}
       <div className="post__bottom-container">
         <button
           className={`post__action-button ${

@@ -15,8 +15,9 @@ const postSchema = new Schema(
       required: [true, "Post body is required"],
       maxlength: [500, "Post body must be less than 500 characters long"],
     },
-    imageUrl: {
-      type: String,
+    postImage: {
+      type: String || null,
+      default: null,
     },
     likedBy: [
       {
