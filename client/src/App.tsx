@@ -39,6 +39,7 @@ function App() {
           getAuth({
             username: data.username,
             userId: data.userId,
+            userImg: data.userImg,
           })
         );
       } catch (error) {

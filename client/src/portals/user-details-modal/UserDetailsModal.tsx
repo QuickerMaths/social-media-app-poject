@@ -59,7 +59,10 @@ const UserDetailsModal: React.FC<Props> = ({
   //TODO: swap X with icon
   return ReactDOM.createPortal(
     <div className="user-details-modal">
-      <div className="user-details-modal__overlay"></div>
+      <div
+        className="user-details-modal__overlay"
+        onClick={() => setIsOpen(false)}
+      ></div>
       <div className="user-details-modal__content">
         <button
           className="user-details-modal__close"

@@ -49,7 +49,7 @@ export const uploadUserImage = async (req: Request, res: Response) => {
   if (!user)
     return res.status(204).json({ message: "No user with matching ID" });
 
-  if (!req?.body?.path)
+  if (!req?.body?.path && req?.body?.path !== null)
     return res.status(400).json({ message: "Image is required" });
 
   await user

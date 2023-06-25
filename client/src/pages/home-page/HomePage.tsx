@@ -5,7 +5,7 @@ import { IPost } from "../../components/post/types";
 
 const HomePage = () => {
   //TODO: refactor to Rtk query
-  const [posts, setPosts] = useState<any>([]);
+  const [posts, setPosts] = useState<IPost[]>([]);
   const [reRender, setReRender] = useState<boolean>(false); //TODO: remove reRender state and use query refetch instead
   useEffect(() => {
     // fetch posts

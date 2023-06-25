@@ -3,29 +3,28 @@ import moment from "moment";
 import defaultImg from "../../assets/images/default_img.png";
 import { IPost } from "./types";
 import { Link } from "react-router-dom";
+import { useAppSelector } from "../../hooks/reduxHooks";
+import { RootState } from "../../redux/store";
 
 interface Props {
   post: IPost;
 }
 
 const Post: React.FC<Props> = ({
-  post: { ownerName, ownerId, createdAt, postBody, likes },
+  post: { owner, createdAt, postBody, likes },
 }) => {
+  const { userImg } = useAppSelector((state: RootState) => state.auth);
   return (
     <li className="post">
       <div className="post__top-container">
-        <Link
-          to={`/user/${ownerId}`}
-          state={{ ownerId }}
-          className="post_owner-wrapper"
-        >
+        <Link to={`/user/${owner._id}`} className="post_owner-wrapper">
           <img
             className="post__profile-img"
-            src={defaultImg}
+            src={userImg ? userImg : defaultImg}
             width={50}
             height={50}
           />
-          <h3 className="post__owner">{ownerName}</h3>
+          <h3 className="post__owner">{owner.username}</h3>
         </Link>
         <p className="post__createdAt">{moment(createdAt).fromNow()}</p>
       </div>

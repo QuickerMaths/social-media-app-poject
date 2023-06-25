@@ -1,19 +1,27 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { useAppSelector } from "../../hooks/reduxHooks";
+import { RootState } from "../../redux/store";
 import defaultImg from "../../assets/images/default_img.png";
 import useMediaQuery from "../../hooks/useMediaQuery";
 import UserProfileMobileNavigation from "../../components/user-profile-mobile-navigation/UserProfileMobileNavigation";
 import MainLeft from "./subcomponents/MainLeft";
 import MainRight from "./subcomponents/MainRight";
+import ProfileImage from "./subcomponents/ProfileImage";
+import UserProfileImgModal from "../../portals/user-profile-img-modal/UserProfileImgModal";
 
 const UserProfile = () => {
   const isMobile = useMediaQuery("(max-width: 1024px)");
   const isDesktop = useMediaQuery("(min-width: 1025px)");
+  const { userId: activeUserId, userImg } = useAppSelector(
+    (state: RootState) => state.auth
+  );
   const [activePage, setActivePage] = useState<"posts" | "details">("posts");
   //getting id from url to enable fetching user data even if opened in new tab
   const { userId } = useParams();
 
   const [reRenderAddress, setRerenderAddress] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   //TODO: refactor fetch to rtkQuery
   const [user, setUser] = useState<any>(null);
@@ -45,13 +53,34 @@ const UserProfile = () => {
   return (
     <section className="user-profile">
       <div className="user-profile__presentation">
-        <img
-          src={defaultImg}
-          alt="user profile image"
-          className="user-profile__img"
-          width={150}
-          height={150}
-        />
+        {activeUserId === userId && userImg ? (
+          <>
+            <img
+              src={userImg ? userImg : defaultImg}
+              alt="user profile image"
+              className="user-profile__img"
+              width={150}
+              height={150}
+              onClick={() => setIsOpen(true)}
+              style={{ cursor: "pointer" }}
+            />
+            <UserProfileImgModal
+              setIsOpen={setIsOpen}
+              isOpen={isOpen}
+              userId={userId}
+            />
+          </>
+        ) : activeUserId === userId ? (
+          <ProfileImage userId={userId} />
+        ) : (
+          <img
+            src={userImg ? userImg : defaultImg}
+            alt="user profile image"
+            className="user-profile__img"
+            width={150}
+            height={150}
+          />
+        )}
         <div className="user-profile__info">
           <h2 className="user-profile__username">{user.username}</h2>
           <h3 className="user-profile__full-name">

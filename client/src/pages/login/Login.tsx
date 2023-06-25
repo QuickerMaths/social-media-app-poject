@@ -34,12 +34,13 @@ const Login = () => {
             }),
           });
 
-          const { username, userId } = await result.json();
+          const { username, userId, userImg } = await result.json();
 
           dispatch(
             getAuth({
               username,
               userId,
+              userImg,
             })
           );
           useToastCreator("You have been logged in successfully", "success");

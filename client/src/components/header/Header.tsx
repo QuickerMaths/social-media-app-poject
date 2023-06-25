@@ -6,7 +6,9 @@ import defaultImg from "../../assets/images/default_img.png";
 
 const Header = () => {
   const dispatch = useAppDispatch();
-  const { username, userId } = useAppSelector((state: RootState) => state.auth);
+  const { username, userId, userImg } = useAppSelector(
+    (state: RootState) => state.auth
+  );
 
   const handleLogOut = async () => {
     try {
@@ -38,7 +40,7 @@ const Header = () => {
           <div className="header__user-logged">
             <Link to={`/user/${userId}`} className="header__user-link">
               <img
-                src={defaultImg}
+                src={userImg ? userImg : defaultImg}
                 alt="profile picture"
                 width={50}
                 height={50}

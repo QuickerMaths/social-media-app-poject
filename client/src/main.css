@@ -759,8 +759,19 @@ input {
   align-items: center;
   gap: 50px;
 }
+.user-profile__form {
+  position: relative;
+}
+.user-profile__label {
+  display: inline-block;
+  border-radius: 100%;
+  cursor: pointer;
+}
 .user-profile__img {
   border-radius: 100%;
+}
+.user-profile__input {
+  display: none;
 }
 .user-profile__main {
   display: flex;
@@ -927,4 +938,51 @@ input {
     filter: brightness(120%);
     color: black;
   }
+}
+
+.user-profile-img-modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+}
+.user-profile-img-modal__overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(66, 68, 90, 0.3);
+}
+.user-profile-img-modal__content {
+  padding: 10px 20px;
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: 0px 8px 22px -14px rgb(66, 68, 90);
+  z-index: 101;
+  position: relative;
+}
+@media (min-width: 768px) {
+  .user-profile-img-modal__content {
+    padding: 20px 40px;
+  }
+}
+.user-profile-img-modal__list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+}
+.user-profile-img-modal__button {
+  font-family: "Oswald", sans-serif;
+  font-size: 1.2rem;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
 }/*# sourceMappingURL=main.css.map */

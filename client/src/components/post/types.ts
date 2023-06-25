@@ -1,8 +1,11 @@
 export type IPost = {
   createdAt: string;
   likes: number;
-  ownerId: string;
-  ownerName: string;
+  owner: {
+    _id: string;
+    profilePicture: string;
+    username: string;
+  };
   postBody: string;
   updatedAt: string;
   __v: number;

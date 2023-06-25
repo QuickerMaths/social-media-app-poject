@@ -35,8 +35,8 @@ const userSchema = new Schema(
       require: [true, "LastName is required"],
     },
     profilePicture: {
-      type: String,
-      default: "",
+      type: String || null,
+      default: null,
     },
     friends: {
       type: [mongoose.Types.ObjectId],

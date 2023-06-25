@@ -2,7 +2,10 @@ import { Request, Response } from "express";
 import Post from "../models/Posts";
 
 export const getPosts = async (req: Request, res: Response) => {
-  const posts = await Post.find();
+  const posts = await Post.find().populate(
+    "owner",
+    "_id username profilePicture"
+  );
 
   if (!posts) return res.status(204).json({ message: "No posts found" });
 
@@ -19,8 +22,7 @@ export const createPost = async (req: Request, res: Response) => {
 
   const post = await Post.create({
     postBody,
-    ownerId: userId,
-    ownerName: username,
+    owner: userId,
   });
 
   res.status(201).json(post);
@@ -74,7 +76,10 @@ export const deletePost = async (req: Request, res: Response) => {
 };
 
 export const getPostsByUser = async (req: Request, res: Response) => {
-  const posts = await Post.find({ ownerId: req.params.id });
+  const posts = await Post.find({ owner: req.params.id }).populate(
+    "owner",
+    "_id username profilePicture"
+  );
 
   if (!posts) return res.status(204).json({ message: "No posts found" });
 

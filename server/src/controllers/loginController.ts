@@ -10,11 +10,15 @@ export const handleUserAuth = async (req: any, res: any) => {
   jwt.verify(
     cookie,
     process.env.JTW_REFRESH_SECRET!,
-    (err: any, decoded: any) => {
+    async (err: any, decoded: any) => {
       if (err) return res.sendStatus(403);
+
+      const user = await User.findOne({ username: decoded.username }).exec();
+
       res.status(200).json({
         username: decoded.username,
         userId: decoded.userId,
+        userImg: user?.profilePicture,
       });
     }
   );
@@ -58,9 +62,11 @@ export const handleLogin = async (req: any, res: any) => {
       secure: true,
       maxAge: 1000 * 60 * 60,
     });
+
     res.status(200).json({
       username,
       userId: user._id,
+      userImg: user.profilePicture,
     });
   }
 };

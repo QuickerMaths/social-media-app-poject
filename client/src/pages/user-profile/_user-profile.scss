@@ -9,8 +9,22 @@
     gap: 50px;
   }
 
+  &__form {
+    position: relative;
+  }
+
+  &__label {
+    display: inline-block;
+    border-radius: 100%;
+    cursor: pointer;
+  }
+
   &__img {
     border-radius: 100%;
+  }
+
+  &__input {
+    display: none;
   }
 
   &__main {

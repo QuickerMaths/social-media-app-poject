@@ -1,0 +1,25 @@
+.user-profile-img-modal {
+  @include modal-container;
+
+  &__overlay {
+    @include modal-overlay;
+  }
+
+  &__content {
+    @include container-padding;
+    @include container-box-shadow;
+    z-index: 101;
+    position: relative;
+  }
+
+  &__list {
+    @include flex-column;
+    gap: 25px;
+  }
+
+  &__button {
+    @include button-reset;
+    width: 100%;
+    text-align: center;
+  }
+}

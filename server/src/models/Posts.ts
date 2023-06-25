@@ -5,13 +5,9 @@ const Schema = mongoose.Schema;
 
 const postSchema = new Schema(
   {
-    ownerId: {
+    owner: {
       type: mongoose.Types.ObjectId,
       ref: User,
-      required: [true, "Post owner is required"],
-    },
-    ownerName: {
-      type: String,
       required: [true, "Post owner is required"],
     },
     postBody: {
@@ -19,7 +15,6 @@ const postSchema = new Schema(
       required: [true, "Post body is required"],
       maxlength: [500, "Post body must be less than 500 characters long"],
     },
-    //TODO: Check if this is the correct way to reference a image
     imageUrl: {
       type: String,
     },
