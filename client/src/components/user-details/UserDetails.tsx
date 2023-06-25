@@ -64,7 +64,6 @@ const UserDetails: React.FC<Props> = ({
         setRerenderAddress={setRerenderAddress}
       />
     </>
-    //TODO: create modal with form to edit user details
   );
 };
 

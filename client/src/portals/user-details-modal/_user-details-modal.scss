@@ -17,6 +17,12 @@
     top: 20px;
     right: 20px;
     cursor: pointer;
+    @include button-reset;
+  }
+
+  &__close-icon {
+    width: 30px;
+    height: 30px;
   }
 
   &__title {

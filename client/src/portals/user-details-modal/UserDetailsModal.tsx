@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useFormik } from "formik";
+import { AiOutlineClose } from "react-icons/ai";
 import React from "react";
 import ReactDOM from "react-dom";
 import InputField from "../../components/inputField/InputField";
@@ -56,7 +57,6 @@ const UserDetailsModal: React.FC<Props> = ({
     });
 
   if (!isOpen) return null;
-  //TODO: swap X with icon
   return ReactDOM.createPortal(
     <div className="user-details-modal">
       <div
@@ -68,7 +68,7 @@ const UserDetailsModal: React.FC<Props> = ({
           className="user-details-modal__close"
           onClick={() => setIsOpen(false)}
         >
-          X
+          <AiOutlineClose className="user-details-modal__close-icon" />
         </button>
         <h2 className="user-details-modal__title">Edit details</h2>
         <form className="user-details-modal__form" onSubmit={handleSubmit}>

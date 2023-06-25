@@ -1,4 +1,5 @@
 import React from "react";
+import { AiOutlineLike } from "react-icons/ai";
 import moment from "moment";
 import defaultImg from "../../assets/images/default_img.png";
 import { IPost } from "./types";
@@ -20,7 +21,7 @@ const Post: React.FC<Props> = ({
         <Link to={`/user/${owner._id}`} className="post_owner-wrapper">
           <img
             className="post__profile-img"
-            //TODO: figure out how to display userImg even if its null (displaying after img removal without need to reload the page)
+            //TODO: figure out how to display userImg even if its null (displaying after img its removal without need to reloading the page)
             src={
               userImg && userId === owner._id
                 ? userImg
@@ -36,8 +37,10 @@ const Post: React.FC<Props> = ({
         <p className="post__createdAt">{moment(createdAt).fromNow()}</p>
       </div>
       <p className="post__body">{postBody}</p>
-      <button className="post__likes">Likes {likes}</button>
-    </li> //TODO: set some icons for likes
+      <button className="post__likes">
+        <AiOutlineLike className="post__likes-icon" /> {likes}
+      </button>
+    </li>
   );
 };
 
