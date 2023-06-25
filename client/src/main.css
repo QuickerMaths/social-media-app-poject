@@ -281,6 +281,9 @@ input {
   width: 20px;
   height: 20px;
 }
+.post__liked {
+  color: rgb(21, 255, 0);
+}
 
 .feed__form {
   width: 90%;

@@ -45,11 +45,12 @@ const Post: React.FC<Props> = ({
 
   const handleLikePost = async (postId: string, userId: string) => {
     try {
-      const result = await axios.put("http://localhost:5000/api/posts", {
+      await axios.put("http://localhost:5000/api/posts", {
         postId,
         userId,
       });
-      console.log(result);
+
+      setReRender(!reRender);
     } catch (err) {
       console.log(err);
     }
@@ -94,7 +95,9 @@ const Post: React.FC<Props> = ({
       <p className="post__body">{postBody}</p>
       <div className="post__bottom-container">
         <button
-          className="post__action-button"
+          className={`post__action-button ${
+            likedBy.includes(userId as string) && "post__liked"
+          }`}
           onClick={() => {
             userId === null
               ? useToastCreator(
@@ -104,7 +107,12 @@ const Post: React.FC<Props> = ({
               : handleLikePost(postId, userId);
           }}
         >
-          <AiOutlineLike className="post__action-icon" /> {likedBy.length}
+          <AiOutlineLike
+            className={`post__action-icon ${
+              likedBy.includes(userId as string) && "post__liked"
+            }`}
+          />
+          {likedBy.length}
         </button>
         <button className="post__action-button">
           <AiOutlineComment className="post__action-icon" /> 0
