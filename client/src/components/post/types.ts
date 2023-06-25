@@ -7,6 +7,7 @@ export type IPost = {
     username: string;
   };
   postBody: string;
+  postImage: string;
   updatedAt: string;
   __v: number;
   _id: string;
