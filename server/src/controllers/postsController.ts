@@ -34,15 +34,19 @@ export const likePost = async (req: Request, res: Response) => {
       .status(400)
       .json({ message: "Post Id and user Id are required" });
 
-  const likedPost = await Post.findByIdAndUpdate(
-    { _id: postId },
-    { $addToSet: { likedBy: userId } },
-    { new: true }
-  ).exec();
+  const post = await Post.findOne({ _id: postId });
 
-  if (!likedPost) return res.status(404).json({ message: "Post not found!" });
+  if (!post) return res.status(404).json({ message: "Post not found!" });
 
-  return res.status(201).json(likedPost);
+  if (post.likedBy.includes(userId)) {
+    await post.updateOne({ $pull: { likedBy: userId } }).exec();
+  } else {
+    await post.updateOne({ $push: { likedBy: userId } }).exec();
+  }
+
+  await post.save();
+
+  return res.status(201).json(post);
 };
 
 export const updatePost = async (req: Request, res: Response) => {
