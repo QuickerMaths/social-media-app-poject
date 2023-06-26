@@ -17,6 +17,7 @@ import registerRoute from "./routes/api/registerRoute";
 import loginRoute from "./routes/api/loginRoute";
 import refreshRoute from "./routes/api/refreshRoute";
 import logoutRoute from "./routes/api/logoutRoute";
+import commentRoute from "./routes/api/commentRoute";
 
 //connect to database
 connectDB();
@@ -40,7 +41,7 @@ app.use(setBearer);
 
 app.use("/api/users", usersRoute);
 app.use("/api/posts", postsRoute);
-//TODO: implement comments route
+app.use("/api/comments", commentRoute);
 app.use("/register", registerRoute);
 app.use("/auth", loginRoute);
 app.use("/api/refresh", refreshRoute);
