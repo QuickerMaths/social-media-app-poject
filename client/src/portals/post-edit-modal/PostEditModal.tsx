@@ -66,8 +66,8 @@ const PostEditModal: React.FC<Props> = ({
         <h2 className="post-edit-modal__title">Edit post</h2>
         <form onSubmit={handleSubmit} className="post-edit-modal__form">
           <textarea
-            rows={10}
-            cols={25}
+            rows={5}
+            cols={10}
             name="postBody"
             id="postBody"
             value={values.postBody}
