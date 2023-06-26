@@ -51,7 +51,7 @@ export const likePost = async (req: Request, res: Response) => {
 };
 
 export const updatePost = async (req: Request, res: Response) => {
-  const { postId, postBody, userId } = req.body;
+  const { postId, postBody, postImage, userId } = req.body;
 
   if (!postId || !postBody || !userId)
     return res
