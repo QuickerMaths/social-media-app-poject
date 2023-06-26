@@ -2,10 +2,11 @@ import { Request, Response } from "express";
 import Post from "../models/Posts";
 
 export const getPosts = async (req: Request, res: Response) => {
-  const posts = await Post.find().populate(
-    "owner",
-    "_id username profilePicture"
-  );
+  const posts = await Post.find().populate({
+    path: "owner",
+    select: "_id username profilePicture",
+    model: "User",
+  });
 
   if (!posts) return res.status(204).json({ message: "No posts found" });
 
