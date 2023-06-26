@@ -1,0 +1,37 @@
+.post-details-modal {
+  @include modal-container;
+
+  &__overlay {
+    @include modal-overlay;
+  }
+
+  &__content {
+    @include container-padding;
+    @include container-box-shadow;
+    z-index: 101;
+    position: relative;
+    width: 90%;
+
+    @media (min-width: 768px) {
+      width: 80%;
+    }
+  }
+
+  &__close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    @include button-reset;
+  }
+
+  &__close-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  &__title {
+    @include form-title;
+    text-align: center;
+  }
+}
