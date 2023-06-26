@@ -102,6 +102,8 @@ const Post: React.FC<Props> = ({
               postImage={postImage}
               postBody={postBody}
               userId={userId}
+              reRender={reRender}
+              setReRender={setReRender}
             />
           </>
         ) : (

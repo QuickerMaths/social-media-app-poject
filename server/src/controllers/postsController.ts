@@ -66,7 +66,7 @@ export const updatePost = async (req: Request, res: Response) => {
   if (post.owner!.toString() !== userId)
     return res.status(403).json({ message: "Unauthorized" });
 
-  const updatedPost = await post.updateOne({ $set: { postBody } });
+  const updatedPost = await post.updateOne({ $set: { postBody, postImage } });
 
   res.status(201).json(updatedPost);
 };

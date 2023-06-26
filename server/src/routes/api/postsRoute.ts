@@ -17,7 +17,7 @@ router
   .put(likePost)
   .delete(deletePost);
 
-router.route("/edit/:id").put(updatePost);
+router.route("/edit").put(updatePost);
 
 router.route("/:id").get(getPostsByUser);
 

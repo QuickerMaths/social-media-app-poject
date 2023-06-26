@@ -4,6 +4,7 @@ import axios from "axios";
 import { useFormik } from "formik";
 import { AiOutlineClose } from "react-icons/ai";
 import { GrAttachment } from "react-icons/gr";
+import { useConvertToBase64 } from "../../hooks/useConvertToBase64";
 
 interface Props {
   isOpen: boolean;
@@ -12,6 +13,8 @@ interface Props {
   postImage: string | null;
   postBody: string;
   userId: string;
+  setReRender: React.Dispatch<React.SetStateAction<boolean>>;
+  reRender: boolean;
 }
 
 const PostEditModal: React.FC<Props> = ({
@@ -21,14 +24,29 @@ const PostEditModal: React.FC<Props> = ({
   postImage,
   postBody,
   userId,
+  reRender,
+  setReRender,
 }) => {
+  //TODO: refactor to rktQuery and change rerender state
   const { handleSubmit, values, handleChange, setFieldValue } = useFormik({
     initialValues: {
       postBody: postBody,
       postImage: postImage,
     },
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: async (values) => {
+      try {
+        await axios.put("http://localhost:5000/api/posts/edit", {
+          postId,
+          userId,
+          postImage: values.postImage,
+          postBody: values.postBody,
+        });
+
+        setIsOpen(false);
+        setReRender(!reRender);
+      } catch (err) {
+        console.log(err);
+      }
     },
   });
   if (!isOpen) return null;
@@ -46,7 +64,7 @@ const PostEditModal: React.FC<Props> = ({
           <AiOutlineClose className="post-edit-modal__close-icon" />
         </button>
         <h2 className="post-edit-modal__title">Edit post</h2>
-        <form className="post-edit-modal__form">
+        <form onSubmit={handleSubmit} className="post-edit-modal__form">
           <textarea
             rows={10}
             cols={25}
@@ -56,12 +74,12 @@ const PostEditModal: React.FC<Props> = ({
             onChange={handleChange}
             className="post-edit-modal__text-area"
           />
-          {postImage ? (
+          {values.postImage ? (
             <>
               <label htmlFor="postImage" className="post-edit-modal__label">
                 <GrAttachment className="post-edit-modal__icon" />
                 <img
-                  src={postImage}
+                  src={values.postImage}
                   alt="post image"
                   className="post-edit-modal__image-label"
                 />
@@ -71,8 +89,11 @@ const PostEditModal: React.FC<Props> = ({
                 name="postImage"
                 id="postImage"
                 accept=".png, .jpg, .jpeg"
-                onChange={(e) => {
-                  setFieldValue("postImage", e.target.files![0]);
+                onChange={async (e) => {
+                  setFieldValue(
+                    "postImage",
+                    await useConvertToBase64(e.target.files![0])
+                  );
                 }}
                 className="post-edit-modal__file-input-image"
               />
