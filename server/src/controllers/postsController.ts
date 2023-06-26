@@ -11,6 +11,10 @@ export const getPosts = async (req: Request, res: Response) => {
     {
       path: "comments",
       model: "Comment",
+      options: {
+        limit: 2,
+        sort: { _id: -1 },
+      },
       populate: {
         path: "owner",
         select: "_id username profilePicture",
