@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Comment from "../models/Comments";
+import Post from "../models/Posts";
 
 export const createComment = async (req: Request, res: Response) => {
   const { postId, userId, commentBody } = req.body;
@@ -14,5 +15,12 @@ export const createComment = async (req: Request, res: Response) => {
     commentBody,
   });
 
-  res.status(201).json(comment);
+  const post = await Post.findOneAndUpdate(
+    { _id: postId },
+    {
+      $push: { comments: comment._id },
+    }
+  ).exec();
+
+  res.status(201).json({ comment, post });
 };

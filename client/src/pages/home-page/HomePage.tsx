@@ -21,6 +21,7 @@ const HomePage = () => {
           },
         });
         const data = await response.json();
+        console.log(data);
         setPosts(data);
       } catch (error) {
         console.log(error);
