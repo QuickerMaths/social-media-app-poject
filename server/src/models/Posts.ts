@@ -1,5 +1,3 @@
-import User from "./Users";
-import Comment from "./Comments";
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
@@ -26,7 +24,7 @@ const postSchema = new Schema(
         ref: "User",
       },
     ],
-    // comments: [{ type: mongoose.Types.ObjectId, ref: Comment }],
+    comments: [{ type: mongoose.Types.ObjectId, ref: "Comment" }],
   },
   { timestamps: true }
 );

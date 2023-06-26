@@ -10,17 +10,17 @@ interface Props {
 const PostDetailsModal: React.FC<Props> = ({ setIsOpen, isOpen }) => {
   if (!isOpen) return null;
   return ReactDOM.createPortal(
-    <div className="post-edit-modal">
+    <div className="post-details-modal">
       <div
-        className="post-edit-modal__overlay"
+        className="post-details-modal__overlay"
         onClick={() => setIsOpen(false)}
       ></div>
-      <div className="post-edit-modal__content">
+      <div className="post-details-modal__content">
         <button
-          className="post-edit-modal__close"
+          className="post-details-modal__close"
           onClick={() => setIsOpen(false)}
         >
-          <AiOutlineClose className="post-edit-modal__close-icon" />
+          <AiOutlineClose className="post-details-modal__close-icon" />
         </button>
       </div>
     </div>,
