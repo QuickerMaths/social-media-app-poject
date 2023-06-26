@@ -10,6 +10,11 @@
     @include container-box-shadow;
     z-index: 101;
     position: relative;
+    width: 90%;
+
+    @media (min-width: 768px) {
+      width: 80%;
+    }
   }
 
   &__close {
@@ -28,5 +33,46 @@
   &__title {
     @include form-title;
     text-align: center;
+  }
+
+  &__form {
+    @include flex-column;
+    gap: 20px;
+    width: 100%;
+  }
+
+  &__text-area {
+    width: 100%;
+    font-family: "Oswald", sans-serif;
+    outline: none;
+    border: none;
+  }
+
+  &__label {
+    position: relative;
+    display: inline-block;
+    border-radius: 100%;
+    cursor: pointer;
+  }
+
+  &__icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    width: 35px;
+    height: 35px;
+  }
+
+  &__image-label {
+    max-width: 100%;
+  }
+
+  &__file-input-image {
+    display: none;
+  }
+
+  &__button {
+    @include button-secondary;
   }
 }

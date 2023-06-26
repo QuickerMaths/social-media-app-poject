@@ -1101,10 +1101,16 @@ input {
   box-shadow: 0px 8px 22px -14px rgb(66, 68, 90);
   z-index: 101;
   position: relative;
+  width: 90%;
 }
 @media (min-width: 768px) {
   .post-edit-modal__content {
     padding: 20px 40px;
+  }
+}
+@media (min-width: 768px) {
+  .post-edit-modal__content {
+    width: 80%;
   }
 }
 .post-edit-modal__close {
@@ -1128,4 +1134,64 @@ input {
   text-decoration: underline;
   font-size: 2.5rem;
   text-align: center;
+}
+.post-edit-modal__form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+.post-edit-modal__text-area {
+  width: 100%;
+  font-family: "Oswald", sans-serif;
+  outline: none;
+  border: none;
+}
+.post-edit-modal__label {
+  position: relative;
+  display: inline-block;
+  border-radius: 100%;
+  cursor: pointer;
+}
+.post-edit-modal__icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  width: 35px;
+  height: 35px;
+}
+.post-edit-modal__image-label {
+  max-width: 100%;
+}
+.post-edit-modal__file-input-image {
+  display: none;
+}
+.post-edit-modal__button {
+  background-color: var(--secondary);
+  color: white;
+  border: none;
+  border-radius: 15px;
+  padding: 5px 10px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+@media (min-width: 768px) {
+  .post-edit-modal__button {
+    padding: 5px 20px;
+    font-size: 1.6rem;
+    font-weight: 600;
+  }
+}
+@media (min-width: 1025px) {
+  .post-edit-modal__button {
+    transition: filter, color, 0.3s ease-in-out;
+  }
+  .post-edit-modal__button:hover {
+    filter: brightness(120%);
+    color: black;
+  }
 }/*# sourceMappingURL=main.css.map */

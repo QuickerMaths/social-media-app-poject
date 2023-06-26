@@ -95,7 +95,14 @@ const Post: React.FC<Props> = ({
               </button>
               <p className="post__createdAt">{moment(createdAt).fromNow()}</p>
             </div>
-            <PostEditModal isOpen={isOpen} setIsOpen={setIsOpen} />
+            <PostEditModal
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
+              postId={postId}
+              postImage={postImage}
+              postBody={postBody}
+              userId={userId}
+            />
           </>
         ) : (
           <p className="post__createdAt">{moment(createdAt).fromNow()}</p>
