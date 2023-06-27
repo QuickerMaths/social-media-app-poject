@@ -7,6 +7,7 @@ import {
   updatePost,
   deletePost,
   getPostsByUser,
+  getPostById,
 } from "../../controllers/postsController";
 import { verifyJWT } from "../../middlewares/verifyJWT";
 
@@ -19,6 +20,8 @@ router
 
 router.route("/edit").put(updatePost);
 
-router.route("/:id").get(getPostsByUser);
+router.route("/:id").get(getPostById);
+
+router.route("/user/:id").get(getPostsByUser);
 
 export default router;

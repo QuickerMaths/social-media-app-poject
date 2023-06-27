@@ -13,15 +13,18 @@ const MainRight: React.FC<Props> = ({ userId }) => {
   useEffect(() => {
     const getUsersPosts = async (userId: string) => {
       try {
-        const res = await fetch(`http://localhost:5000/api/posts/${userId}`, {
-          method: "GET",
-          mode: "cors",
-          credentials: "include",
-          headers: {
-            "Access-Control-Allow-Origin": `http://localhost:5000`,
-            "Content-Type": "application/json",
-          },
-        });
+        const res = await fetch(
+          `http://localhost:5000/api/posts/user/${userId}`,
+          {
+            method: "GET",
+            mode: "cors",
+            credentials: "include",
+            headers: {
+              "Access-Control-Allow-Origin": `http://localhost:5000`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
         const data = await res.json();
         setUserPosts(data);
       } catch (error) {

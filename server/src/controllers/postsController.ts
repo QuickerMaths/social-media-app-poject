@@ -132,3 +132,29 @@ export const getPostsByUser = async (req: Request, res: Response) => {
 
   res.status(200).json({ posts });
 };
+
+export const getPostById = async (req: Request, res: Response) => {
+  const post = await Post.find({ owner: req.params.id }).populate([
+    {
+      path: "owner",
+      select: "_id username profilePicture",
+      model: "User",
+    },
+    {
+      path: "comments",
+      model: "Comment",
+      options: {
+        sort: { _id: -1 },
+      },
+      populate: {
+        path: "owner",
+        select: "_id username profilePicture",
+        model: "User",
+      },
+    },
+  ]);
+
+  if (!post) return res.status(204).json({ message: "No posts found" });
+
+  res.status(200).json({ post });
+};
