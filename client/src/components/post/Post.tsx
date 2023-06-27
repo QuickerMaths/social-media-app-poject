@@ -25,8 +25,8 @@ interface Props {
   setReRender: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Post: React.FC<Props> = ({
-  post: {
+const Post: React.FC<Props> = ({ post, setReRender, reRender }) => {
+  const {
     owner,
     createdAt,
     postBody,
@@ -35,10 +35,7 @@ const Post: React.FC<Props> = ({
     postImage,
     comments,
     commentTotal,
-  },
-  setReRender,
-  reRender,
-}) => {
+  } = post;
   const { userId, userImg } = useAppSelector((state: RootState) => state.auth);
 
   const [isOpenEdit, setIsOpenEdit] = useState<boolean>(false);
@@ -175,7 +172,11 @@ const Post: React.FC<Props> = ({
           )}
         </>
       )}
-      <PostDetailsModal isOpen={isOpenDetails} setIsOpen={setIsOpenDetails} />
+      <PostDetailsModal
+        post={post}
+        isOpen={isOpenDetails}
+        setIsOpen={setIsOpenDetails}
+      />
     </li>
   );
 };
