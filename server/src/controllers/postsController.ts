@@ -107,10 +107,26 @@ export const deletePost = async (req: Request, res: Response) => {
 };
 
 export const getPostsByUser = async (req: Request, res: Response) => {
-  const posts = await Post.find({ owner: req.params.id }).populate(
-    "owner",
-    "_id username profilePicture"
-  );
+  const posts = await Post.find({ owner: req.params.id }).populate([
+    {
+      path: "owner",
+      select: "_id username profilePicture",
+      model: "User",
+    },
+    {
+      path: "comments",
+      model: "Comment",
+      options: {
+        limit: 2,
+        sort: { _id: -1 },
+      },
+      populate: {
+        path: "owner",
+        select: "_id username profilePicture",
+        model: "User",
+      },
+    },
+  ]);
 
   if (!posts) return res.status(204).json({ message: "No posts found" });
 
