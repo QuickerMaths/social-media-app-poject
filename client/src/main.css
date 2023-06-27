@@ -1375,4 +1375,41 @@ input {
 .post-details-modal__image {
   margin-top: 20px;
   max-width: 100%;
+}
+.post-details-modal__bottom-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+}
+.post-details-modal__edit-button, .post-details-modal__action-button {
+  font-family: "Oswald", sans-serif;
+  font-size: 1.2rem;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+.post-details-modal__action-button {
+  margin-top: 25px;
+}
+.post-details-modal__edit-icon, .post-details-modal__action-icon {
+  width: 20px;
+  height: 20px;
+}
+.post-details-modal__liked {
+  color: rgb(21, 255, 0);
+}
+.post-details-modal__comments-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: 15px;
 }/*# sourceMappingURL=main.css.map */
