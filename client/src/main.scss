@@ -9,10 +9,11 @@
 @import "components/header/header";
 @import "components/sidebar/sidebar";
 @import "components/post/post";
-@import "./components/textArea/text-area";
-@import "./components/user-details/user-details";
-@import "./components/user-friends/user-firends";
-@import "./components/user-profile-mobile-navigation/user-profile-mobile-navigation";
+@import "components/textArea/text-area";
+@import "components/user-details/user-details";
+@import "components/user-friends/user-firends";
+@import "components/user-profile-mobile-navigation/user-profile-mobile-navigation";
+@import "components/comment/comment";
 
 //Pages
 @import "pages/shared-layout/shared-layout";
