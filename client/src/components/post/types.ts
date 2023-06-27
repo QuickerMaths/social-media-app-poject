@@ -1,3 +1,5 @@
+import { IComment } from "../comment/types";
+
 export type IPost = {
   createdAt: string;
   likedBy: string[];
@@ -9,6 +11,7 @@ export type IPost = {
   postBody: string;
   postImage: string;
   updatedAt: string;
+  comments: IComment[];
   __v: number;
   _id: string;
 };

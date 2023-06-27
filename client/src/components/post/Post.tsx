@@ -23,7 +23,15 @@ interface Props {
 }
 
 const Post: React.FC<Props> = ({
-  post: { owner, createdAt, postBody, likedBy, _id: postId, postImage },
+  post: {
+    owner,
+    createdAt,
+    postBody,
+    likedBy,
+    _id: postId,
+    postImage,
+    comments,
+  },
   setReRender,
   reRender,
 }) => {
