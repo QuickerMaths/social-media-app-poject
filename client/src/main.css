@@ -1293,6 +1293,7 @@ input {
   z-index: 101;
   position: relative;
   width: 90%;
+  max-height: 90%;
 }
 @media (min-width: 768px) {
   .post-details-modal__content {
@@ -1405,11 +1406,11 @@ input {
   color: rgb(21, 255, 0);
 }
 .post-details-modal__comments-container {
+  overflow-y: scroll;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 10px;
   width: 100%;
-  margin-top: 15px;
 }/*# sourceMappingURL=main.css.map */

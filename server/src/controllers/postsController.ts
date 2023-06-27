@@ -134,7 +134,7 @@ export const getPostsByUser = async (req: Request, res: Response) => {
 };
 
 export const getPostById = async (req: Request, res: Response) => {
-  const post = await Post.find({ owner: req.params.id }).populate([
+  const post = await Post.find({ _id: req.params.id }).populate([
     {
       path: "owner",
       select: "_id username profilePicture",

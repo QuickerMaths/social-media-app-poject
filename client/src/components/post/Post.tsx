@@ -172,12 +172,16 @@ const Post: React.FC<Props> = ({ post, setReRender, reRender }) => {
           )}
         </>
       )}
-      <PostDetailsModal
-        post={post}
-        isOpen={isOpenDetails}
-        setIsOpen={setIsOpenDetails}
-      />
+
+      {isOpenDetails && (
+        <PostDetailsModal
+          postId={postId}
+          isOpen={isOpenDetails}
+          setIsOpen={setIsOpenDetails}
+        />
+      )}
     </li>
+    //TODO: make sure that caching data works here in postdetailsmodal
   );
 };
 

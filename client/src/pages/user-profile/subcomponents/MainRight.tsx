@@ -9,6 +9,7 @@ interface Props {
 
 const MainRight: React.FC<Props> = ({ userId }) => {
   const [reRender, setReRender] = useState<boolean>(false);
+  //TODO: set type insted of any
   const [userPosts, setUserPosts] = useState<any>(null);
   useEffect(() => {
     const getUsersPosts = async (userId: string) => {

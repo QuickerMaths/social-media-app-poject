@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Post from "../../components/post/Post";
 import TextArea from "../../components/textArea/TextArea";
 import { IPost } from "../../components/post/types";
