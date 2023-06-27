@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
-const postSchema = new Schema(
+export const postSchema = new Schema(
   {
     owner: {
       type: mongoose.Types.ObjectId,
@@ -24,9 +24,20 @@ const postSchema = new Schema(
         ref: "User",
       },
     ],
+    commentTotal: {
+      type: Number,
+      default: 0,
+    },
     comments: [{ type: mongoose.Types.ObjectId, ref: "Comment" }],
   },
   { timestamps: true }
 );
+
+postSchema.post("findOneAndUpdate", function (doc, next) {
+  doc.commentTotal = doc.comments.length;
+  console.log(doc.comments);
+  console.log(doc.commentTotal);
+  next();
+});
 
 export default mongoose.model("Post", postSchema);

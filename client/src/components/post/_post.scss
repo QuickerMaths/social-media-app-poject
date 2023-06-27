@@ -91,4 +91,26 @@
   &__liked {
     color: rgb(21, 255, 0);
   }
+
+  &__comments-container {
+    @include flex-column;
+    gap: 10px;
+    width: 100%;
+    margin-top: 15px;
+  }
+
+  &__see-more {
+    @include flex-center;
+    @include button-reset;
+    text-decoration: underline;
+    margin: 5px auto;
+
+    @media (min-width: 1025px) {
+      transition: color 0.2s ease-in-out;
+
+      &:hover {
+        color: blue;
+      }
+    }
+  }
 }

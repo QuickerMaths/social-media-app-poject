@@ -1,0 +1,33 @@
+.comment {
+  @include container-box-shadow;
+  background-color: var(--third);
+  border-radius: 10px;
+  width: 100%;
+  padding: 5px 10px;
+
+  &__top-container {
+    @include flex-between;
+  }
+
+  &__owner {
+    @include flex-center;
+    gap: 10px;
+  }
+
+  &__username {
+    font-size: 0.7rem;
+
+    @media (min-width: 768px) {
+      font-size: 1rem;
+    }
+  }
+
+  &__body {
+    font-size: 0.8rem;
+    margin: 10px 0px;
+
+    @media (min-width: 768px) {
+      font-size: 1rem;
+    }
+  }
+}

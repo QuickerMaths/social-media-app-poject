@@ -153,11 +153,16 @@ const Post: React.FC<Props> = ({
         </button>
       </div>
       {comments && (
-        <div className="post__comments-container">
-          {comments.map((comment: IComment) => (
-            <Comment key={comment._id} comment={comment} />
-          ))}
-        </div>
+        <>
+          <ul className="post__comments-container">
+            {comments.map((comment: IComment) => (
+              <Comment key={comment._id} comment={comment} />
+            ))}
+          </ul>
+          {comments.length > 2 && (
+            <button className="post__see-more">See more</button>
+          )}
+        </>
       )}
     </li>
   );
