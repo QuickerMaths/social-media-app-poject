@@ -1,6 +1,10 @@
 import React from "react";
+import { IComment } from "./types";
 
-const Comment = () => {
+interface Props {
+  comment: IComment;
+}
+const Comment: React.FC<Props> = ({ comment }) => {
   return <div>Comment</div>;
 };
 

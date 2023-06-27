@@ -6,15 +6,17 @@ import {
   AiOutlineDelete,
 } from "react-icons/ai";
 import { BiRepost } from "react-icons/bi";
-import moment from "moment";
 import defaultImg from "../../assets/images/default_img.png";
-import { IPost } from "./types";
+import moment from "moment";
 import { Link } from "react-router-dom";
+import { IPost } from "./types";
+import { IComment } from "../comment/types";
 import { useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import axios from "axios";
 import useToastCreator from "../../hooks/useToastCreator";
 import PostEditModal from "../../portals/post-edit-modal/PostEditModal";
+import Comment from "../comment/Comment";
 
 interface Props {
   post: IPost;
@@ -144,12 +146,19 @@ const Post: React.FC<Props> = ({
           {likedBy.length}
         </button>
         <button className="post__action-button">
-          <AiOutlineComment className="post__action-icon" /> 0
+          <AiOutlineComment className="post__action-icon" /> {comments.length}
         </button>
         <button className="post__action-button">
           <BiRepost className="post__action-icon" /> 0
         </button>
       </div>
+      {comments && (
+        <div className="post__comments-container">
+          {comments.map((comment: IComment) => (
+            <Comment key={comment._id} comment={comment} />
+          ))}
+        </div>
+      )}
     </li>
   );
 };
