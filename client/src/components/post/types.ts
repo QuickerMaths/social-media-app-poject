@@ -11,6 +11,7 @@ export type IPost = {
   postBody: string;
   postImage: string;
   updatedAt: string;
+  commentTotal: number;
   comments: IComment[];
   __v: number;
   _id: string;

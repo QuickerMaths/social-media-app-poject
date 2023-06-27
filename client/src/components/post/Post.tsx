@@ -33,6 +33,7 @@ const Post: React.FC<Props> = ({
     _id: postId,
     postImage,
     comments,
+    commentTotal,
   },
   setReRender,
   reRender,
@@ -146,7 +147,7 @@ const Post: React.FC<Props> = ({
           {likedBy.length}
         </button>
         <button className="post__action-button">
-          <AiOutlineComment className="post__action-icon" /> {comments.length}
+          <AiOutlineComment className="post__action-icon" /> {commentTotal}
         </button>
         <button className="post__action-button">
           <BiRepost className="post__action-icon" /> 0
@@ -159,7 +160,7 @@ const Post: React.FC<Props> = ({
               <Comment key={comment._id} comment={comment} />
             ))}
           </ul>
-          {comments.length > 2 && (
+          {commentTotal > 2 && (
             <button className="post__see-more">See more</button>
           )}
         </>

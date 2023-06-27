@@ -33,10 +33,9 @@ export const postSchema = new Schema(
   { timestamps: true }
 );
 
-postSchema.post("findOneAndUpdate", function (doc, next) {
+postSchema.post("findOneAndUpdate", async function (doc, next) {
   doc.commentTotal = doc.comments.length;
-  console.log(doc.comments);
-  console.log(doc.commentTotal);
+  await doc.save();
   next();
 });
 
