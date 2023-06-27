@@ -16,6 +16,7 @@ import { RootState } from "../../redux/store";
 import axios from "axios";
 import useToastCreator from "../../hooks/useToastCreator";
 import PostEditModal from "../../portals/post-edit-modal/PostEditModal";
+import PostDetailsModal from "../../portals/post-details-modal/PostDetailsModal";
 import Comment from "../comment/Comment";
 
 interface Props {
@@ -40,7 +41,8 @@ const Post: React.FC<Props> = ({
 }) => {
   const { userId, userImg } = useAppSelector((state: RootState) => state.auth);
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpenEdit, setIsOpenEdit] = useState<boolean>(false);
+  const [isOpenDetails, setIsOpenDetails] = useState<boolean>(false);
 
   const handlePostDelete = async (userId: string, postId: string) => {
     try {
@@ -63,7 +65,7 @@ const Post: React.FC<Props> = ({
         postId,
         userId,
       });
-
+      //TODO: rtkQuery optimistic updates !
       setReRender(!reRender);
     } catch (err) {
       console.log(err);
@@ -94,7 +96,7 @@ const Post: React.FC<Props> = ({
             <div className="post__edit-wrapper">
               <button
                 className="post__edit-button"
-                onClick={() => setIsOpen(true)}
+                onClick={() => setIsOpenEdit(true)}
               >
                 <AiOutlineEdit className="post__edit-icon" />
               </button>
@@ -107,8 +109,8 @@ const Post: React.FC<Props> = ({
               <p className="post__createdAt">{moment(createdAt).fromNow()}</p>
             </div>
             <PostEditModal
-              isOpen={isOpen}
-              setIsOpen={setIsOpen}
+              isOpen={isOpenEdit}
+              setIsOpen={setIsOpenEdit}
               postId={postId}
               postImage={postImage}
               postBody={postBody}
@@ -146,14 +148,17 @@ const Post: React.FC<Props> = ({
           />
           {likedBy.length}
         </button>
-        <button className="post__action-button">
+        <button
+          className="post__action-button"
+          onClick={() => setIsOpenDetails(true)}
+        >
           <AiOutlineComment className="post__action-icon" /> {commentTotal}
         </button>
         <button className="post__action-button">
           <BiRepost className="post__action-icon" /> 0
         </button>
       </div>
-      {comments && (
+      {commentTotal > 0 && (
         <>
           <ul className="post__comments-container">
             {comments.map((comment: IComment) => (
@@ -161,10 +166,16 @@ const Post: React.FC<Props> = ({
             ))}
           </ul>
           {commentTotal > 2 && (
-            <button className="post__see-more">See more</button>
+            <button
+              className="post__see-more"
+              onClick={() => setIsOpenDetails(true)}
+            >
+              See more
+            </button>
           )}
         </>
       )}
+      <PostDetailsModal isOpen={isOpenDetails} setIsOpen={setIsOpenDetails} />
     </li>
   );
 };

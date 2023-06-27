@@ -8,7 +8,7 @@ interface Props {
 }
 
 const MainRight: React.FC<Props> = ({ userId }) => {
-  const [reRender, setRerender] = useState<boolean>(false);
+  const [reRender, setReRender] = useState<boolean>(false);
   const [userPosts, setUserPosts] = useState<any>(null);
   useEffect(() => {
     const getUsersPosts = async (userId: string) => {
@@ -38,12 +38,19 @@ const MainRight: React.FC<Props> = ({ userId }) => {
 
   return (
     <div className="user-profile__main-right">
-      <TextArea reRender={reRender} setRerender={setRerender} />
+      <TextArea reRender={reRender} setReRender={setReRender} />
 
       <ul className="user-profile__posts-list">
         {userPosts.posts.length > 0 ? (
           userPosts.posts
-            .map((post: IPost) => <Post key={post._id} post={post} />)
+            .map((post: IPost) => (
+              <Post
+                key={post._id}
+                post={post}
+                reRender={reRender}
+                setReRender={setReRender}
+              />
+            ))
             .reverse()
         ) : (
           <p className="user-profile__no-posts-msg">No posts yet...</p>

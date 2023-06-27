@@ -32,7 +32,7 @@ const HomePage = () => {
 
   return (
     <section className="home-page">
-      <TextArea setRerender={setReRender} reRender={reRender} />
+      <TextArea setReRender={setReRender} reRender={reRender} />
       <ul className="home-page__posts-list">
         {posts
           .map((post: any) => (

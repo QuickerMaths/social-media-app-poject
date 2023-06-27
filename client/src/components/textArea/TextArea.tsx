@@ -8,10 +8,10 @@ import useToastCreator from "../../hooks/useToastCreator";
 
 interface Props {
   reRender: boolean;
-  setRerender: React.Dispatch<React.SetStateAction<boolean>>;
+  setReRender: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const TextArea: React.FC<Props> = ({ reRender, setRerender }) => {
+const TextArea: React.FC<Props> = ({ reRender, setReRender }) => {
   const { username, userId } = useAppSelector((state: RootState) => state.auth);
   // TODO: refactor fetch to rtkQuery and formik hooks to formik components
   const { handleChange, values, handleSubmit, setFieldValue } = useFormik({
@@ -35,7 +35,7 @@ const TextArea: React.FC<Props> = ({ reRender, setRerender }) => {
             withCredentials: true,
           }
         );
-        setRerender(!reRender);
+        setReRender(!reRender);
         values.postBody = "";
         setFieldValue("image", "");
       } catch (err: any) {
