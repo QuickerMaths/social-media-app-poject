@@ -46,5 +46,5 @@ export const deletedComment = async (req: Request, res: Response) => {
   if (!post)
     return res.status(204).json({ message: "No post with matching id" });
 
-  res.status(200).json({ comment, post });
+  res.status(204).json({ comment });
 };

@@ -34,8 +34,16 @@ export const postSchema = new Schema(
 );
 
 postSchema.post("findOneAndUpdate", async function (doc, next) {
-  doc.commentTotal += 1;
-  await doc.save();
+  const update = JSON.parse(JSON.stringify(this.getUpdate()));
+
+  if (Object.keys(update).includes("$push")) {
+    doc.commentTotal += 1;
+    await doc.save();
+  } else if (Object.keys(update).includes("$pull")) {
+    doc.commentTotal -= 1;
+    await doc.save();
+  }
+
   next();
 });
 
