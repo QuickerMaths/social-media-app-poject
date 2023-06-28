@@ -78,6 +78,10 @@
     color: gray;
   }
 
+  &__overflow {
+    overflow-y: scroll;
+  }
+
   &__body {
     margin-top: 20px;
   }
@@ -115,9 +119,31 @@
   }
 
   &__comments-container {
-    overflow-y: scroll;
     @include flex-column;
     gap: 10px;
     width: 100%;
+    margin-top: 10px;
+    padding-bottom: 20px;
+  }
+
+  &__form {
+    @include flex-center;
+    gap: 20px;
+    width: 100%;
+    padding-top: 20px;
+  }
+
+  &__text-area {
+    width: 100%;
+    font-family: "Oswald", sans-serif;
+    border-radius: 15px;
+
+    @media (min-width: 768px) {
+      width: 60%;
+    }
+  }
+
+  &__submit-button {
+    @include button-secondary;
   }
 }

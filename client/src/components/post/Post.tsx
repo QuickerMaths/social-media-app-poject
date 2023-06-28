@@ -178,6 +178,8 @@ const Post: React.FC<Props> = ({ post, setReRender, reRender }) => {
           postId={postId}
           isOpen={isOpenDetails}
           setIsOpen={setIsOpenDetails}
+          reRender={reRender}
+          setReRender={setReRender}
         />
       )}
     </li>

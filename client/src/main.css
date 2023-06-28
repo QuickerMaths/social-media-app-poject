@@ -1370,6 +1370,9 @@ input {
   font-size: 0.8rem;
   color: gray;
 }
+.post-details-modal__overflow {
+  overflow-y: scroll;
+}
 .post-details-modal__body {
   margin-top: 20px;
 }
@@ -1406,11 +1409,56 @@ input {
   color: rgb(21, 255, 0);
 }
 .post-details-modal__comments-container {
-  overflow-y: scroll;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 10px;
   width: 100%;
+  margin-top: 10px;
+  padding-bottom: 20px;
+}
+.post-details-modal__form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  padding-top: 20px;
+}
+.post-details-modal__text-area {
+  width: 100%;
+  font-family: "Oswald", sans-serif;
+  border-radius: 15px;
+}
+@media (min-width: 768px) {
+  .post-details-modal__text-area {
+    width: 60%;
+  }
+}
+.post-details-modal__submit-button {
+  background-color: var(--secondary);
+  color: white;
+  border: none;
+  border-radius: 15px;
+  padding: 5px 10px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+@media (min-width: 768px) {
+  .post-details-modal__submit-button {
+    padding: 5px 20px;
+    font-size: 1.6rem;
+    font-weight: 600;
+  }
+}
+@media (min-width: 1025px) {
+  .post-details-modal__submit-button {
+    transition: filter, color, 0.3s ease-in-out;
+  }
+  .post-details-modal__submit-button:hover {
+    filter: brightness(120%);
+    color: black;
+  }
 }/*# sourceMappingURL=main.css.map */

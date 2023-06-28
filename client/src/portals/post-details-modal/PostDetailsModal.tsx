@@ -16,14 +16,23 @@ import { BiRepost } from "react-icons/bi";
 import axios from "axios";
 import { IComment } from "../../components/comment/types";
 import Comment from "../../components/comment/Comment";
+import { useFormik } from "formik";
 
 interface Props {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   postId: string;
+  reRender: boolean;
+  setReRender: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const PostDetailsModal: React.FC<Props> = ({ setIsOpen, isOpen, postId }) => {
+const PostDetailsModal: React.FC<Props> = ({
+  setIsOpen,
+  isOpen,
+  postId,
+  reRender,
+  setReRender,
+}) => {
   const { userId, userImg } = useAppSelector((state: RootState) => state.auth);
   const [post, setPost] = useState<IPost | null>(null);
 
@@ -41,7 +50,26 @@ const PostDetailsModal: React.FC<Props> = ({ setIsOpen, isOpen, postId }) => {
       }
     };
     getPost();
-  }, []);
+  }, [reRender]);
+
+  const { handleSubmit, values, handleChange } = useFormik({
+    initialValues: {
+      commentBody: "",
+    },
+    onSubmit: async (values) => {
+      try {
+        await axios.post("http://localhost:5000/api/comments", {
+          commentBody: values.commentBody,
+          postId,
+          userId,
+        });
+        values.commentBody = "";
+        setReRender(!reRender);
+      } catch (err) {
+        console.log(err);
+      }
+    },
+  });
 
   const handleLikePost = async (postId: string, userId: string) => {
     try {
@@ -50,7 +78,7 @@ const PostDetailsModal: React.FC<Props> = ({ setIsOpen, isOpen, postId }) => {
         userId,
       });
       //TODO: rtkQuery optimistic updates !
-      // setReRender(!reRender);
+      setReRender(!reRender);
     } catch (err) {
       console.log(err);
     }
@@ -104,54 +132,70 @@ const PostDetailsModal: React.FC<Props> = ({ setIsOpen, isOpen, postId }) => {
                 {moment(post.createdAt).fromNow()}
               </p>
             </div>
-            <p className="post-details-modal__body">{post.postBody}</p>
-            {post.postImage && (
-              <img
-                src={post.postImage}
-                alt="post image"
-                className="post-details-modal__image"
-              />
-            )}
-            <div className="post-details-modal__bottom-container">
-              <button
-                className={`post-details-modal__action-button ${
-                  post.likedBy.includes(userId as string) &&
-                  "post-details-modal__liked"
-                }`}
-                onClick={() => {
-                  userId === null
-                    ? useToastCreator(
-                        "You have to be logged in to like this post",
-                        "error"
-                      )
-                    : handleLikePost(postId, userId);
-                }}
-              >
-                <AiOutlineLike
-                  className={`post-details-modal__action-icon ${
+            <div className="post-details-modal__overflow">
+              <p className="post-details-modal__body">{post.postBody}</p>
+              {post.postImage && (
+                <img
+                  src={post.postImage}
+                  alt="post image"
+                  className="post-details-modal__image"
+                />
+              )}
+              <div className="post-details-modal__bottom-container">
+                <button
+                  className={`post-details-modal__action-button ${
                     post.likedBy.includes(userId as string) &&
                     "post-details-modal__liked"
                   }`}
-                />
-                {post.likedBy.length}
-              </button>
-              <button className="post-details-modal__action-button">
-                <AiOutlineComment className="post-details-modal__action-icon" />{" "}
-                {post.commentTotal}
-              </button>
-              <button className="post-details-modal__action-button">
-                <BiRepost className="post-details-modal__action-icon" /> 0
-              </button>
-            </div>
-            {post.commentTotal > 0 && (
-              <>
+                  onClick={() => {
+                    userId === null
+                      ? useToastCreator(
+                          "You have to be logged in to like this post",
+                          "error"
+                        )
+                      : handleLikePost(postId, userId);
+                  }}
+                >
+                  <AiOutlineLike
+                    className={`post-details-modal__action-icon ${
+                      post.likedBy.includes(userId as string) &&
+                      "post-details-modal__liked"
+                    }`}
+                  />
+                  {post.likedBy.length}
+                </button>
+                <button className="post-details-modal__action-button">
+                  <AiOutlineComment className="post-details-modal__action-icon" />{" "}
+                  {post.commentTotal}
+                </button>
+                <button className="post-details-modal__action-button">
+                  <BiRepost className="post-details-modal__action-icon" /> 0
+                </button>
+              </div>
+              {post.commentTotal > 0 && (
                 <ul className="post-details-modal__comments-container">
                   {post.comments.map((comment: IComment) => (
                     <Comment key={comment._id} comment={comment} />
                   ))}
                 </ul>
-              </>
-            )}
+              )}
+            </div>
+            <form onSubmit={handleSubmit} className="post-details-modal__form">
+              <input
+                name="commentBody"
+                id="commentBody"
+                value={values.commentBody}
+                onChange={handleChange}
+                className="post-details-modal__text-area"
+                placeholder="Write a comment..."
+              />
+              <button
+                className="post-details-modal__submit-button"
+                type="submit"
+              >
+                Comment
+              </button>
+            </form>
           </>
         )}
       </div>

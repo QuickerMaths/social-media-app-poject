@@ -34,7 +34,7 @@ export const postSchema = new Schema(
 );
 
 postSchema.post("findOneAndUpdate", async function (doc, next) {
-  doc.commentTotal = doc.comments.length;
+  doc.commentTotal += 1;
   await doc.save();
   next();
 });
