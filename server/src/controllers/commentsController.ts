@@ -49,3 +49,22 @@ export const deletedComment = async (req: Request, res: Response) => {
 
   res.status(204).json({ comment });
 };
+
+export const likeComment = async (req: Request, res: Response) => {
+  const { commentId, userId } = req.body;
+
+  if (!commentId || !userId)
+    return res.status(400).json({ message: "Comment and user Id required" });
+
+  const comment = await Comment.findOneAndUpdate(
+    { _id: commentId },
+    {
+      $push: { likedBy: userId },
+    }
+  ).exec();
+
+  if (!comment)
+    return res.status(204).json({ message: "No comment with matching id" });
+
+  res.status(201).json({ comment });
+};
