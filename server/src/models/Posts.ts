@@ -29,6 +29,10 @@ export const postSchema = new Schema(
       default: 0,
     },
     comments: [{ type: mongoose.Types.ObjectId, ref: "Comment" }],
+    rePosted: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );
