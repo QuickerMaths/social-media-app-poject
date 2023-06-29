@@ -13,6 +13,7 @@ export const createComment = async (req: Request, res: Response) => {
   const comment = await Comment.create({
     owner: userId,
     commentBody,
+    postId,
   });
 
   const post = await Post.findOneAndUpdate(

@@ -9,4 +9,5 @@ export type IComment = {
     profilePicture: string;
     username: string;
   };
+  postId: string;
 };

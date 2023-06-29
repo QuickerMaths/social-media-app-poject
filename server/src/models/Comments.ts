@@ -15,6 +15,11 @@ const commentSchema = new Schema(
         ref: "User",
       },
     ],
+    postId: {
+      type: mongoose.Types.ObjectId,
+      ref: "Post",
+      required: [true, "Post id is required"],
+    },
   },
   { timestamps: true }
 );

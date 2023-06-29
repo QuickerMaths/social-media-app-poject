@@ -3,13 +3,28 @@ import moment from "moment";
 import defaultImg from "../../assets/images/default_img.png";
 import { Link } from "react-router-dom";
 import { IComment } from "./types";
+import axios from "axios";
 
 interface Props {
   comment: IComment;
 }
 const Comment: React.FC<Props> = ({
-  comment: { owner, createdAt, commentBody },
+  comment: { owner, createdAt, commentBody, _id: commentId, postId },
 }) => {
+  const handleDeleteComment = async () => {
+    try {
+      const data = await axios.delete("http://localhost:5000/api/comments", {
+        data: {
+          commentId,
+          postId,
+        },
+      });
+      console.log(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <li className="comment">
       <div className="comment__top-container">
