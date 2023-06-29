@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Post from "../models/Posts";
+import RePost from "../models/RePosts";
 import Comment from "../models/Comments";
 
 export const getPosts = async (req: Request, res: Response) => {
@@ -158,4 +159,15 @@ export const getPostById = async (req: Request, res: Response) => {
   if (!post) return res.status(204).json({ message: "No posts found" });
 
   res.status(200).json({ post });
+};
+
+export const createRePost = async (req: Request, res: Response) => {
+  const { postId, userId } = req.body;
+
+  if (!postId || !userId)
+    return res.status(400).json({ message: "Post Id and user Id required" });
+
+  const rePost = await RePost.create({ post: postId, owner: userId });
+
+  res.status(201).json(rePost);
 };

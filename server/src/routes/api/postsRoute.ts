@@ -8,6 +8,7 @@ import {
   deletePost,
   getPostsByUser,
   getPostById,
+  createRePost,
 } from "../../controllers/postsController";
 import { verifyJWT } from "../../middlewares/verifyJWT";
 
@@ -23,5 +24,7 @@ router.route("/edit").put(updatePost);
 router.route("/:id").get(getPostById);
 
 router.route("/user/:id").get(getPostsByUser);
+
+router.route("/repost").post(createRePost);
 
 export default router;
