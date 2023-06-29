@@ -27,6 +27,14 @@
     gap: 10px;
   }
 
+  &__createdAt {
+    font-size: 0.6rem;
+
+    @media (min-width: 768px) {
+      font-size: 1rem;
+    }
+  }
+
   &__body {
     font-size: 0.8rem;
     margin: 10px 0px;
@@ -34,5 +42,33 @@
     @media (min-width: 768px) {
       font-size: 1rem;
     }
+  }
+
+  &__edit-button,
+  &__action-button {
+    @include button-reset;
+    @include flex-center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 0.8rem;
+
+    @media (min-width: 768px) {
+      font-size: 1.2rem;
+    }
+  }
+
+  &__edit-icon,
+  &__action-icon {
+    width: 15px;
+    height: 15px;
+
+    @media (min-width: 768px) {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  &__liked {
+    color: rgb(21, 255, 0);
   }
 }

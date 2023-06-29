@@ -584,6 +584,14 @@ input {
   align-items: center;
   gap: 10px;
 }
+.comment__createdAt {
+  font-size: 0.6rem;
+}
+@media (min-width: 768px) {
+  .comment__createdAt {
+    font-size: 1rem;
+  }
+}
 .comment__body {
   font-size: 0.8rem;
   margin: 10px 0px;
@@ -592,6 +600,37 @@ input {
   .comment__body {
     font-size: 1rem;
   }
+}
+.comment__edit-button, .comment__action-button {
+  font-family: "Oswald", sans-serif;
+  font-size: 1.2rem;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+@media (min-width: 768px) {
+  .comment__edit-button, .comment__action-button {
+    font-size: 1.2rem;
+  }
+}
+.comment__edit-icon, .comment__action-icon {
+  width: 15px;
+  height: 15px;
+}
+@media (min-width: 768px) {
+  .comment__edit-icon, .comment__action-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+.comment__liked {
+  color: rgb(21, 255, 0);
 }
 
 .main {

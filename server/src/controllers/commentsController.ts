@@ -47,7 +47,9 @@ export const deletedComment = async (req: Request, res: Response) => {
   if (!post)
     return res.status(204).json({ message: "No post with matching id" });
 
-  res.status(204).json({ comment });
+  const deletedComment = await comment.deleteOne();
+
+  res.status(204).json({ deletedComment });
 };
 
 export const likeComment = async (req: Request, res: Response) => {
@@ -56,15 +58,16 @@ export const likeComment = async (req: Request, res: Response) => {
   if (!commentId || !userId)
     return res.status(400).json({ message: "Comment and user Id required" });
 
-  const comment = await Comment.findOneAndUpdate(
-    { _id: commentId },
-    {
-      $push: { likedBy: userId },
-    }
-  ).exec();
+  const comment = await Comment.findOne({ _id: commentId });
 
   if (!comment)
     return res.status(204).json({ message: "No comment with matching id" });
 
-  res.status(201).json({ comment });
+  if (comment.likedBy.includes(userId)) {
+    await comment.updateOne({ $pull: { likedBy: userId } }).exec();
+  } else {
+    await comment.updateOne({ $push: { likedBy: userId } }).exec();
+  }
+
+  res.status(200).json({ comment });
 };

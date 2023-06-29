@@ -61,8 +61,6 @@ export const likePost = async (req: Request, res: Response) => {
     await post.updateOne({ $push: { likedBy: userId } }).exec();
   }
 
-  await post.save();
-
   return res.status(201).json(post);
 };
 
