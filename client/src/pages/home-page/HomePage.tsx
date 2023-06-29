@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Post from "../../components/post/originalPost/Post";
 import TextArea from "../../components/textArea/TextArea";
 import { IPost, IRePost } from "../../components/post/types";
@@ -38,7 +38,11 @@ const HomePage = () => {
         {posts
           .map((post: IPost | IRePost) =>
             post.isRePost ? (
-              <RePost />
+              <RePost
+                rePost={post as IRePost}
+                reRender={reRender}
+                setReRender={setReRender}
+              />
             ) : (
               <Post
                 key={(post as IPost)._id}

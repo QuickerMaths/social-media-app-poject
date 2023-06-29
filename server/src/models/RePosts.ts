@@ -11,7 +11,7 @@ export const rePostSchema = new Schema(
     postBody: {
       type: String,
     },
-    post: {
+    originalPost: {
       type: mongoose.Types.ObjectId,
       ref: "Post",
       required: [true, "Post is required"],

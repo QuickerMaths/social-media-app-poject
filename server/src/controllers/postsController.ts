@@ -32,7 +32,7 @@ export const getPosts = async (req: Request, res: Response) => {
       model: "User",
     },
     {
-      path: "post",
+      path: "originalPost",
       select: "_id owner postBody postImage likedBy commentTotal rePostCount",
       model: "Post",
     },
@@ -182,7 +182,11 @@ export const createRePost = async (req: Request, res: Response) => {
   if (!postId || !userId)
     return res.status(400).json({ message: "Post Id and user Id required" });
 
-  const rePost = await RePost.create({ post: postId, owner: userId, postBody });
+  const rePost = await RePost.create({
+    originalPost: postId,
+    owner: userId,
+    postBody,
+  });
 
   res.status(201).json(rePost);
 };

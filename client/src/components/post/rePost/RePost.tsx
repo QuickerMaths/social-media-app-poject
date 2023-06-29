@@ -1,6 +1,13 @@
 import React from "react";
+import { IRePost } from "../types";
 
-const RePost = () => {
+interface Props {
+  rePost: IRePost;
+  reRender: boolean;
+  setReRender: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const RePost: React.FC<Props> = ({ rePost, reRender, setReRender }) => {
   return <div>RePost</div>;
 };
 
