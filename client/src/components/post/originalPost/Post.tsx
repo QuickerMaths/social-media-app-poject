@@ -6,18 +6,18 @@ import {
   AiOutlineDelete,
 } from "react-icons/ai";
 import { BiRepost } from "react-icons/bi";
-import defaultImg from "../../assets/images/default_img.png";
+import defaultImg from "../../../assets/images/default_img.png";
 import moment from "moment";
 import { Link } from "react-router-dom";
-import { IPost } from "./types";
-import { IComment } from "../comment/types";
-import { useAppSelector } from "../../hooks/reduxHooks";
-import { RootState } from "../../redux/store";
+import { IPost } from "../types";
+import { IComment } from "../../comment/types";
+import { useAppSelector } from "../../../hooks/reduxHooks";
+import { RootState } from "../../../redux/store";
 import axios from "axios";
-import useToastCreator from "../../hooks/useToastCreator";
-import PostEditModal from "../../portals/post-edit-modal/PostEditModal";
-import PostDetailsModal from "../../portals/post-details-modal/PostDetailsModal";
-import Comment from "../comment/Comment";
+import useToastCreator from "../../../hooks/useToastCreator";
+import PostEditModal from "../../../portals/post-edit-modal/PostEditModal";
+import PostDetailsModal from "../../../portals/post-details-modal/PostDetailsModal";
+import Comment from "../../comment/Comment";
 
 interface Props {
   post: IPost;

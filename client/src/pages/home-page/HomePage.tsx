@@ -1,7 +1,8 @@
 import { Suspense, useEffect, useState } from "react";
-import Post from "../../components/post/Post";
+import Post from "../../components/post/originalPost/Post";
 import TextArea from "../../components/textArea/TextArea";
-import { IPost } from "../../components/post/types";
+import { IPost, IRePost } from "../../components/post/types";
+import RePost from "../../components/post/rePost/RePost";
 
 const HomePage = () => {
   //TODO: refactor to Rtk query
@@ -35,14 +36,18 @@ const HomePage = () => {
       <TextArea setReRender={setReRender} reRender={reRender} />
       <ul className="home-page__posts-list">
         {posts
-          .map((post: any) => (
-            <Post
-              key={post._id}
-              post={post}
-              setReRender={setReRender}
-              reRender={reRender}
-            /> //TODO: while refactor to rktquery switch sorting posts using entity adapter
-          ))
+          .map((post: IPost | IRePost) =>
+            post.isRePost ? (
+              <RePost />
+            ) : (
+              <Post
+                key={(post as IPost)._id}
+                post={post as IPost}
+                setReRender={setReRender}
+                reRender={reRender}
+              /> //TODO: while refactor to rktquery switch sorting posts using entity adapter
+            )
+          )
           .reverse()}
       </ul>
     </section>

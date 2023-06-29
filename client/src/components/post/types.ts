@@ -15,4 +15,19 @@ export type IPost = {
   comments: IComment[];
   __v: number;
   _id: string;
+  isRePost: boolean;
+};
+
+export type IRePost = {
+  owner: {
+    _id: string;
+    profilePicture: string;
+    username: string;
+  };
+  postBody: string;
+  post: IPost;
+  likedBy: string[];
+  commentTotal: number;
+  comments: IComment[];
+  isRePost: boolean;
 };

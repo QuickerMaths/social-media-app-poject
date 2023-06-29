@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { IPost } from "../../../components/post/types";
-import Post from "../../../components/post/Post";
+import { IPost, IRePost } from "../../../components/post/types";
+import Post from "../../../components/post/originalPost/Post";
 import TextArea from "../../../components/textArea/TextArea";
+import RePost from "../../../components/post/rePost/RePost";
 
 interface Props {
   userId: string | undefined;
@@ -47,14 +48,18 @@ const MainRight: React.FC<Props> = ({ userId }) => {
       <ul className="user-profile__posts-list">
         {userPosts.posts.length > 0 ? (
           userPosts.posts
-            .map((post: IPost) => (
-              <Post
-                key={post._id}
-                post={post}
-                reRender={reRender}
-                setReRender={setReRender}
-              />
-            ))
+            .map((post: IPost | IRePost) =>
+              post.isRePost ? (
+                <RePost />
+              ) : (
+                <Post
+                  key={(post as IPost)._id}
+                  post={post as IPost}
+                  setReRender={setReRender}
+                  reRender={reRender}
+                /> //TODO: while refactor to rktquery switch sorting posts using entity adapter
+              )
+            )
             .reverse()
         ) : (
           <p className="user-profile__no-posts-msg">No posts yet...</p>
