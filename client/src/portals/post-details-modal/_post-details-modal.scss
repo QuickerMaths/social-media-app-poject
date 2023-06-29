@@ -14,7 +14,7 @@
     max-height: 90%;
 
     @media (min-width: 768px) {
-      width: 80%;
+      width: 70%;
     }
   }
 
@@ -36,9 +36,10 @@
   }
 
   &__top-container {
-    @include flex-center;
+    @include flex-between;
     flex-direction: column-reverse;
     gap: 20px;
+    width: 80%;
 
     @media (min-width: 480px) {
       flex-direction: row;
@@ -80,10 +81,12 @@
 
   &__overflow {
     overflow-y: scroll;
+    width: 90%;
   }
 
   &__body {
     margin-top: 20px;
+    width: 70%;
   }
 
   &__image {

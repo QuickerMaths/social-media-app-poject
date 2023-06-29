@@ -42,6 +42,10 @@
     }
   }
 
+  &__createdAt {
+    margin-left: auto;
+  }
+
   &__edit-wrapper {
     @include flex-center;
     gap: 10px;
