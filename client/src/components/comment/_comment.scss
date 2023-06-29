@@ -5,6 +5,10 @@
   width: 100%;
   padding: 5px 10px;
 
+  @media (min-width: 768px) {
+    padding: 10px 20px;
+  }
+
   &__top-container {
     @include flex-between;
   }
