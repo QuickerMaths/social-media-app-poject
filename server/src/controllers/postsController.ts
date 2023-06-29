@@ -25,9 +25,24 @@ export const getPosts = async (req: Request, res: Response) => {
     },
   ]);
 
-  if (!posts) return res.status(204).json({ message: "No posts found" });
+  const rePosts = await RePost.find().populate([
+    {
+      path: "owner",
+      select: "_id username profilePicture",
+      model: "User",
+    },
+    {
+      path: "post",
+      select: "_id owner postBody postImage likedBy commentTotal rePostCount",
+      model: "Post",
+    },
+  ]);
 
-  res.status(200).json(posts);
+  const allPosts = [...posts, ...rePosts];
+
+  if (!allPosts) return res.status(204).json({ message: "No posts found" });
+
+  res.status(200).json(allPosts);
 };
 
 export const createPost = async (req: Request, res: Response) => {

@@ -22,6 +22,15 @@ export const rePostSchema = new Schema(
         ref: "User",
       },
     ],
+    commentTotal: {
+      type: Number,
+      default: 0,
+    },
+    comments: [{ type: mongoose.Types.ObjectId, ref: "Comment" }],
+    isRePost: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true }
 );
