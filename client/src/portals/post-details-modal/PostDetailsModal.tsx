@@ -175,7 +175,12 @@ const PostDetailsModal: React.FC<Props> = ({
               {post.commentTotal > 0 && (
                 <ul className="post-details-modal__comments-container">
                   {post.comments.map((comment: IComment) => (
-                    <Comment key={comment._id} comment={comment} />
+                    <Comment
+                      key={comment._id}
+                      comment={comment}
+                      reRender={reRender}
+                      setReRender={setReRender}
+                    />
                   ))}
                 </ul>
               )}

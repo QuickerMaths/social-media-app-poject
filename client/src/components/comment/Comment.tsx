@@ -4,22 +4,31 @@ import defaultImg from "../../assets/images/default_img.png";
 import { Link } from "react-router-dom";
 import { IComment } from "./types";
 import axios from "axios";
+import { useAppSelector } from "../../hooks/reduxHooks";
+import { RootState } from "../../redux/store";
+import { AiOutlineDelete } from "react-icons/ai";
 
 interface Props {
   comment: IComment;
+  reRender: boolean;
+  setReRender: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const Comment: React.FC<Props> = ({
   comment: { owner, createdAt, commentBody, _id: commentId, postId },
+  reRender,
+  setReRender,
 }) => {
-  const handleDeleteComment = async () => {
+  const { userId } = useAppSelector((state: RootState) => state.auth);
+  //TODO: refactor to rtqQuery
+  const handleDeleteComment = async (userId: string, postId: string) => {
     try {
-      const data = await axios.delete("http://localhost:5000/api/comments", {
+      await axios.delete("http://localhost:5000/api/comments", {
         data: {
           commentId,
           postId,
         },
       });
-      console.log(data);
+      setReRender(!reRender);
     } catch (err) {
       console.log(err);
     }
@@ -38,7 +47,19 @@ const Comment: React.FC<Props> = ({
           />
           <h2 className="comment__username">{owner.username}</h2>
         </Link>
-        <p className="post__createdAt">{moment(createdAt).fromNow()}</p>
+        {owner._id === userId ? (
+          <div className="comment__wrapper">
+            <button
+              className="post__edit-button"
+              onClick={() => handleDeleteComment(userId, postId)}
+            >
+              <AiOutlineDelete className="post__edit-icon" />
+            </button>
+            <p className="comment__createdAt">{moment(createdAt).fromNow()}</p>
+          </div>
+        ) : (
+          <p className="comment__createdAt">{moment(createdAt).fromNow()}</p>
+        )}
       </div>
       <p className="comment__body">{commentBody}</p>
     </li>

@@ -22,6 +22,11 @@
     }
   }
 
+  &__wrapper {
+    @include flex-center;
+    gap: 10px;
+  }
+
   &__body {
     font-size: 0.8rem;
     margin: 10px 0px;

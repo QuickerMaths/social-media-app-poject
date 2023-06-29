@@ -578,6 +578,12 @@ input {
     font-size: 1rem;
   }
 }
+.comment__wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
 .comment__body {
   font-size: 0.8rem;
   margin: 10px 0px;

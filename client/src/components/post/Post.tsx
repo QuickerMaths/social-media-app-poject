@@ -159,7 +159,12 @@ const Post: React.FC<Props> = ({ post, setReRender, reRender }) => {
         <>
           <ul className="post__comments-container">
             {comments.map((comment: IComment) => (
-              <Comment key={comment._id} comment={comment} />
+              <Comment
+                key={comment._id}
+                comment={comment}
+                reRender={reRender}
+                setReRender={setReRender}
+              />
             ))}
           </ul>
           {commentTotal > 2 && (
