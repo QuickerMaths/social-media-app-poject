@@ -8,11 +8,20 @@ export const rePostSchema = new Schema(
       ref: "User",
       required: [true, "Post owner is required"],
     },
+    postBody: {
+      type: String,
+    },
     post: {
       type: mongoose.Types.ObjectId,
       ref: "Post",
       required: [true, "Post is required"],
     },
+    likedBy: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   { timestamps: true }
 );
