@@ -33,6 +33,11 @@ export const postSchema = new Schema(
       type: Number,
       default: 0,
     },
+    isRePost: {
+      type: Boolean,
+      immutable: true,
+      default: false,
+    },
   },
   { timestamps: true }
 );

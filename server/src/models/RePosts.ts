@@ -29,6 +29,7 @@ export const rePostSchema = new Schema(
     comments: [{ type: mongoose.Types.ObjectId, ref: "Comment" }],
     isRePost: {
       type: Boolean,
+      immutable: true,
       default: true,
     },
   },
