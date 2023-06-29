@@ -162,12 +162,12 @@ export const getPostById = async (req: Request, res: Response) => {
 };
 
 export const createRePost = async (req: Request, res: Response) => {
-  const { postId, userId } = req.body;
+  const { postId, userId, postBody } = req.body;
 
   if (!postId || !userId)
     return res.status(400).json({ message: "Post Id and user Id required" });
 
-  const rePost = await RePost.create({ post: postId, owner: userId });
+  const rePost = await RePost.create({ post: postId, owner: userId, postBody });
 
   res.status(201).json(rePost);
 };
