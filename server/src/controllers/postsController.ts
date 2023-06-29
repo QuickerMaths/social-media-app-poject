@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Post from "../models/Posts";
+import Comment from "../models/Comments";
 
 export const getPosts = async (req: Request, res: Response) => {
   const posts = await Post.find().populate([
@@ -100,6 +101,8 @@ export const deletePost = async (req: Request, res: Response) => {
     return res.status(403).json({ message: "Unauthorized" });
 
   const deletedPost = await post.deleteOne();
+
+  await Comment.deleteMany({ _id: { $in: post.comments } });
 
   res.status(204).json(deletedPost);
 };
