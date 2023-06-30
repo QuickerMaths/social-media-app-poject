@@ -1,25 +1,16 @@
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import { Link } from "react-router-dom";
 import { IPost } from "../../components/post/types";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
-import defaultImg from "../../assets/images/default_img.png";
-import useToastCreator from "../../hooks/useToastCreator";
-import {
-  AiOutlineComment,
-  AiOutlineLike,
-  AiOutlineClose,
-} from "react-icons/ai";
-import { BiRepost } from "react-icons/bi";
-import axios from "axios";
-import { IComment } from "../../components/comment/types";
-import Comment from "../../components/comment/Comment";
+import { AiOutlineClose } from "react-icons/ai";
 import { useFormik } from "formik";
 import { closeModal } from "../../features/modalSlice/modalSlice";
 import PostAction from "../../components/post/sumcomponents/PostAction";
 import PostComments from "../../components/post/sumcomponents/PostComments";
+import PostOwner from "../../components/post/sumcomponents/PostOwner";
+import axios from "axios";
 
 interface Props {
   postId: string;
@@ -33,7 +24,7 @@ const PostDetailsModal: React.FC<Props> = ({
   setReRender,
 }) => {
   const dispatch = useAppDispatch();
-  const { userId, userImg } = useAppSelector((state: RootState) => state.auth);
+  const { userId } = useAppSelector((state: RootState) => state.auth);
   const { modals } = useAppSelector((state: RootState) => state.modal);
   const [post, setPost] = useState<IPost | null>(null);
 
@@ -72,19 +63,6 @@ const PostDetailsModal: React.FC<Props> = ({
     },
   });
 
-  const handleLikePost = async (postId: string, userId: string) => {
-    try {
-      await axios.put("http://localhost:5000/api/posts", {
-        postId,
-        userId,
-      });
-      //TODO: rtkQuery optimistic updates !
-      setReRender(!reRender);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   if (!modals.detailsPostModal) return null;
 
   return ReactDOM.createPortal(
@@ -98,7 +76,6 @@ const PostDetailsModal: React.FC<Props> = ({
           <p>Loading...</p>
         ) : (
           <>
-            {" "}
             <button
               className="post-details-modal__close"
               onClick={() => dispatch(closeModal("detailsPostModal"))}
@@ -106,28 +83,7 @@ const PostDetailsModal: React.FC<Props> = ({
               <AiOutlineClose className="post-details-modal__close-icon" />
             </button>
             <div className="post-details-modal__top-container">
-              <Link
-                to={`/user/${post.owner._id}`}
-                className="post-details-modal__owner-wrapper"
-                onClick={() => dispatch(closeModal("detailsPostModal"))}
-              >
-                <img
-                  className="post-details-modal__profile-img"
-                  //TODO: figure out how to display userImg even if its null (displaying after img its removal without need to reloading the page)
-                  src={
-                    userImg && userId === post.owner._id
-                      ? userImg
-                      : post.owner.profilePicture
-                      ? post.owner.profilePicture
-                      : defaultImg
-                  }
-                  width={50}
-                  height={50}
-                />
-                <h3 className="post-details-modal__owner">
-                  {post.owner.username}
-                </h3>
-              </Link>
+              <PostOwner owner={post.owner} />
 
               <p className="post-details-modal__createdAt">
                 {moment(post.createdAt).fromNow()}
