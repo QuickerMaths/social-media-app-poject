@@ -8,6 +8,7 @@ import Comment from "../../comment/Comment";
 import PostHeading from "../sumcomponents/PostHeading";
 import PostAction from "../sumcomponents/PostAction";
 import { openModal } from "../../../features/modalSlice/modalSlice";
+import PostComments from "../sumcomponents/PostComments";
 
 interface Props {
   post: IPost;
@@ -53,24 +54,12 @@ const Post: React.FC<Props> = ({ post, setReRender, reRender }) => {
       />
       {commentTotal > 0 && (
         <>
-          <ul className="post__comments-container">
-            {comments.map((comment: IComment) => (
-              <Comment
-                key={comment._id}
-                comment={comment}
-                reRender={reRender}
-                setReRender={setReRender}
-              />
-            ))}
-          </ul>
-          {commentTotal > 2 && (
-            <button
-              className="post__see-more"
-              onClick={() => dispatch(openModal("detailsPostModal"))}
-            >
-              See more
-            </button>
-          )}
+          <PostComments
+            commentTotal={commentTotal}
+            comments={comments}
+            reRender={reRender}
+            setReRender={setReRender}
+          />
         </>
       )}
 
