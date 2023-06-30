@@ -1,15 +1,13 @@
-import React, { useState } from "react";
-import { AiOutlineLike, AiOutlineComment } from "react-icons/ai";
-import { BiRepost } from "react-icons/bi";
+import React from "react";
 import { IPost } from "../types";
 import { IComment } from "../../comment/types";
-import { useAppSelector } from "../../../hooks/reduxHooks";
+import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import { RootState } from "../../../redux/store";
-import useToastCreator from "../../../hooks/useToastCreator";
 import PostDetailsModal from "../../../portals/post-details-modal/PostDetailsModal";
 import Comment from "../../comment/Comment";
 import PostHeading from "../sumcomponents/PostHeading";
 import PostAction from "../sumcomponents/PostAction";
+import { openModal } from "../../../features/modalSlice/modalSlice";
 
 interface Props {
   post: IPost;
@@ -28,9 +26,8 @@ const Post: React.FC<Props> = ({ post, setReRender, reRender }) => {
     comments,
     commentTotal,
   } = post;
-  const { userId } = useAppSelector((state: RootState) => state.auth);
-
-  const [isOpenDetails, setIsOpenDetails] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
+  const { modals } = useAppSelector((state: RootState) => state.modal);
 
   return (
     <li className="post">
@@ -69,7 +66,7 @@ const Post: React.FC<Props> = ({ post, setReRender, reRender }) => {
           {commentTotal > 2 && (
             <button
               className="post__see-more"
-              onClick={() => setIsOpenDetails(true)}
+              onClick={() => dispatch(openModal("detailsPostModal"))}
             >
               See more
             </button>
@@ -77,11 +74,9 @@ const Post: React.FC<Props> = ({ post, setReRender, reRender }) => {
         </>
       )}
 
-      {isOpenDetails && (
+      {modals.detailsPostModal && (
         <PostDetailsModal
           postId={postId}
-          isOpen={isOpenDetails}
-          setIsOpen={setIsOpenDetails}
           reRender={reRender}
           setReRender={setReRender}
         />

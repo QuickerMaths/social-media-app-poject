@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { Link } from "react-router-dom";
 import { IPost } from "../../components/post/types";
-import { useAppSelector } from "../../hooks/reduxHooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import defaultImg from "../../assets/images/default_img.png";
 import useToastCreator from "../../hooks/useToastCreator";
@@ -17,23 +17,22 @@ import axios from "axios";
 import { IComment } from "../../components/comment/types";
 import Comment from "../../components/comment/Comment";
 import { useFormik } from "formik";
+import { closeModal } from "../../features/modalSlice/modalSlice";
 
 interface Props {
-  isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   postId: string;
   reRender: boolean;
   setReRender: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const PostDetailsModal: React.FC<Props> = ({
-  setIsOpen,
-  isOpen,
   postId,
   reRender,
   setReRender,
 }) => {
+  const dispatch = useAppDispatch();
   const { userId, userImg } = useAppSelector((state: RootState) => state.auth);
+  const { modals } = useAppSelector((state: RootState) => state.modal);
   const [post, setPost] = useState<IPost | null>(null);
 
   useEffect(() => {
@@ -84,13 +83,13 @@ const PostDetailsModal: React.FC<Props> = ({
     }
   };
 
-  if (!isOpen) return null;
+  if (!modals.detailsPostModal) return null;
 
   return ReactDOM.createPortal(
     <div className="post-details-modal">
       <div
         className="post-details-modal__overlay"
-        onClick={() => setIsOpen(false)}
+        onClick={() => dispatch(closeModal("detailsPostModal"))}
       ></div>
       <div className="post-details-modal__content">
         {!post ? (
@@ -100,7 +99,7 @@ const PostDetailsModal: React.FC<Props> = ({
             {" "}
             <button
               className="post-details-modal__close"
-              onClick={() => setIsOpen(false)}
+              onClick={() => dispatch(closeModal("detailsPostModal"))}
             >
               <AiOutlineClose className="post-details-modal__close-icon" />
             </button>
@@ -108,7 +107,7 @@ const PostDetailsModal: React.FC<Props> = ({
               <Link
                 to={`/user/${post.owner._id}`}
                 className="post-details-modal__owner-wrapper"
-                onClick={() => setIsOpen(false)}
+                onClick={() => dispatch(closeModal("detailsPostModal"))}
               >
                 <img
                   className="post-details-modal__profile-img"
