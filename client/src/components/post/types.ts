@@ -25,7 +25,7 @@ export type IRePost = {
     username: string;
   };
   postBody: string;
-  post: IPost;
+  originalPost: IPost;
   likedBy: string[];
   commentTotal: number;
   comments: IComment[];

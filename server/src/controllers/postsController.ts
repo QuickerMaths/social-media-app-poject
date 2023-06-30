@@ -34,6 +34,11 @@ export const getPosts = async (req: Request, res: Response) => {
     {
       path: "originalPost",
       select: "_id owner postBody postImage likedBy commentTotal rePostCount",
+      populate: {
+        path: "owner",
+        select: "_id username profilePicture",
+        model: "User",
+      },
       model: "Post",
     },
   ]);

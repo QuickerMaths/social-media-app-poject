@@ -3,7 +3,6 @@ import { IPost } from "../types";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import { RootState } from "../../../redux/store";
 import PostDetailsModal from "../../../portals/post-details-modal/PostDetailsModal";
-
 import PostAction from "../sumcomponents/PostAction";
 import PostComments from "../sumcomponents/PostComments";
 import { openModal } from "../../../features/modalSlice/modalSlice";

@@ -20,7 +20,7 @@ const RePost: React.FC<Props> = ({ rePost, reRender, setReRender }) => {
   const {
     owner,
     postBody,
-    post: rePostedPost,
+    originalPost,
     likedBy,
     commentTotal,
     comments,
@@ -39,7 +39,6 @@ const RePost: React.FC<Props> = ({ rePost, reRender, setReRender }) => {
           <PostEdit
             createdAt={createdAt}
             postId={rePostId}
-            postImage={null} //TODO: change this to the rePostedPost
             postBody={postBody}
             setReRender={setReRender}
             reRender={reRender}
@@ -49,7 +48,24 @@ const RePost: React.FC<Props> = ({ rePost, reRender, setReRender }) => {
         )}
       </div>
       <p className="post__body">{postBody}</p>
-      // TODO: place repostedpost here
+
+      <div className="re-post">
+        {originalPost.postImage && (
+          <img
+            src={originalPost.postImage}
+            alt="post image"
+            className="post__image"
+          />
+        )}
+        <div className="post__top-container">
+          <PostOwner owner={originalPost.owner} />
+          <p className="post__createdAt">
+            {moment(originalPost.createdAt).fromNow()}
+          </p>
+        </div>
+        <p className="post__body">{originalPost.postBody}</p>
+      </div>
+
       <PostAction
         likedBy={likedBy}
         commentTotal={commentTotal}

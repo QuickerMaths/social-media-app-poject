@@ -11,7 +11,7 @@ import { closeModal } from "../../features/modalSlice/modalSlice";
 
 interface Props {
   postId: string;
-  postImage: string | null;
+  postImage?: string | null;
   postBody: string;
   userId: string;
   setReRender: React.Dispatch<React.SetStateAction<boolean>>;

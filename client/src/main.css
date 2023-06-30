@@ -343,6 +343,19 @@ input {
   }
 }
 
+.re-post {
+  padding: 10px 20px;
+  width: 90%;
+  border: 1px solid black;
+  border-radius: 25px;
+  margin-top: 20px;
+}
+@media (min-width: 768px) {
+  .re-post {
+    padding: 20px 40px;
+  }
+}
+
 .feed__form {
   display: flex;
   flex-direction: column;

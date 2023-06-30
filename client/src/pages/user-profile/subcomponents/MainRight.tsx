@@ -51,6 +51,7 @@ const MainRight: React.FC<Props> = ({ userId }) => {
             .map((post: IPost | IRePost) =>
               post.isRePost ? (
                 <RePost
+                  key={(post as IRePost)._id}
                   rePost={post as IRePost}
                   reRender={reRender}
                   setReRender={setReRender}
