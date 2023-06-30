@@ -1,14 +1,12 @@
 import React from "react";
 import { IPost } from "../types";
-import { IComment } from "../../comment/types";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import { RootState } from "../../../redux/store";
 import PostDetailsModal from "../../../portals/post-details-modal/PostDetailsModal";
-import Comment from "../../comment/Comment";
 import PostHeading from "../sumcomponents/PostHeading";
 import PostAction from "../sumcomponents/PostAction";
-import { openModal } from "../../../features/modalSlice/modalSlice";
 import PostComments from "../sumcomponents/PostComments";
+import { openModal } from "../../../features/modalSlice/modalSlice";
 
 interface Props {
   post: IPost;
@@ -27,6 +25,7 @@ const Post: React.FC<Props> = ({ post, setReRender, reRender }) => {
     comments,
     commentTotal,
   } = post;
+
   const dispatch = useAppDispatch();
   const { modals } = useAppSelector((state: RootState) => state.modal);
 
@@ -55,11 +54,18 @@ const Post: React.FC<Props> = ({ post, setReRender, reRender }) => {
       {commentTotal > 0 && (
         <>
           <PostComments
-            commentTotal={commentTotal}
             comments={comments}
             reRender={reRender}
             setReRender={setReRender}
           />
+          {commentTotal > 2 && (
+            <button
+              className="post__see-more"
+              onClick={() => dispatch(openModal("detailsPostModal"))}
+            >
+              See more
+            </button>
+          )}
         </>
       )}
 

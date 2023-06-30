@@ -18,6 +18,8 @@ import { IComment } from "../../components/comment/types";
 import Comment from "../../components/comment/Comment";
 import { useFormik } from "formik";
 import { closeModal } from "../../features/modalSlice/modalSlice";
+import PostAction from "../../components/post/sumcomponents/PostAction";
+import PostComments from "../../components/post/sumcomponents/PostComments";
 
 interface Props {
   postId: string;
@@ -140,48 +142,19 @@ const PostDetailsModal: React.FC<Props> = ({
                   className="post-details-modal__image"
                 />
               )}
-              <div className="post-details-modal__bottom-container">
-                <button
-                  className={`post-details-modal__action-button ${
-                    post.likedBy.includes(userId as string) &&
-                    "post-details-modal__liked"
-                  }`}
-                  onClick={() => {
-                    userId === null
-                      ? useToastCreator(
-                          "You have to be logged in to like this post",
-                          "error"
-                        )
-                      : handleLikePost(postId, userId);
-                  }}
-                >
-                  <AiOutlineLike
-                    className={`post-details-modal__action-icon ${
-                      post.likedBy.includes(userId as string) &&
-                      "post-details-modal__liked"
-                    }`}
-                  />
-                  {post.likedBy.length}
-                </button>
-                <button className="post-details-modal__action-button">
-                  <AiOutlineComment className="post-details-modal__action-icon" />{" "}
-                  {post.commentTotal}
-                </button>
-                <button className="post-details-modal__action-button">
-                  <BiRepost className="post-details-modal__action-icon" /> 0
-                </button>
-              </div>
+              <PostAction
+                likedBy={post.likedBy}
+                commentTotal={post.commentTotal}
+                postId={post._id}
+                reRender={reRender}
+                setReRender={setReRender}
+              />
               {post.commentTotal > 0 && (
-                <ul className="post-details-modal__comments-container">
-                  {post.comments.map((comment: IComment) => (
-                    <Comment
-                      key={comment._id}
-                      comment={comment}
-                      reRender={reRender}
-                      setReRender={setReRender}
-                    />
-                  ))}
-                </ul>
+                <PostComments
+                  comments={post.comments}
+                  reRender={reRender}
+                  setReRender={setReRender}
+                />
               )}
             </div>
             <form onSubmit={handleSubmit} className="post-details-modal__form">

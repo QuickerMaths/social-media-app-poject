@@ -23,7 +23,7 @@ interface Props {
   reRender: boolean;
 }
 
-const PostHead: React.FC<Props> = ({
+const PostHeading: React.FC<Props> = ({
   owner,
   createdAt,
   postId,
@@ -34,9 +34,6 @@ const PostHead: React.FC<Props> = ({
 }) => {
   const dispatch = useAppDispatch();
   const { userId, userImg } = useAppSelector((state: RootState) => state.auth);
-  const { modals } = useAppSelector((state: RootState) => state.modal);
-
-  console.log(modals);
 
   const handlePostDelete = async (userId: string, postId: string) => {
     try {
@@ -104,4 +101,4 @@ const PostHead: React.FC<Props> = ({
   );
 };
 
-export default PostHead;
+export default PostHeading;
