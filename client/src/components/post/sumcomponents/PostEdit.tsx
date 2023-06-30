@@ -6,24 +6,16 @@ import { openModal } from "../../../features/modalSlice/modalSlice";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import PostEditModal from "../../../portals/post-edit-modal/PostEditModal";
 import { RootState } from "../../../redux/store";
+import { IPost, IRePost } from "../types";
 
 interface Props {
-  createdAt: string;
-  postId: string;
-  postImage: string | null;
-  postBody: string;
+  post: IPost | IRePost;
   setReRender: React.Dispatch<React.SetStateAction<boolean>>;
   reRender: boolean;
 }
 
-const PostEdit: React.FC<Props> = ({
-  createdAt,
-  postId,
-  postImage,
-  postBody,
-  setReRender,
-  reRender,
-}) => {
+const PostEdit: React.FC<Props> = ({ post, setReRender, reRender }) => {
+  const { createdAt, _id: postId } = post;
   const dispatch = useAppDispatch();
   const { userId } = useAppSelector((state: RootState) => state.auth);
 
@@ -59,10 +51,7 @@ const PostEdit: React.FC<Props> = ({
         <p className="post__createdAt">{moment(createdAt).fromNow()}</p>
       </div>
       <PostEditModal
-        postId={postId}
-        postImage={postImage}
-        postBody={postBody}
-        userId={userId as string}
+        post={post}
         reRender={reRender}
         setReRender={setReRender}
       />

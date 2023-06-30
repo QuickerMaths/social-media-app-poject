@@ -2,26 +2,24 @@ import axios from "axios";
 import { useFormik } from "formik";
 import React from "react";
 import { GrAttachment } from "react-icons/gr";
+import { IPost } from "../../../components/post/types";
 import { closeModal } from "../../../features/modalSlice/modalSlice";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import { useConvertToBase64 } from "../../../hooks/useConvertToBase64";
 import { RootState } from "../../../redux/store";
 
 interface Props {
-  postId: string;
-  postImage: string | null;
-  postBody: string;
+  post: IPost;
   setReRender: React.Dispatch<React.SetStateAction<boolean>>;
   reRender: boolean;
 }
 
 const PostEditImageForm: React.FC<Props> = ({
+  post,
   reRender,
   setReRender,
-  postId,
-  postImage,
-  postBody,
 }) => {
+  const { _id: postId, postImage, postBody } = post;
   const dispatch = useAppDispatch();
   const { userId } = useAppSelector((state: RootState) => state.auth);
   const { handleSubmit, values, handleChange, setFieldValue } = useFormik({

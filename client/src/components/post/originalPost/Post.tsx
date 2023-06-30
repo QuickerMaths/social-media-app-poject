@@ -37,14 +37,7 @@ const Post: React.FC<Props> = ({ post, setReRender, reRender }) => {
       <div className="post__top-container">
         <PostOwner owner={owner} />
         {owner._id === userId ? (
-          <PostEdit
-            createdAt={createdAt}
-            postId={postId}
-            postImage={postImage}
-            postBody={postBody}
-            setReRender={setReRender}
-            reRender={reRender}
-          />
+          <PostEdit post={post} setReRender={setReRender} reRender={reRender} />
         ) : (
           <p className="post__createdAt">{moment(createdAt).fromNow()}</p>
         )}

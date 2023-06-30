@@ -4,20 +4,20 @@ import { closeModal } from "../../../features/modalSlice/modalSlice";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import { RootState } from "../../../redux/store";
 import { useFormik } from "formik";
+import { IRePost } from "../../../components/post/types";
 
 interface Props {
-  postId: string;
-  postBody: string;
+  post: IRePost;
   setReRender: React.Dispatch<React.SetStateAction<boolean>>;
   reRender: boolean;
 }
 
 const PostEditRePostForm: React.FC<Props> = ({
-  postId,
-  postBody,
+  post,
   setReRender,
   reRender,
 }) => {
+  const { _id: postId, postBody } = post;
   const dispatch = useAppDispatch();
   const { userId } = useAppSelector((state: RootState) => state.auth);
 
