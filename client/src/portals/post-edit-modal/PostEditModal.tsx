@@ -8,12 +8,13 @@ import { useConvertToBase64 } from "../../hooks/useConvertToBase64";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import { closeModal } from "../../features/modalSlice/modalSlice";
+import PostEditImageForm from "./subcomponents/PostEditImageForm";
+import PostEditRePostForm from "./subcomponents/PostEditRePostForm";
 
 interface Props {
   postId: string;
-  postImage?: string | null;
+  postImage: string | null;
   postBody: string;
-  userId: string;
   setReRender: React.Dispatch<React.SetStateAction<boolean>>;
   reRender: boolean;
 }
@@ -22,34 +23,14 @@ const PostEditModal: React.FC<Props> = ({
   postId,
   postImage,
   postBody,
-  userId,
   reRender,
   setReRender,
 }) => {
   const dispatch = useAppDispatch();
   const { modals } = useAppSelector((state: RootState) => state.modal);
+  const { userId } = useAppSelector((state: RootState) => state.auth);
   //TODO: refactor to rktQuery and change rerender state
-  const { handleSubmit, values, handleChange, setFieldValue } = useFormik({
-    initialValues: {
-      postBody: postBody,
-      postImage: postImage,
-    },
-    onSubmit: async (values) => {
-      try {
-        await axios.put("http://localhost:5000/api/posts/edit", {
-          postId,
-          userId,
-          postImage: values.postImage,
-          postBody: values.postBody,
-        });
 
-        dispatch(closeModal("editPostModal"));
-        setReRender(!reRender);
-      } catch (err) {
-        console.log(err);
-      }
-    },
-  });
   if (!modals.editPostModal) return null;
   return ReactDOM.createPortal(
     <div className="post-edit-modal">
@@ -65,59 +46,22 @@ const PostEditModal: React.FC<Props> = ({
           <AiOutlineClose className="post-edit-modal__close-icon" />
         </button>
         <h2 className="post-edit-modal__title">Edit post</h2>
-        <form onSubmit={handleSubmit} className="post-edit-modal__form">
-          <textarea
-            rows={5}
-            cols={10}
-            name="postBody"
-            id="postBody"
-            value={values.postBody}
-            onChange={handleChange}
-            className="post-edit-modal__text-area"
+        {postImage === null ? (
+          <PostEditRePostForm
+            postId={postId}
+            postBody={postBody}
+            setReRender={setReRender}
+            reRender={reRender}
           />
-          {values.postImage ? (
-            <>
-              <label htmlFor="postImage" className="post-edit-modal__label">
-                <GrAttachment className="post-edit-modal__icon" />
-                <img
-                  src={values.postImage}
-                  alt="post image"
-                  className="post-edit-modal__image-label"
-                />
-              </label>
-              <input
-                type="file"
-                name="postImage"
-                id="postImage"
-                accept=".png, .jpg, .jpeg"
-                onChange={async (e) => {
-                  setFieldValue(
-                    "postImage",
-                    await useConvertToBase64(e.target.files![0])
-                  );
-                }}
-                className="post-edit-modal__file-input-image"
-              />
-            </>
-          ) : (
-            <>
-              <label htmlFor="postImage">Add Image</label>
-              <input
-                type="file"
-                name="postImage"
-                id="postImage"
-                accept=".png, .jpg, .jpeg"
-                onChange={(e) => {
-                  setFieldValue("postImage", e.target.files![0]);
-                }}
-                className="post-edit-modal__file-input"
-              />
-            </>
-          )}
-          <button className="post-edit-modal__button" type="submit">
-            Edit
-          </button>
-        </form>
+        ) : (
+          <PostEditImageForm
+            postBody={postBody}
+            postId={postId}
+            postImage={postImage}
+            setReRender={setReRender}
+            reRender={reRender}
+          />
+        )}
       </div>
     </div>,
     document.body

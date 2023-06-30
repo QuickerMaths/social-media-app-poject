@@ -10,7 +10,7 @@ import { RootState } from "../../../redux/store";
 interface Props {
   createdAt: string;
   postId: string;
-  postImage: string;
+  postImage: string | null;
   postBody: string;
   setReRender: React.Dispatch<React.SetStateAction<boolean>>;
   reRender: boolean;

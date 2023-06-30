@@ -9,6 +9,7 @@ import PostAction from "../sumcomponents/PostAction";
 import PostComments from "../sumcomponents/PostComments";
 import { openModal } from "../../../features/modalSlice/modalSlice";
 import PostDetailsModal from "../../../portals/post-details-modal/PostDetailsModal";
+import PostEditModal from "../../../portals/post-edit-modal/PostEditModal";
 
 interface Props {
   rePost: IRePost;
@@ -36,13 +37,23 @@ const RePost: React.FC<Props> = ({ rePost, reRender, setReRender }) => {
       <div className="post__top-container">
         <PostOwner owner={owner} />
         {owner._id === userId ? (
-          <PostEdit
-            createdAt={createdAt}
-            postId={rePostId}
-            postBody={postBody}
-            setReRender={setReRender}
-            reRender={reRender}
-          />
+          <>
+            <PostEdit
+              createdAt={createdAt}
+              postId={rePostId}
+              postImage={null}
+              postBody={postBody}
+              setReRender={setReRender}
+              reRender={reRender}
+            />
+            <PostEditModal
+              postId={rePostId}
+              postImage={null}
+              postBody={postBody}
+              setReRender={setReRender}
+              reRender={reRender}
+            />
+          </>
         ) : (
           <p className="post__createdAt">{moment(createdAt).fromNow()}</p>
         )}
