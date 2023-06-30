@@ -6,22 +6,16 @@ import { openModal } from "../../../features/modalSlice/modalSlice";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import useToastCreator from "../../../hooks/useToastCreator";
 import { RootState } from "../../../redux/store";
+import { IPost, IRePost } from "../types";
 
 interface Props {
-  likedBy: string[];
-  commentTotal: number;
-  postId: string;
+  post: IPost | IRePost;
   reRender: boolean;
   setReRender: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const PostAction: React.FC<Props> = ({
-  likedBy,
-  postId,
-  commentTotal,
-  setReRender,
-  reRender,
-}) => {
+const PostAction: React.FC<Props> = ({ post, setReRender, reRender }) => {
+  const { likedBy, _id: postId, commentTotal } = post;
   const dispatch = useAppDispatch();
   const { userId } = useAppSelector((state: RootState) => state.auth);
 
