@@ -46,13 +46,7 @@ const Post: React.FC<Props> = ({ post, setReRender, reRender }) => {
       {postImage && (
         <img src={postImage} alt="post image" className="post__image" />
       )}
-      <PostAction
-        likedBy={likedBy}
-        commentTotal={commentTotal}
-        postId={postId}
-        setReRender={setReRender}
-        reRender={reRender}
-      />
+      <PostAction post={post} setReRender={setReRender} reRender={reRender} />
       {commentTotal > 0 && (
         <>
           <PostComments
@@ -73,7 +67,7 @@ const Post: React.FC<Props> = ({ post, setReRender, reRender }) => {
 
       {modals.detailsPostModal && (
         <PostDetailsModal
-          postId={postId}
+          post={post}
           reRender={reRender}
           setReRender={setReRender}
         />
