@@ -5,10 +5,11 @@ import { useFormik } from "formik";
 import { AiOutlineClose } from "react-icons/ai";
 import { GrAttachment } from "react-icons/gr";
 import { useConvertToBase64 } from "../../hooks/useConvertToBase64";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
+import { RootState } from "../../redux/store";
+import { closeModal } from "../../features/modalSlice/modalSlice";
 
 interface Props {
-  isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   postId: string;
   postImage: string | null;
   postBody: string;
@@ -18,8 +19,6 @@ interface Props {
 }
 
 const PostEditModal: React.FC<Props> = ({
-  isOpen,
-  setIsOpen,
   postId,
   postImage,
   postBody,
@@ -27,6 +26,8 @@ const PostEditModal: React.FC<Props> = ({
   reRender,
   setReRender,
 }) => {
+  const dispatch = useAppDispatch();
+  const { modals } = useAppSelector((state: RootState) => state.modal);
   //TODO: refactor to rktQuery and change rerender state
   const { handleSubmit, values, handleChange, setFieldValue } = useFormik({
     initialValues: {
@@ -42,24 +43,24 @@ const PostEditModal: React.FC<Props> = ({
           postBody: values.postBody,
         });
 
-        setIsOpen(false);
+        dispatch(closeModal("editPostModal"));
         setReRender(!reRender);
       } catch (err) {
         console.log(err);
       }
     },
   });
-  if (!isOpen) return null;
+  if (!modals.editPostModal) return null;
   return ReactDOM.createPortal(
     <div className="post-edit-modal">
       <div
         className="post-edit-modal__overlay"
-        onClick={() => setIsOpen(false)}
+        onClick={() => dispatch(closeModal("editPostModal"))}
       ></div>
       <div className="post-edit-modal__content">
         <button
           className="post-edit-modal__close"
-          onClick={() => setIsOpen(false)}
+          onClick={() => dispatch(closeModal("editPostModal"))}
         >
           <AiOutlineClose className="post-edit-modal__close-icon" />
         </button>
