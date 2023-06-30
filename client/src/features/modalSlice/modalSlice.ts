@@ -4,6 +4,7 @@ import { IModalSliceState } from "./types";
 const initialState: IModalSliceState = {
   modals: {
     editPostModal: false,
+    detailsPostModal: false,
   },
 };
 
