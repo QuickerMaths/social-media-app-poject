@@ -30,4 +30,6 @@ export type IRePost = {
   commentTotal: number;
   comments: IComment[];
   isRePost: boolean;
+  createdAt: string;
+  _id: string;
 };

@@ -1,24 +1,14 @@
-import React, { useState } from "react";
-import {
-  AiOutlineLike,
-  AiOutlineComment,
-  AiOutlineEdit,
-  AiOutlineDelete,
-} from "react-icons/ai";
-import { BiRepost } from "react-icons/bi";
+import React from "react";
 import { IRePost } from "../types";
-import defaultImg from "../../../assets/images/default_img.png";
-import moment from "moment";
-import { Link } from "react-router-dom";
-import { IPost } from "../types";
-import { IComment } from "../../comment/types";
-import { useAppSelector } from "../../../hooks/reduxHooks";
+import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import { RootState } from "../../../redux/store";
-import axios from "axios";
-import useToastCreator from "../../../hooks/useToastCreator";
-import PostEditModal from "../../../portals/post-edit-modal/PostEditModal";
+import PostOwner from "../sumcomponents/PostOwner";
+import PostEdit from "../sumcomponents/PostEdit";
+import moment from "moment";
+import PostAction from "../sumcomponents/PostAction";
+import PostComments from "../sumcomponents/PostComments";
+import { openModal } from "../../../features/modalSlice/modalSlice";
 import PostDetailsModal from "../../../portals/post-details-modal/PostDetailsModal";
-import Comment from "../../comment/Comment";
 
 interface Props {
   rePost: IRePost;
@@ -28,20 +18,72 @@ interface Props {
 
 const RePost: React.FC<Props> = ({ rePost, reRender, setReRender }) => {
   const {
-    owner: { _id, profilePicture, username },
+    owner,
     postBody,
     post: rePostedPost,
     likedBy,
     commentTotal,
     comments,
+    createdAt,
     _id: rePostId,
   } = rePost;
-  const { userId, userImg } = useAppSelector((state: RootState) => state.auth);
+  const dispatch = useAppDispatch();
+  const { userId } = useAppSelector((state: RootState) => state.auth);
+  const { modals } = useAppSelector((state: RootState) => state.modal);
 
-  const [isOpenEdit, setIsOpenEdit] = useState<boolean>(false);
-  const [isOpenDetails, setIsOpenDetails] = useState<boolean>(false);
-
-  return <li className="re-post">RePost</li>;
+  return (
+    <li className="post">
+      <div className="post__top-container">
+        <PostOwner owner={owner} />
+        {owner._id === userId ? (
+          <PostEdit
+            createdAt={createdAt}
+            postId={rePostId}
+            postImage={null} //TODO: change this to the rePostedPost
+            postBody={postBody}
+            setReRender={setReRender}
+            reRender={reRender}
+          />
+        ) : (
+          <p className="post__createdAt">{moment(createdAt).fromNow()}</p>
+        )}
+      </div>
+      <p className="post__body">{postBody}</p>
+      // TODO: place repostedpost here
+      <PostAction
+        likedBy={likedBy}
+        commentTotal={commentTotal}
+        postId={rePostId}
+        setReRender={setReRender}
+        reRender={reRender}
+      />
+      {commentTotal > 0 && (
+        <>
+          <PostComments
+            comments={comments}
+            reRender={reRender}
+            setReRender={setReRender}
+          />
+          {commentTotal > 2 && (
+            <button
+              className="post__see-more"
+              onClick={() => dispatch(openModal("detailsPostModal"))}
+            >
+              See more
+            </button>
+          )}
+        </>
+      )}
+      {/* {modals.detailsPostModal && (
+        <PostDetailsModal
+          postId={rePostId}
+          reRender={reRender}
+          setReRender={setReRender}
+        />
+      )} */}
+    </li>
+    //TODO: fix modaldetails
+  );
 };
 
 export default RePost;
