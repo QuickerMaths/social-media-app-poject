@@ -22,11 +22,10 @@ const RePost: React.FC<Props> = ({ rePost, reRender, setReRender }) => {
     owner,
     postBody,
     originalPost,
-    likedBy,
     commentTotal,
     comments,
     createdAt,
-    _id: rePostId,
+    _id: postId,
   } = rePost;
   const dispatch = useAppDispatch();
   const { userId } = useAppSelector((state: RootState) => state.auth);
@@ -39,20 +38,17 @@ const RePost: React.FC<Props> = ({ rePost, reRender, setReRender }) => {
         {owner._id === userId ? (
           <>
             <PostEdit
-              createdAt={createdAt}
-              postId={rePostId}
-              postImage={null}
-              postBody={postBody}
+              post={rePost}
               setReRender={setReRender}
               reRender={reRender}
             />
-            <PostEditModal
-              postId={rePostId}
-              postImage={null}
-              postBody={postBody}
-              setReRender={setReRender}
-              reRender={reRender}
-            />
+            {modals[`${postId}edit`] && (
+              <PostEditModal
+                post={rePost}
+                setReRender={setReRender}
+                reRender={reRender}
+              />
+            )}
           </>
         ) : (
           <p className="post__createdAt">{moment(createdAt).fromNow()}</p>
@@ -60,30 +56,30 @@ const RePost: React.FC<Props> = ({ rePost, reRender, setReRender }) => {
       </div>
       <p className="post__body">{postBody}</p>
 
-      <div className="re-post">
-        {originalPost.postImage && (
-          <img
-            src={originalPost.postImage}
-            alt="post image"
-            className="post__image"
-          />
-        )}
-        <div className="post__top-container">
-          <PostOwner owner={originalPost.owner} />
-          <p className="post__createdAt">
-            {moment(originalPost.createdAt).fromNow()}
-          </p>
+      {originalPost === null ? (
+        <div className="re-post">
+          <h2 className="re-post__deleted-message">Post has been deleted</h2>
         </div>
-        <p className="post__body">{originalPost.postBody}</p>
-      </div>
+      ) : (
+        <div className="re-post">
+          {originalPost.postImage && (
+            <img
+              src={originalPost.postImage}
+              alt="post image"
+              className="post__image"
+            />
+          )}
+          <div className="post__top-container">
+            <PostOwner owner={originalPost.owner} />
+            <p className="post__createdAt">
+              {moment(originalPost.createdAt).fromNow()}
+            </p>
+          </div>
+          <p className="post__body">{originalPost.postBody}</p>
+        </div>
+      )}
 
-      <PostAction
-        likedBy={likedBy}
-        commentTotal={commentTotal}
-        postId={rePostId}
-        setReRender={setReRender}
-        reRender={reRender}
-      />
+      <PostAction post={rePost} setReRender={setReRender} reRender={reRender} />
       {commentTotal > 0 && (
         <>
           <PostComments
@@ -94,20 +90,20 @@ const RePost: React.FC<Props> = ({ rePost, reRender, setReRender }) => {
           {commentTotal > 2 && (
             <button
               className="post__see-more"
-              onClick={() => dispatch(openModal("detailsPostModal"))}
+              onClick={() => dispatch(openModal(`${postId}details`))}
             >
               See more
             </button>
           )}
         </>
       )}
-      {/* {modals.detailsPostModal && (
+      {modals[`${postId}details`] && (
         <PostDetailsModal
-          postId={rePostId}
+          post={rePost}
           reRender={reRender}
           setReRender={setReRender}
         />
-      )} */}
+      )}
     </li>
     //TODO: fix modaldetails
   );

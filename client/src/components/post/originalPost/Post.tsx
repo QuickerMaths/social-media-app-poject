@@ -9,6 +9,7 @@ import { openModal } from "../../../features/modalSlice/modalSlice";
 import PostOwner from "../sumcomponents/PostOwner";
 import PostEdit from "../sumcomponents/PostEdit";
 import moment from "moment";
+import PostEditModal from "../../../portals/post-edit-modal/PostEditModal";
 
 interface Props {
   post: IPost;
@@ -21,11 +22,10 @@ const Post: React.FC<Props> = ({ post, setReRender, reRender }) => {
     owner,
     createdAt,
     postBody,
-    likedBy,
-    _id: postId,
     postImage,
     comments,
     commentTotal,
+    _id: postId,
   } = post;
 
   const dispatch = useAppDispatch();
@@ -37,7 +37,20 @@ const Post: React.FC<Props> = ({ post, setReRender, reRender }) => {
       <div className="post__top-container">
         <PostOwner owner={owner} />
         {owner._id === userId ? (
-          <PostEdit post={post} setReRender={setReRender} reRender={reRender} />
+          <>
+            <PostEdit
+              post={post}
+              setReRender={setReRender}
+              reRender={reRender}
+            />
+            {modals[`${postId}edit`] && (
+              <PostEditModal
+                post={post}
+                setReRender={setReRender}
+                reRender={reRender}
+              />
+            )}
+          </>
         ) : (
           <p className="post__createdAt">{moment(createdAt).fromNow()}</p>
         )}
@@ -57,7 +70,7 @@ const Post: React.FC<Props> = ({ post, setReRender, reRender }) => {
           {commentTotal > 2 && (
             <button
               className="post__see-more"
-              onClick={() => dispatch(openModal("detailsPostModal"))}
+              onClick={() => dispatch(openModal(`${postId}details`))}
             >
               See more
             </button>
@@ -65,7 +78,7 @@ const Post: React.FC<Props> = ({ post, setReRender, reRender }) => {
         </>
       )}
 
-      {modals.detailsPostModal && (
+      {modals[`${postId}details`] && (
         <PostDetailsModal
           post={post}
           reRender={reRender}

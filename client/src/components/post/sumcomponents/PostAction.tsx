@@ -55,7 +55,7 @@ const PostAction: React.FC<Props> = ({ post, setReRender, reRender }) => {
       </button>
       <button
         className="post__action-button"
-        onClick={() => dispatch(openModal("detailsPostModal"))}
+        onClick={() => dispatch(openModal(`${postId}details`))}
       >
         <AiOutlineComment className="post__action-icon" /> {commentTotal}
       </button>

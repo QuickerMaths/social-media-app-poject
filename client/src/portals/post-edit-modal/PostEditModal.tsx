@@ -15,22 +15,24 @@ interface Props {
 }
 
 const PostEditModal: React.FC<Props> = ({ post, reRender, setReRender }) => {
+  const { _id: postId } = post;
+
   const dispatch = useAppDispatch();
   const { modals } = useAppSelector((state: RootState) => state.modal);
 
   //TODO: refactor to rktQuery and change rerender state
 
-  if (!modals.editPostModal) return null;
+  if (!modals[`${postId}edit`]) return null;
   return ReactDOM.createPortal(
     <div className="post-edit-modal">
       <div
         className="post-edit-modal__overlay"
-        onClick={() => dispatch(closeModal("editPostModal"))}
+        onClick={() => dispatch(closeModal(`${postId}edit`))}
       ></div>
       <div className="post-edit-modal__content">
         <button
           className="post-edit-modal__close"
-          onClick={() => dispatch(closeModal("editPostModal"))}
+          onClick={() => dispatch(closeModal(`${postId}edit`))}
         >
           <AiOutlineClose className="post-edit-modal__close-icon" />
         </button>

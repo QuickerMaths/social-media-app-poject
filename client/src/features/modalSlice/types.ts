@@ -1,6 +1,5 @@
 export type IModalSliceState = {
   modals: {
-    editPostModal: boolean;
-    detailsPostModal: boolean;
+    [key: string]: boolean;
   };
 };

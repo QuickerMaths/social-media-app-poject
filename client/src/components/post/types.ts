@@ -1,7 +1,6 @@
 import { IComment } from "../comment/types";
 
 export type IPost = {
-  createdAt: string;
   likedBy: string[];
   owner: {
     _id: string;
@@ -10,6 +9,7 @@ export type IPost = {
   };
   postBody: string;
   postImage: string;
+  createdAt: string;
   updatedAt: string;
   commentTotal: number;
   comments: IComment[];
@@ -31,5 +31,6 @@ export type IRePost = {
   comments: IComment[];
   isRePost: boolean;
   createdAt: string;
+  updatedAt: string;
   _id: string;
 };

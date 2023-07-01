@@ -38,7 +38,7 @@ const PostEdit: React.FC<Props> = ({ post, setReRender, reRender }) => {
       <div className="post__edit-wrapper">
         <button
           className="post__edit-button"
-          onClick={() => dispatch(openModal("editPostModal"))}
+          onClick={() => dispatch(openModal(`${postId}edit`))}
         >
           <AiOutlineEdit className="post__edit-icon" />
         </button>
@@ -50,11 +50,6 @@ const PostEdit: React.FC<Props> = ({ post, setReRender, reRender }) => {
         </button>
         <p className="post__createdAt">{moment(createdAt).fromNow()}</p>
       </div>
-      <PostEditModal
-        post={post}
-        reRender={reRender}
-        setReRender={setReRender}
-      />
     </>
   );
 };

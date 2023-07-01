@@ -1,5 +1,5 @@
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
 import { IPost, IRePost } from "../../components/post/types";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
@@ -11,6 +11,8 @@ import PostAction from "../../components/post/sumcomponents/PostAction";
 import PostComments from "../../components/post/sumcomponents/PostComments";
 import PostOwner from "../../components/post/sumcomponents/PostOwner";
 import axios from "axios";
+import PostDetailsPost from "./subcomponents/PostDetailsPost";
+import PostDetailsRePost from "./subcomponents/PostDetailsRePost";
 
 interface Props {
   post: IPost | IRePost;
@@ -19,7 +21,14 @@ interface Props {
 }
 
 const PostDetailsModal: React.FC<Props> = ({ post, reRender, setReRender }) => {
-  const { _id: postId, isRePost, createdAt, postImage, owner, postBody } = post;
+  const {
+    _id: postId,
+    isRePost,
+    createdAt,
+    owner,
+    comments,
+    commentTotal,
+  } = post;
   const dispatch = useAppDispatch();
   const { userId } = useAppSelector((state: RootState) => state.auth);
   const { modals } = useAppSelector((state: RootState) => state.modal);
@@ -43,13 +52,13 @@ const PostDetailsModal: React.FC<Props> = ({ post, reRender, setReRender }) => {
     },
   });
 
-  if (!modals.detailsPostModal) return null;
+  if (!modals[`${postId}details`]) return null;
 
   return ReactDOM.createPortal(
     <div className="post-details-modal">
       <div
         className="post-details-modal__overlay"
-        onClick={() => dispatch(closeModal("detailsPostModal"))}
+        onClick={() => dispatch(closeModal(`${postId}details`))}
       ></div>
       <div className="post-details-modal__content">
         {!post ? (
@@ -58,7 +67,7 @@ const PostDetailsModal: React.FC<Props> = ({ post, reRender, setReRender }) => {
           <>
             <button
               className="post-details-modal__close"
-              onClick={() => dispatch(closeModal("detailsPostModal"))}
+              onClick={() => dispatch(closeModal(`${postId}details`))}
             >
               <AiOutlineClose className="post-details-modal__close-icon" />
             </button>
@@ -70,22 +79,19 @@ const PostDetailsModal: React.FC<Props> = ({ post, reRender, setReRender }) => {
               </p>
             </div>
             <div className="post-details-modal__overflow">
-              <p className="post-details-modal__body">{postBody}</p>
-              {postImage && (
-                <img
-                  src={postImage}
-                  alt="post image"
-                  className="post-details-modal__image"
-                />
+              {isRePost ? (
+                <PostDetailsRePost post={post as IRePost} />
+              ) : (
+                <PostDetailsPost post={post as IPost} />
               )}
               <PostAction
                 post={post}
                 reRender={reRender}
                 setReRender={setReRender}
               />
-              {post.commentTotal > 0 && (
+              {!isRePost && commentTotal > 0 && (
                 <PostComments
-                  comments={post.comments}
+                  comments={comments}
                   reRender={reRender}
                   setReRender={setReRender}
                 />
