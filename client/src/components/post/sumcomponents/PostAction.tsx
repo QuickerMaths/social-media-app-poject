@@ -15,7 +15,7 @@ interface Props {
 }
 
 const PostAction: React.FC<Props> = ({ post, setReRender, reRender }) => {
-  const { likedBy, _id: postId, commentTotal } = post;
+  const { likedBy, _id: postId, commentTotal, isRePost } = post;
   const dispatch = useAppDispatch();
   const { userId } = useAppSelector((state: RootState) => state.auth);
 
@@ -59,9 +59,14 @@ const PostAction: React.FC<Props> = ({ post, setReRender, reRender }) => {
       >
         <AiOutlineComment className="post__action-icon" /> {commentTotal}
       </button>
-      <button className="post__action-button">
-        <BiRepost className="post__action-icon" /> 0
-      </button>
+      {!isRePost && (
+        <button
+          className="post__action-button"
+          onClick={() => dispatch(openModal(`${postId}repost`))}
+        >
+          <BiRepost className="post__action-icon" /> 0
+        </button>
+      )}
     </div>
   );
 };

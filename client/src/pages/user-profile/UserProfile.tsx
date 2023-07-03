@@ -22,6 +22,8 @@ const UserProfile = () => {
   const { userId } = useParams();
 
   const [reRenderAddress, setRerenderAddress] = useState<boolean>(false);
+
+  //TODO: refactor modal open state to redux slice
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   //TODO: refactor fetch to rtkQuery

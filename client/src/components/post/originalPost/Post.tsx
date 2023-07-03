@@ -10,6 +10,7 @@ import PostOwner from "../sumcomponents/PostOwner";
 import PostEdit from "../sumcomponents/PostEdit";
 import moment from "moment";
 import PostEditModal from "../../../portals/post-edit-modal/PostEditModal";
+import CreateRePostModal from "../../../portals/create-repost-modal/CreateRePostModal";
 
 interface Props {
   post: IPost;
@@ -78,6 +79,13 @@ const Post: React.FC<Props> = ({ post, setReRender, reRender }) => {
         </>
       )}
 
+      {modals[`${postId}repost`] && (
+        <CreateRePostModal
+          post={post as IPost}
+          reRender={reRender}
+          setReRender={setReRender}
+        />
+      )}
       {modals[`${postId}details`] && (
         <PostDetailsModal
           post={post}
