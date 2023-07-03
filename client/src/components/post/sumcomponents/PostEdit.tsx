@@ -4,7 +4,6 @@ import React from "react";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import { openModal } from "../../../features/modalSlice/modalSlice";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
-import PostEditModal from "../../../portals/post-edit-modal/PostEditModal";
 import { RootState } from "../../../redux/store";
 import { IPost, IRePost } from "../types";
 
@@ -15,18 +14,21 @@ interface Props {
 }
 
 const PostEdit: React.FC<Props> = ({ post, setReRender, reRender }) => {
-  const { createdAt, _id: postId } = post;
+  const { createdAt, _id: postId, isRePost } = post;
   const dispatch = useAppDispatch();
   const { userId } = useAppSelector((state: RootState) => state.auth);
 
   const handlePostDelete = async (userId: string, postId: string) => {
     try {
-      await axios.delete("http://localhost:5000/api/posts", {
-        data: {
-          userId,
-          postId,
-        },
-      });
+      await axios.delete(
+        `http://localhost:5000/api/${isRePost ? "repost" : "posts"}`,
+        {
+          data: {
+            userId,
+            postId,
+          },
+        }
+      );
 
       setReRender(!reRender);
     } catch (err) {

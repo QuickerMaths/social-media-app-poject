@@ -15,7 +15,7 @@ interface Props {
 }
 
 const PostEditModal: React.FC<Props> = ({ post, reRender, setReRender }) => {
-  const { _id: postId } = post;
+  const { _id: postId, isRePost } = post;
 
   const dispatch = useAppDispatch();
   const { modals } = useAppSelector((state: RootState) => state.modal);
@@ -37,7 +37,7 @@ const PostEditModal: React.FC<Props> = ({ post, reRender, setReRender }) => {
           <AiOutlineClose className="post-edit-modal__close-icon" />
         </button>
         <h2 className="post-edit-modal__title">Edit post</h2>
-        {post.isRePost === true ? (
+        {isRePost === true ? (
           <PostEditRePostForm
             post={post as IRePost}
             setReRender={setReRender}
