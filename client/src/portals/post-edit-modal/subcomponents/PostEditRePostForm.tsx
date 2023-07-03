@@ -51,6 +51,9 @@ const PostEditRePostForm: React.FC<Props> = ({
         onChange={handleChange}
         className="post-edit-modal__text-area"
       />
+      <button className="post-edit-modal__button" type="submit">
+        Edit
+      </button>
     </form>
   );
 };
