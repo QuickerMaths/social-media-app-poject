@@ -18,6 +18,7 @@ import loginRoute from "./routes/api/loginRoute";
 import refreshRoute from "./routes/api/refreshRoute";
 import logoutRoute from "./routes/api/logoutRoute";
 import commentRoute from "./routes/api/commentRoute";
+import rePostRoute from "./routes/api/rePostRoute";
 
 //connect to database
 connectDB();
@@ -46,6 +47,7 @@ app.use("/register", registerRoute);
 app.use("/auth", loginRoute);
 app.use("/api/refresh", refreshRoute);
 app.use("/api/logout", logoutRoute);
+app.use("/api/repost", rePostRoute);
 
 // starting to listen only id connected to database
 

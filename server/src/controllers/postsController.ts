@@ -43,6 +43,7 @@ export const getPosts = async (req: Request, res: Response) => {
     },
   ]);
 
+  //TODO: stor all posts
   const allPosts = [...posts, ...rePosts];
 
   if (!allPosts) return res.status(204).json({ message: "No posts found" });
@@ -179,19 +180,4 @@ export const getPostById = async (req: Request, res: Response) => {
   if (!post) return res.status(204).json({ message: "No posts found" });
 
   res.status(200).json({ post });
-};
-
-export const createRePost = async (req: Request, res: Response) => {
-  const { postId, userId, postBody } = req.body;
-
-  if (!postId || !userId)
-    return res.status(400).json({ message: "Post Id and user Id required" });
-
-  const rePost = await RePost.create({
-    originalPost: postId,
-    owner: userId,
-    postBody,
-  });
-
-  res.status(201).json(rePost);
 };
