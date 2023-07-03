@@ -1530,4 +1530,114 @@ input {
     filter: brightness(120%);
     color: black;
   }
+}
+
+.create-repost-modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+}
+.create-repost-modal__overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(66, 68, 90, 0.3);
+}
+.create-repost-modal__content {
+  padding: 10px 20px;
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: 0px 8px 22px -14px rgb(66, 68, 90);
+  z-index: 101;
+  position: relative;
+  width: 90%;
+}
+@media (min-width: 768px) {
+  .create-repost-modal__content {
+    padding: 20px 40px;
+  }
+}
+@media (min-width: 768px) {
+  .create-repost-modal__content {
+    width: 80%;
+  }
+}
+.create-repost-modal__close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+  font-family: "Oswald", sans-serif;
+  font-size: 1.2rem;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+.create-repost-modal__close-icon {
+  width: 30px;
+  height: 30px;
+}
+.create-repost-modal__title {
+  margin-bottom: 10px;
+  letter-spacing: 2px;
+  text-decoration: underline;
+  font-size: 2.5rem;
+  text-align: center;
+}
+.create-repost-modal__form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+.create-repost-modal__text-area {
+  width: 100%;
+  font-family: "Oswald", sans-serif;
+  outline: none;
+  border: none;
+}
+@media (min-width: 768px) {
+  .create-repost-modal__text-area {
+    width: 60%;
+  }
+}
+.create-repost-modal__label {
+  position: relative;
+  display: inline-block;
+  border-radius: 100%;
+  cursor: pointer;
+}
+.create-repost-modal__button {
+  background-color: var(--secondary);
+  color: white;
+  border: none;
+  border-radius: 15px;
+  padding: 5px 10px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+@media (min-width: 768px) {
+  .create-repost-modal__button {
+    padding: 5px 20px;
+    font-size: 1.6rem;
+    font-weight: 600;
+  }
+}
+@media (min-width: 1025px) {
+  .create-repost-modal__button {
+    transition: filter, color, 0.3s ease-in-out;
+  }
+  .create-repost-modal__button:hover {
+    filter: brightness(120%);
+    color: black;
+  }
 }/*# sourceMappingURL=main.css.map */

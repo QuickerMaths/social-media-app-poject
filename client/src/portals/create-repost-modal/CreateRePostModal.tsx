@@ -5,6 +5,8 @@ import { IPost } from "../../components/post/types";
 import { closeModal } from "../../features/modalSlice/modalSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
+import { useFormik } from "formik";
+import axios from "axios";
 
 interface Props {
   post: IPost;
@@ -19,23 +21,58 @@ const CreateRePostModal: React.FC<Props> = ({
 }) => {
   const { _id: postId } = post;
   const dispatch = useAppDispatch();
+  const { userId } = useAppSelector((state: RootState) => state.auth);
   const { modals } = useAppSelector((state: RootState) => state.modal);
+
+  const { handleSubmit, values, handleChange } = useFormik({
+    initialValues: {
+      postBody: "",
+    },
+    onSubmit: async (values) => {
+      try {
+        await axios.post("http://localhost:5000/api/repost", {
+          postId,
+          userId,
+          postBody: values.postBody,
+        });
+
+        dispatch(closeModal(`${postId}repost`));
+        setReRender(!reRender);
+      } catch (err) {
+        console.log(err);
+      }
+    },
+  });
 
   if (!modals[`${postId}repost`]) return null;
   return ReactDOM.createPortal(
-    <div className="post-edit-modal">
+    <div className="create-repost-modal">
       <div
-        className="post-edit-modal__overlay"
+        className="create-repost-modal__overlay"
         onClick={() => dispatch(closeModal(`${postId}repost`))}
       ></div>
-      <div className="post-edit-modal__content">
+      <div className="create-repost-modal__content">
         <button
-          className="post-edit-modal__close"
+          className="create-repost-modal__close"
           onClick={() => dispatch(closeModal(`${postId}repost`))}
         >
-          <AiOutlineClose className="post-edit-modal__close-icon" />
+          <AiOutlineClose className="create-repost-modal__close-icon" />
         </button>
-        <h2 className="post-edit-modal__title">Edit repost</h2>
+        <h2 className="create-repost-modal__title">RePost</h2>
+        <form onSubmit={handleSubmit} className="create-repost-modal__form">
+          <textarea
+            rows={5}
+            cols={10}
+            name="postBody"
+            id="postBody"
+            value={values.postBody}
+            onChange={handleChange}
+            className="create-repost-modal__text-area"
+          />
+          <button className="create-repost-modal__button" type="submit">
+            RePost
+          </button>
+        </form>
       </div>
     </div>,
     document.body

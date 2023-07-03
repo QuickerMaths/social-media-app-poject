@@ -21,6 +21,9 @@ function App() {
   //check if user is already loggedin
 
   const dispatch = useAppDispatch();
+
+  //TODO: add scrolling to the top feature after editing/reposting post etc.
+
   useEffect(() => {
     //TODO: refactor fetch to rtkQuery
     const checkLoggedIn = async () => {

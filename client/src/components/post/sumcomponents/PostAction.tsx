@@ -62,7 +62,11 @@ const PostAction: React.FC<Props> = ({ post, setReRender, reRender }) => {
       {!isRePost && (
         <button
           className="post__action-button"
-          onClick={() => dispatch(openModal(`${postId}repost`))}
+          onClick={() => {
+            userId === null
+              ? useToastCreator("You have to be logged in to repost", "error")
+              : dispatch(openModal(`${postId}repost`));
+          }}
         >
           <BiRepost className="post__action-icon" /> 0
         </button>
