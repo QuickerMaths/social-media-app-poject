@@ -119,9 +119,6 @@ export const deletePost = async (req: Request, res: Response) => {
   if (!post)
     return res.status(204).json({ message: "No post with matching Id" });
 
-  if (post.owner!.toString() !== userId)
-    return res.status(403).json({ message: "Unauthorized" });
-
   const deletedPost = await post.deleteOne();
 
   await Comment.deleteMany({ _id: { $in: post.comments } });
