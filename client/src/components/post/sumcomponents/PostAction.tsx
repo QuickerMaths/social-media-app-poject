@@ -68,7 +68,8 @@ const PostAction: React.FC<Props> = ({ post, setReRender, reRender }) => {
               : dispatch(openModal(`${postId}repost`));
           }}
         >
-          <BiRepost className="post__action-icon" /> 0
+          <BiRepost className="post__action-icon" />
+          {(post as IPost).rePostsCount}
         </button>
       )}
     </div>

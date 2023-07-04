@@ -126,6 +126,8 @@ export const deletePost = async (req: Request, res: Response) => {
   res.status(204).json(deletedPost);
 };
 
+// TODO: include rePosts here
+
 export const getPostsByUser = async (req: Request, res: Response) => {
   const posts = await Post.find({ owner: req.params.id }).populate([
     {
@@ -148,9 +150,29 @@ export const getPostsByUser = async (req: Request, res: Response) => {
     },
   ]);
 
-  if (!posts) return res.status(204).json({ message: "No posts found" });
+  const rePosts = await RePost.find({ owner: req.params.id }).populate([
+    {
+      path: "owner",
+      select: "_id username profilePicture",
+      model: "User",
+    },
+    {
+      path: "originalPost",
+      select: "_id owner postBody postImage likedBy commentTotal rePostCount",
+      populate: {
+        path: "owner",
+        select: "_id username profilePicture",
+        model: "User",
+      },
+      model: "Post",
+    },
+  ]);
 
-  res.status(200).json({ posts });
+  const allPosts = [...posts, ...rePosts];
+
+  if (!allPosts) return res.status(204).json({ message: "No posts found" });
+
+  res.status(200).json(allPosts);
 };
 
 export const getPostById = async (req: Request, res: Response) => {

@@ -15,6 +15,7 @@ export type IPost = {
   comments: IComment[];
   __v: number;
   _id: string;
+  rePostsCount: number;
   isRePost: boolean;
 };
 
