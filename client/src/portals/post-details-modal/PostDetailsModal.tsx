@@ -90,7 +90,7 @@ const PostDetailsModal: React.FC<Props> = ({ post, reRender, setReRender }) => {
                 reRender={reRender}
                 setReRender={setReRender}
               />
-              {!isRePost && commentTotal > 0 && (
+              {commentTotal > 0 && (
                 <PostComments
                   comments={comments}
                   reRender={reRender}

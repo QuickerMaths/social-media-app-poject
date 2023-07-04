@@ -20,6 +20,7 @@ export const createRePost = async (req: Request, res: Response) => {
     postBody,
   });
 
+  //TODO: use middleware fot this action
   post.rePostsCount += 1;
   await post.save();
 
@@ -59,6 +60,15 @@ export const deleteRePost = async (req: Request, res: Response) => {
 
   if (!rePost)
     return res.status(204).json({ message: "No post with matching Id" });
+
+  const originalPost = await Post.findOne({ _id: rePost.originalPost });
+
+  if (!originalPost)
+    return res.status(500).json({ message: "Server Internal Error" });
+
+  //TODO: use middleware fot this action
+  originalPost.rePostsCount -= 1;
+  await originalPost.save();
 
   const deletedRePost = await rePost.deleteOne();
 
