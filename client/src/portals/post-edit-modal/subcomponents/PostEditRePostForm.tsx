@@ -27,13 +27,13 @@ const PostEditRePostForm: React.FC<Props> = ({
     },
     onSubmit: async (values) => {
       try {
-        await axios.put("http://localhost:5000/api/posts/edit", {
+        await axios.put("http://localhost:5000/api/repost/edit", {
           postId,
           userId,
           postBody: values.postBody,
         });
 
-        dispatch(closeModal("editPostModal"));
+        dispatch(closeModal(`${postId}edit`));
         setReRender(!reRender);
       } catch (err) {
         console.log(err);

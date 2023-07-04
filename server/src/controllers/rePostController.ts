@@ -50,6 +50,24 @@ export const likeRePost = async (req: Request, res: Response) => {
   return res.status(201).json(rePost);
 };
 
+export const updateRePost = async (req: Request, res: Response) => {
+  const { postId, postBody, userId } = req.body;
+
+  if (!postId || !postBody || !userId)
+    return res
+      .status(400)
+      .json({ message: "Id, userId and post body required" });
+
+  const rePost = await RePost.findById(postId);
+
+  if (!rePost)
+    return res.status(204).json({ message: "No post with matching id" });
+
+  const updatedRePost = await rePost.updateOne({ postBody });
+
+  res.status(201).json(updatedRePost);
+};
+
 export const deleteRePost = async (req: Request, res: Response) => {
   const { postId, userId } = req.body;
 
