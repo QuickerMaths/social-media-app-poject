@@ -28,6 +28,7 @@ const MainRight: React.FC<Props> = ({ userId }) => {
           }
         );
         const data = await res.json();
+        console.log(data);
         setUserPosts(data);
       } catch (error) {
         console.log(error);
@@ -46,8 +47,8 @@ const MainRight: React.FC<Props> = ({ userId }) => {
       <TextArea reRender={reRender} setReRender={setReRender} />
 
       <ul className="user-profile__posts-list">
-        {userPosts.posts.length > 0 ? (
-          userPosts.posts
+        {userPosts.length > 0 ? (
+          userPosts
             .map((post: IPost | IRePost) =>
               post.isRePost ? (
                 <RePost

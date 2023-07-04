@@ -100,8 +100,8 @@ export const updatePost = async (req: Request, res: Response) => {
   if (!post)
     return res.status(204).json({ message: "No post with matching id" });
 
-  if (post.owner!.toString() !== userId)
-    return res.status(403).json({ message: "Unauthorized" });
+  // if (post.owner!.toString() !== userId)
+  //   return res.status(403).json({ message: "Unauthorized" });
 
   const updatedPost = await post.updateOne({ $set: { postBody, postImage } });
 
@@ -125,8 +125,6 @@ export const deletePost = async (req: Request, res: Response) => {
 
   res.status(204).json(deletedPost);
 };
-
-// TODO: include rePosts here
 
 export const getPostsByUser = async (req: Request, res: Response) => {
   const posts = await Post.find({ owner: req.params.id }).populate([
@@ -168,35 +166,10 @@ export const getPostsByUser = async (req: Request, res: Response) => {
     },
   ]);
 
+  //TODO: sort posts
   const allPosts = [...posts, ...rePosts];
 
   if (!allPosts) return res.status(204).json({ message: "No posts found" });
 
   res.status(200).json(allPosts);
-};
-
-export const getPostById = async (req: Request, res: Response) => {
-  const post = await Post.find({ _id: req.params.id }).populate([
-    {
-      path: "owner",
-      select: "_id username profilePicture",
-      model: "User",
-    },
-    {
-      path: "comments",
-      model: "Comment",
-      options: {
-        sort: { _id: -1 },
-      },
-      populate: {
-        path: "owner",
-        select: "_id username profilePicture",
-        model: "User",
-      },
-    },
-  ]);
-
-  if (!post) return res.status(204).json({ message: "No posts found" });
-
-  res.status(200).json({ post });
 };
