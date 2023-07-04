@@ -50,12 +50,23 @@ export const deletedComment = async (req: Request, res: Response) => {
   if (!comment)
     return res.status(204).json({ message: "No comment with matching id" });
 
-  const post = await Post.findOneAndUpdate(
-    { _id: postId },
-    {
-      $pull: { comments: commentId },
-    }
-  ).exec();
+  let post;
+
+  if (comment.belongsToRePost) {
+    post = await RePost.findOneAndUpdate(
+      { _id: postId },
+      {
+        $pull: { comments: commentId },
+      }
+    ).exec();
+  } else {
+    post = await Post.findOneAndUpdate(
+      { _id: postId },
+      {
+        $pull: { comments: commentId },
+      }
+    ).exec();
+  }
 
   if (!post)
     return res.status(204).json({ message: "No post with matching id" });
