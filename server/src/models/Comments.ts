@@ -20,6 +20,10 @@ const commentSchema = new Schema(
       ref: "Post",
       required: [true, "Post id is required"],
     },
+    belongsToRePost: {
+      type: Boolean,
+      required: [true, "BelongsToRePost body is required"],
+    },
   },
   { timestamps: true }
 );
