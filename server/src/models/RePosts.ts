@@ -36,4 +36,20 @@ export const rePostSchema = new Schema(
   { timestamps: true }
 );
 
+//TODO: figure out way to make it DRY
+
+rePostSchema.post("findOneAndUpdate", async function (doc, next) {
+  const update = JSON.parse(JSON.stringify(this.getUpdate()));
+
+  if (Object.keys(update).includes("$push")) {
+    doc.commentTotal += 1;
+    await doc.save();
+  } else if (Object.keys(update).includes("$pull")) {
+    doc.commentTotal -= 1;
+    await doc.save();
+  }
+
+  next();
+});
+
 export default mongoose.model("RePost", rePostSchema);

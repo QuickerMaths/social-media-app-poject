@@ -42,6 +42,8 @@ export const postSchema = new Schema(
   { timestamps: true }
 );
 
+//TODO: figure out way to make it DRY
+
 postSchema.post("findOneAndUpdate", async function (doc, next) {
   const update = JSON.parse(JSON.stringify(this.getUpdate()));
 
