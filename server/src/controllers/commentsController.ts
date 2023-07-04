@@ -15,6 +15,7 @@ export const createComment = async (req: Request, res: Response) => {
     owner: userId,
     commentBody,
     postId,
+    belongsToRePost: isRePost,
   });
 
   let post;
