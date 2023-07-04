@@ -21,16 +21,20 @@ const PostAction: React.FC<Props> = ({ post, setReRender, reRender }) => {
 
   const handleLikePost = async (postId: string, userId: string) => {
     try {
-      await axios.put("http://localhost:5000/api/posts", {
-        postId,
-        userId,
-      });
+      await axios.put(
+        `http://localhost:5000/api/${isRePost ? "repost" : "posts"}`,
+        {
+          postId,
+          userId,
+        }
+      );
       //TODO: rtkQuery optimistic updates !
       setReRender(!reRender);
     } catch (err) {
       console.log(err);
     }
   };
+
   return (
     <div className="post__bottom-container">
       <button
