@@ -66,6 +66,8 @@ export const createPost = async (req: Request, res: Response) => {
   res.status(201).json(post);
 };
 
+// TODO: somehow figure out the way to refactor like, update and delete controllers for rePosts and Posts to make it DRY
+
 export const likePost = async (req: Request, res: Response) => {
   const { postId, userId } = req.body;
 
@@ -99,9 +101,6 @@ export const updatePost = async (req: Request, res: Response) => {
 
   if (!post)
     return res.status(204).json({ message: "No post with matching id" });
-
-  // if (post.owner!.toString() !== userId)
-  //   return res.status(403).json({ message: "Unauthorized" });
 
   const updatedPost = await post.updateOne({ $set: { postBody, postImage } });
 

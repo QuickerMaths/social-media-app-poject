@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Post from "../models/Posts";
 import RePost from "../models/RePosts";
+import Comment from "../models/Comments";
 
 export const createRePost = async (req: Request, res: Response) => {
   const { postId, userId, postBody } = req.body;
@@ -24,6 +25,8 @@ export const createRePost = async (req: Request, res: Response) => {
 
   res.status(201).json(rePost);
 };
+
+// TODO: somehow figure out the way to refactor like, update and delete controllers for rePosts and Posts to make it DRY
 
 export const likeRePost = async (req: Request, res: Response) => {
   const { postId, userId } = req.body;
@@ -52,7 +55,14 @@ export const deleteRePost = async (req: Request, res: Response) => {
   if (!postId || !userId)
     return res.status(400).json({ message: "Post Id and user Id required" });
 
-  const rePost = await RePost.findOneAndDelete({ _id: postId }).exec();
+  const rePost = await RePost.findById(postId);
 
-  res.status(204).json(rePost);
+  if (!rePost)
+    return res.status(204).json({ message: "No post with matching Id" });
+
+  const deletedRePost = await rePost.deleteOne();
+
+  await Comment.deleteMany({ _id: { $in: rePost.comments } });
+
+  res.status(204).json(deletedRePost);
 };
