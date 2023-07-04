@@ -43,6 +43,11 @@ const userSchema = new Schema(
       ref: "User",
       default: [],
     },
+    friendsRequests: {
+      type: [mongoose.Types.ObjectId],
+      ref: "User",
+      default: [],
+    },
     address: {
       type: Object,
       default: {
