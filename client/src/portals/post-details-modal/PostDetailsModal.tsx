@@ -43,6 +43,7 @@ const PostDetailsModal: React.FC<Props> = ({ post, reRender, setReRender }) => {
           commentBody: values.commentBody,
           postId,
           userId,
+          isRePost,
         });
         values.commentBody = "";
         setReRender(!reRender);

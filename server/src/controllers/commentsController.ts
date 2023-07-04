@@ -1,14 +1,15 @@
 import { Request, Response } from "express";
 import Comment from "../models/Comments";
 import Post from "../models/Posts";
+import RePost from "../models/RePosts";
 
 export const createComment = async (req: Request, res: Response) => {
-  const { postId, userId, commentBody } = req.body;
+  const { postId, userId, commentBody, isRePost } = req.body;
 
-  if (!commentBody || !userId || !postId)
-    return res
-      .status(400)
-      .json({ message: "Comment body, postId and userId required" });
+  if (!commentBody || !userId || !postId || !isRePost)
+    return res.status(400).json({
+      message: "Comment body, postId, userId and isRePost are required",
+    });
 
   const comment = await Comment.create({
     owner: userId,
@@ -16,12 +17,23 @@ export const createComment = async (req: Request, res: Response) => {
     postId,
   });
 
-  const post = await Post.findOneAndUpdate(
-    { _id: postId },
-    {
-      $push: { comments: comment._id },
-    }
-  ).exec();
+  let post;
+
+  if (isRePost) {
+    post = await RePost.findOneAndUpdate(
+      { _id: postId },
+      {
+        $push: { comments: comment._id },
+      }
+    ).exec();
+  } else {
+    post = await Post.findOneAndUpdate(
+      { _id: postId },
+      {
+        $push: { comments: comment._id },
+      }
+    ).exec();
+  }
 
   res.status(201).json({ comment, post });
 };

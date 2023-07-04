@@ -41,6 +41,19 @@ export const getPosts = async (req: Request, res: Response) => {
       },
       model: "Post",
     },
+    {
+      path: "comments",
+      model: "Comment",
+      options: {
+        limit: 2,
+        sort: { _id: -1 },
+      },
+      populate: {
+        path: "owner",
+        select: "_id username profilePicture",
+        model: "User",
+      },
+    },
   ]);
 
   //TODO: stor all posts
@@ -162,6 +175,19 @@ export const getPostsByUser = async (req: Request, res: Response) => {
         model: "User",
       },
       model: "Post",
+    },
+    {
+      path: "comments",
+      model: "Comment",
+      options: {
+        limit: 2,
+        sort: { _id: -1 },
+      },
+      populate: {
+        path: "owner",
+        select: "_id username profilePicture",
+        model: "User",
+      },
     },
   ]);
 
