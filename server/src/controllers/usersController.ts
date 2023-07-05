@@ -35,7 +35,17 @@ export const deleteUser = async (req: Request, res: Response) => {
 };
 
 export const getUserById = async (req: Request, res: Response) => {
-  const user = await User.findById(req.params.id);
+  const user = await User.findById(req.params.id).populate([
+    {
+      path: "friends",
+      select: "username _id profilePicture",
+      model: "User",
+      options: {
+        limit: 8,
+        sort: { _id: -1 },
+      },
+    },
+  ]);
 
   if (!user)
     return res.status(204).json({ message: "No user with matching ID" });
