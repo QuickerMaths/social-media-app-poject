@@ -1,6 +1,11 @@
 import React from "react";
+import { IUser } from "../../pages/user-profile/types";
 
-const FriendsRequest = () => {
+interface Props {
+  request: IUser;
+}
+
+const FriendsRequest: React.FC<Props> = ({ request }) => {
   return <div>FriendsRequest</div>;
 };
 

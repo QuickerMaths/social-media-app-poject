@@ -107,9 +107,7 @@ const UserProfile = () => {
         <MainRight userId={userId} />
       ) : isMobile && activePage === "details" ? (
         <MainLeft
-          createdAt={user.createdAt}
-          address={user.address}
-          userId={userId as string}
+          user={user}
           reRenderAddress={reRenderAddress}
           setRerenderAddress={setRerenderAddress}
         />
@@ -117,9 +115,7 @@ const UserProfile = () => {
         isDesktop && (
           <div className="user-profile__main">
             <MainLeft
-              createdAt={user.createdAt}
-              address={user.address}
-              userId={userId as string}
+              user={user}
               reRenderAddress={reRenderAddress}
               setRerenderAddress={setRerenderAddress}
             />

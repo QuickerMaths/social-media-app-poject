@@ -3,24 +3,25 @@ import moment from "moment";
 import { RootState } from "../../redux/store";
 import { useAppSelector } from "../../hooks/reduxHooks";
 import UserDetailsModal from "../../portals/user-details-modal/UserDetailsModal";
-import { IUserAddress } from "./types";
+import { IUser } from "../../pages/user-profile/types";
 
 interface Props {
-  createdAt: string;
-  address: IUserAddress;
-  userId: string;
+  user: IUser;
   setRerenderAddress: React.Dispatch<React.SetStateAction<boolean>>;
   reRenderAddress: boolean;
 }
 
 const UserDetails: React.FC<Props> = ({
-  createdAt,
-  address,
-  userId,
+  user,
   reRenderAddress,
   setRerenderAddress,
 }) => {
-  const { street, city, state, zip } = address;
+  const {
+    createdAt,
+    address: { street, city, state, zip },
+    _id: userId,
+  } = user;
+
   const { userId: activeUserId } = useAppSelector(
     (state: RootState) => state.auth
   );

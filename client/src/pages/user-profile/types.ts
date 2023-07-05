@@ -1,10 +1,12 @@
 export type IUser = {
+  _id: string;
   username: string;
   email: string;
   firstName: string;
   lastName: string;
   profilePicture: string | null;
-  friends: string[] | [];
+  friends: string[] | [] | IUser[];
+  friendsRequests: string[] | [] | IUser[];
   address: {
     street: string;
     city: string;
