@@ -1,72 +1,73 @@
 import { Request, Response } from "express";
+import {
+  getAllUsersService,
+  updateUserService,
+  deleteUserService,
+  getUserByIdService,
+  uploadUserImageService,
+} from "../services/userService";
 import User from "../models/Users";
 
-export const getUsers = async (req: Request, res: Response) => {
-  const users = await User.find();
+export const getAllUsers = async (req: Request, res: Response) => {
+  const users = await getAllUsersService();
 
-  if (!users) return res.status(204).json({ message: "No users found" });
+  if (!users)
+    return res
+      .status(204)
+      .json({ status: "FAILED", data: { error: "No users found" } });
 
-  res.status(200).json(users);
+  res.status(200).json({ status: "OK", data: users });
 };
 
 export const updateUser = async (req: Request, res: Response) => {
-  if (!req?.body?.userId)
-    return res.status(400).json({ message: "Id is required" });
+  const { userId } = req.body;
 
-  const updateUser = await User.findByIdAndUpdate(req?.body?.userId, {
-    address: {
-      street: req?.body?.street,
-      city: req?.body?.city,
-      state: req?.body?.state,
-      zip: req?.body?.zip,
-    },
-  }).exec();
+  if (!userId)
+    return res
+      .status(400)
+      .json({ status: "FAILED", data: { error: "User id is required" } });
 
-  res.status(201).json(updateUser);
+  const updatedUser = await updateUserService(userId);
+
+  res.status(201).json({ status: "OK", data: updatedUser });
 };
 
 export const deleteUser = async (req: Request, res: Response) => {
-  if (!req?.body?.userId)
-    return res.status(400).json({ message: "Id is required" });
+  const { userId } = req.body;
 
-  const deleteUser = await User.findByIdAndDelete(req?.body?.userId).exec();
+  if (!userId)
+    return res
+      .status(400)
+      .json({ status: "FAILED", data: { error: "User id is required" } });
 
-  res.status(204).json(deleteUser);
+  const deletedUser = await deleteUserService(userId);
+
+  res.status(204).json({ status: "OK", data: deletedUser });
 };
 
 export const getUserById = async (req: Request, res: Response) => {
-  const user = await User.findById(req.params.id).populate([
-    {
-      path: "friends",
-      select: "username _id profilePicture",
-      model: "User",
-      options: {
-        limit: 8,
-        sort: { _id: -1 },
-      },
-    },
-  ]);
+  const user = await getUserByIdService(req.params.id);
 
   if (!user)
-    return res.status(204).json({ message: "No user with matching ID" });
+    return res
+      .status(204)
+      .json({ status: "FAILED", data: { error: "No user with matching id" } });
 
-  res.status(200).json(user);
+  res.status(200).json({ status: "OK", data: user });
 };
 
 export const uploadUserImage = async (req: Request, res: Response) => {
-  const user = await User.findById(req.params.id);
+  if (!req?.body?.path && req?.body?.path !== null)
+    return res
+      .status(400)
+      .json({ status: "FILED", data: { error: "Image is required" } });
+
+  const user = await uploadUserImageService(req.body.id, req.body.path);
 
   if (!user)
-    return res.status(204).json({ message: "No user with matching ID" });
+    return res
+      .status(400)
+      .json({ status: "FILED", data: { error: "No user with matching id" } });
 
-  if (!req?.body?.path && req?.body?.path !== null)
-    return res.status(400).json({ message: "Image is required" });
-
-  await user
-    .updateOne({
-      profilePicture: req?.body?.path,
-    })
-    .exec();
-
-  res.status(201).json(user);
+  res.status(201).json({ status: "OK", data: user });
 };
