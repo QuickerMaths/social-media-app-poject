@@ -21,6 +21,8 @@
   &__navigation-link {
     color: black;
     font-size: 2rem;
+    cursor: pointer;
+
     @media (min-width: 1025px) {
       position: relative;
 

@@ -185,6 +185,7 @@ input {
 .sidebar__navigation-link {
   color: black;
   font-size: 2rem;
+  cursor: pointer;
 }
 @media (min-width: 1025px) {
   .sidebar__navigation-link {
