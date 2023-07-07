@@ -3,7 +3,9 @@ import { useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 
 const Sidebar = () => {
-  const { userId } = useAppSelector((state: RootState) => state.auth);
+  const { userId, friendsRequests } = useAppSelector(
+    (state: RootState) => state.auth
+  );
 
   return (
     <section className="sidebar">
@@ -22,7 +24,16 @@ const Sidebar = () => {
                 </Link>
               </li>
               <li className="sidebar__navigation-item">
-                <p className="sidebar__navigation-link">Requests</p>
+                <div className="sidebar__navigation-link">
+                  Requests
+                  {friendsRequests.length > 0 && (
+                    <p className="sidebar__friends-requests-count">
+                      {friendsRequests.length > 9
+                        ? "9+"
+                        : friendsRequests.length}
+                    </p>
+                  )}
+                </div>
               </li>
             </>
           ) : (

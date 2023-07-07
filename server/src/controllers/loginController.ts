@@ -19,6 +19,7 @@ export const handleUserAuth = async (req: any, res: any) => {
         username: decoded.username,
         userId: decoded.userId,
         userImg: user?.profilePicture,
+        friendsRequests: user?.friendsRequests,
       });
     }
   );
@@ -67,6 +68,7 @@ export const handleLogin = async (req: any, res: any) => {
       username,
       userId: user._id,
       userImg: user.profilePicture,
+      friendsRequests: user.friendsRequests,
     });
   }
 };

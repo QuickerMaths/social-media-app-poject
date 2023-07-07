@@ -3,6 +3,7 @@ import { logOut } from "../../features/authSlice/authSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import defaultImg from "../../assets/images/default_img.png";
+import { AiFillCaretDown } from "react-icons/ai";
 
 const Header = () => {
   const dispatch = useAppDispatch();

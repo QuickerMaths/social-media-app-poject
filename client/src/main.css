@@ -183,6 +183,10 @@ input {
   gap: 20px;
 }
 .sidebar__navigation-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
   color: black;
   font-size: 2rem;
   cursor: pointer;
@@ -204,6 +208,24 @@ input {
   .sidebar__navigation-link:hover::after {
     width: 100%;
   }
+}
+.sidebar__friends-requests-count {
+  font-size: 1rem;
+  color: white;
+  position: relative;
+  z-index: 1;
+}
+.sidebar__friends-requests-count::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  transform: translate(50%, -50%);
+  width: 25px;
+  height: 25px;
+  background-color: red;
+  border-radius: 50%;
+  z-index: -1;
 }
 
 .post {

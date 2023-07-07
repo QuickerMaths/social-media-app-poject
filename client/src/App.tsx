@@ -43,6 +43,7 @@ function App() {
             username: data.username,
             userId: data.userId,
             userImg: data.userImg,
+            friendsRequests: data.friendsRequests,
           })
         );
       } catch (error) {

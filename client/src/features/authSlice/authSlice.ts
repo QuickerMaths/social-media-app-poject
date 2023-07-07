@@ -6,6 +6,7 @@ const initialState: IAuthSliceState = {
   username: null,
   userId: null,
   userImg: null,
+  friendsRequests: [],
 };
 
 export const authSlice = createSlice({
@@ -18,11 +19,13 @@ export const authSlice = createSlice({
         username: string;
         userId: string;
         userImg: string | null;
+        friendsRequests: string[] | [];
       }>
     ) => {
       state.username = action.payload.username;
       state.userId = action.payload.userId;
       state.userImg = action.payload.userImg;
+      state.friendsRequests = action.payload.friendsRequests;
     },
     setProfileImage: (state, action: PayloadAction<string | null>) => {
       state.userImg = action.payload;
@@ -31,6 +34,7 @@ export const authSlice = createSlice({
       state.username = null;
       state.userId = null;
       state.userImg = null;
+      state.friendsRequests = [];
     },
   },
 });
