@@ -124,12 +124,17 @@ export const deletePost = async (req: Request, res: Response) => {
   const { postId, userId } = req.body;
 
   if (!postId || !userId)
-    return res.status(400).json({ message: "Post Id and user Id required" });
+    return res.status(400).json({
+      status: "FAILED",
+      data: { error: "Post Id and user Id are required" },
+    });
 
   const post = await Post.findById(postId);
 
   if (!post)
-    return res.status(204).json({ message: "No post with matching Id" });
+    return res
+      .status(204)
+      .json({ status: "FAILED", data: { error: "No post with matching id" } });
 
   const deletedPost = await post.deleteOne();
 

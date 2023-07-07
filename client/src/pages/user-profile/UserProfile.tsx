@@ -39,7 +39,7 @@ const UserProfile = () => {
             "Content-Type": "application/json",
           },
         });
-        const data = await res.json();
+        const { data } = await res.json();
         setUser(data);
       } catch (error) {
         console.log(error);

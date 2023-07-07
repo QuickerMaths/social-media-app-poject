@@ -6,7 +6,6 @@ import {
   getUserByIdService,
   uploadUserImageService,
 } from "../services/userService";
-import User from "../models/Users";
 
 export const getAllUsers = async (req: Request, res: Response) => {
   const users = await getAllUsersService();

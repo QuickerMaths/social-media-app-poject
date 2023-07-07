@@ -16,11 +16,7 @@ const UserDetails: React.FC<Props> = ({
   reRenderAddress,
   setRerenderAddress,
 }) => {
-  const {
-    createdAt,
-    address: { street, city, state, zip },
-    _id: userId,
-  } = user;
+  const { createdAt, address, _id: userId } = user;
 
   const { userId: activeUserId } = useAppSelector(
     (state: RootState) => state.auth
@@ -33,16 +29,16 @@ const UserDetails: React.FC<Props> = ({
         <h4 className="user-details__title">Details</h4>
         <ul className="user-details__info">
           <li className="user-details__info-item">
-            Street: {!street ? "N/A" : street}
+            Street: {!address.street ? "N/A" : address.street}
           </li>
           <li className="user-details__info-item">
-            City: {!city ? "N/A" : city}
+            City: {!address.city ? "N/A" : address.city}
           </li>
           <li className="user-details__info-item">
-            State: {!state ? "N/A" : state}
+            State: {!address.state ? "N/A" : address.state}
           </li>
           <li className="user-details__info-item">
-            ZipCode: {!zip ? "N/A" : zip}
+            ZipCode: {!address.zip ? "N/A" : address.zip}
           </li>
           <li className="user-details__info-item">
             Socialy member since: {moment(createdAt).format("MMMM Do YYYY")}
