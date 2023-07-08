@@ -156,13 +156,17 @@ input {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  display: none;
+  padding: 10px 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
   justify-content: flex-start;
   align-items: flex-start;
   flex-grow: 0.5;
   min-width: 250px;
+  height: 100%;
   background-color: var(--primary);
-  padding: 10px 20px;
+  transition: transform 0.3s ease-in-out;
 }
 @media (min-width: 768px) {
   .sidebar {
@@ -172,7 +176,28 @@ input {
 @media (min-width: 1400px) {
   .sidebar {
     display: flex;
+    position: static;
   }
+}
+.sidebar__close-button {
+  font-family: "Oswald", sans-serif;
+  font-size: 1.2rem;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+@media (min-width: 1400px) {
+  .sidebar__close-button {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+.sidebar__close-icon {
+  width: 30px;
+  height: 30px;
 }
 .sidebar__navigation-list {
   display: flex;
@@ -226,6 +251,55 @@ input {
   background-color: red;
   border-radius: 50%;
   z-index: -1;
+}
+.sidebar__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-backdrop-filter: blur(5px);
+          backdrop-filter: blur(5px);
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 0;
+  cursor: pointer;
+  transition: opacity 0.3s ease-in-out;
+}
+.sidebar__toggle-button {
+  font-family: "Oswald", sans-serif;
+  font-size: 1.2rem;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  position: fixed;
+  top: 20%;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 5px;
+  border-bottom-right-radius: 15%;
+  border-top-right-radius: 15%;
+}
+@media (min-width: 1400px) {
+  .sidebar__toggle-button {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+.is-hidden-overlay {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.is-hidden-sidebar {
+  transform: translateX(-100%);
+  pointer-events: none;
+}
+@media (min-width: 1400px) {
+  .is-hidden-sidebar {
+    transform: translateX(0%);
+    pointer-events: initial;
+  }
 }
 
 .post {

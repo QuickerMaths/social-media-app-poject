@@ -1,15 +1,37 @@
 .sidebar {
   @include flex-column;
-  display: none;
+  @include container-padding;
+  position: fixed;
+  top: 0;
+  left: 0;
   justify-content: flex-start;
   align-items: flex-start;
   flex-grow: 0.5;
   min-width: 250px;
+  height: 100%;
   background-color: var(--primary);
-  @include container-padding;
+  transition: transform 0.3s ease-in-out;
 
   @media (min-width: 1400px) {
     display: flex;
+    position: static;
+  }
+
+  &__close-button {
+    @include button-reset;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+
+    @media (min-width: 1400px) {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  &__close-icon {
+    width: 30px;
+    height: 30px;
   }
 
   &__navigation-list {
@@ -63,5 +85,49 @@
       border-radius: 50%;
       z-index: -1;
     }
+  }
+
+  &__overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(5px);
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 0;
+    cursor: pointer;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  &__toggle-button {
+    @include button-reset;
+    position: fixed;
+    top: 20%;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 5px;
+    border-bottom-right-radius: 15%;
+    border-top-right-radius: 15%;
+
+    @media (min-width: 1400px) {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+}
+
+.is-hidden-overlay {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.is-hidden-sidebar {
+  transform: translateX(-100%);
+  pointer-events: none;
+
+  @media (min-width: 1400px) {
+    transform: translateX(0%);
+    pointer-events: initial;
   }
 }
