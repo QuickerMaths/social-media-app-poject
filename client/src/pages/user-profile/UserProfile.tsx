@@ -40,6 +40,7 @@ const UserProfile = () => {
           },
         });
         const { data } = await res.json();
+        console.log(data);
         setUser(data);
       } catch (error) {
         console.log(error);

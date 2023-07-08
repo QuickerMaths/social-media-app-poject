@@ -619,6 +619,13 @@ input {
   text-align: left;
   text-decoration: underline;
 }
+.user-friends__list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 10px;
+}
 
 .user-profile-mobile-navigation {
   padding: 10px 20px;
@@ -851,6 +858,15 @@ input {
   .is-hidden-friends-request-list {
     transform: translateX(0%);
     pointer-events: initial;
+  }
+}
+
+.friend__img {
+  border-radius: 100%;
+}
+@media (min-width: 768px) {
+  .friend__img {
+    cursor: pointer;
   }
 }
 

@@ -1,0 +1,9 @@
+.friend {
+  &__img {
+    border-radius: 100%;
+
+    @media (min-width: 768px) {
+      cursor: pointer;
+    }
+  }
+}

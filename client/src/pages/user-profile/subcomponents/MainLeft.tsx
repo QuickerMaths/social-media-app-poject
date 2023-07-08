@@ -21,7 +21,7 @@ const MainLeft: React.FC<Props> = ({
         reRenderAddress={reRenderAddress}
         setRerenderAddress={setRerenderAddress}
       />
-      <UserFriends />
+      <UserFriends user={user} />
     </div>
   );
 };

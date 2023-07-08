@@ -5,8 +5,8 @@ export type IUser = {
   firstName: string;
   lastName: string;
   profilePicture: string | null;
-  friends: string[] | [] | IUser[];
-  friendsRequests: string[] | [] | IUser[];
+  friends: string[] | [] | IUserBasicData[];
+  friendsRequests: string[] | [] | IUserBasicData[];
   address: {
     street: string;
     city: string;
