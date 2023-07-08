@@ -1,0 +1,49 @@
+.friends-request-list {
+  @include flex-column;
+  @include container-padding;
+  position: fixed;
+  top: 0;
+  left: 0;
+  justify-content: flex-start;
+  align-items: flex-start;
+  min-width: 80%;
+  height: 100%;
+  background-color: var(--primary);
+  transition: transform 0.3s ease-in-out;
+  z-index: 10;
+  gap: 20px;
+
+  @media (min-width: 768px) {
+    min-width: 300px;
+  }
+
+  @media (min-width: 1400px) {
+    flex-grow: 0.5;
+    display: flex;
+    position: static;
+  }
+
+  &__back-button {
+    @include button-reset;
+  }
+
+  &__back-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  &__list {
+    width: 100%;
+    overflow-y: scroll;
+  }
+}
+
+.is-hidden-friends-request-list {
+  transform: translateX(-100%);
+  pointer-events: none;
+
+  @media (min-width: 1400px) {
+    transform: translateX(0%);
+    pointer-events: initial;
+  }
+}

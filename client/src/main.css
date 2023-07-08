@@ -162,8 +162,7 @@ input {
   left: 0;
   justify-content: flex-start;
   align-items: flex-start;
-  flex-grow: 0.5;
-  min-width: 250px;
+  min-width: 80%;
   height: 100%;
   background-color: var(--primary);
   transition: transform 0.3s ease-in-out;
@@ -173,8 +172,14 @@ input {
     padding: 20px 40px;
   }
 }
+@media (min-width: 768px) {
+  .sidebar {
+    min-width: 300px;
+  }
+}
 @media (min-width: 1400px) {
   .sidebar {
+    flex-grow: 0.5;
     display: flex;
     position: static;
   }
@@ -264,6 +269,12 @@ input {
   z-index: 0;
   cursor: pointer;
   transition: opacity 0.3s ease-in-out;
+}
+@media (min-width: 1400px) {
+  .sidebar__overlay {
+    opacity: 0;
+    pointer-events: none;
+  }
 }
 .sidebar__toggle-button {
   font-family: "Oswald", sans-serif;
@@ -746,6 +757,101 @@ input {
 }
 .comment__liked {
   color: rgb(21, 255, 0);
+}
+
+.request {
+  padding: 10px;
+  min-width: 100%;
+  background-color: white;
+  border-radius: 10px;
+}
+.request__button-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 10px;
+}
+.request__button {
+  font-family: "Oswald", sans-serif;
+  font-size: 1.2rem;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 15px;
+  color: var(--white);
+  width: 45%;
+}
+.request__button--accept {
+  background-color: green;
+}
+.request__button--decline {
+  background-color: red;
+}
+
+.friends-request-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  justify-content: flex-start;
+  align-items: flex-start;
+  min-width: 80%;
+  height: 100%;
+  background-color: var(--primary);
+  transition: transform 0.3s ease-in-out;
+  z-index: 10;
+  gap: 20px;
+}
+@media (min-width: 768px) {
+  .friends-request-list {
+    padding: 20px 40px;
+  }
+}
+@media (min-width: 768px) {
+  .friends-request-list {
+    min-width: 300px;
+  }
+}
+@media (min-width: 1400px) {
+  .friends-request-list {
+    flex-grow: 0.5;
+    display: flex;
+    position: static;
+  }
+}
+.friends-request-list__back-button {
+  font-family: "Oswald", sans-serif;
+  font-size: 1.2rem;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+.friends-request-list__back-icon {
+  width: 30px;
+  height: 30px;
+}
+.friends-request-list__list {
+  width: 100%;
+  overflow-y: scroll;
+}
+
+.is-hidden-friends-request-list {
+  transform: translateX(-100%);
+  pointer-events: none;
+}
+@media (min-width: 1400px) {
+  .is-hidden-friends-request-list {
+    transform: translateX(0%);
+    pointer-events: initial;
+  }
 }
 
 .main {

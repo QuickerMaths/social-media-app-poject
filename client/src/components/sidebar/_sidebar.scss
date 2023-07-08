@@ -6,13 +6,17 @@
   left: 0;
   justify-content: flex-start;
   align-items: flex-start;
-  flex-grow: 0.5;
-  min-width: 250px;
+  min-width: 80%;
   height: 100%;
   background-color: var(--primary);
   transition: transform 0.3s ease-in-out;
 
+  @media (min-width: 768px) {
+    min-width: 300px;
+  }
+
   @media (min-width: 1400px) {
+    flex-grow: 0.5;
     display: flex;
     position: static;
   }
@@ -98,6 +102,11 @@
     z-index: 0;
     cursor: pointer;
     transition: opacity 0.3s ease-in-out;
+
+    @media (min-width: 1400px) {
+      opacity: 0;
+      pointer-events: none;
+    }
   }
 
   &__toggle-button {

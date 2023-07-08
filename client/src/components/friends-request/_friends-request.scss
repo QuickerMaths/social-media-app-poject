@@ -1,0 +1,28 @@
+.request {
+  padding: 10px;
+  min-width: 100%;
+  background-color: white;
+  border-radius: 10px;
+
+  &__button-container {
+    @include flex-around;
+    margin-top: 10px;
+  }
+
+  &__button {
+    @include button-reset;
+    @include flex-center;
+    padding: 5px 10px;
+    border-radius: 15px;
+    color: var(--white);
+    width: 45%;
+
+    &--accept {
+      background-color: green;
+    }
+
+    &--decline {
+      background-color: red;
+    }
+  }
+}

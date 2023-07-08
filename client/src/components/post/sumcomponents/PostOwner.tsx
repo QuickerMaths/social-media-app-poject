@@ -2,18 +2,16 @@ import React from "react";
 import { Link } from "react-router-dom";
 import defaultImg from "../../../assets/images/default_img.png";
 import { useAppSelector } from "../../../hooks/reduxHooks";
+import { IUserBasicData } from "../../../pages/user-profile/types";
 import { RootState } from "../../../redux/store";
 
 interface Props {
-  owner: {
-    _id: string;
-    username: string;
-    profilePicture: string;
-  };
+  owner: IUserBasicData;
 }
 
 const PostOwner: React.FC<Props> = ({ owner }) => {
   const { userId, userImg } = useAppSelector((state: RootState) => state.auth);
+
   return (
     <Link to={`/user/${owner._id}`} className="post__owner-wrapper">
       <img

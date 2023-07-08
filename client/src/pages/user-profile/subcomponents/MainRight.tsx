@@ -28,7 +28,6 @@ const MainRight: React.FC<Props> = ({ userId }) => {
           }
         );
         const data = await res.json();
-        console.log(data);
         setUserPosts(data);
       } catch (error) {
         console.log(error);

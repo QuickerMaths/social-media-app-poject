@@ -105,7 +105,6 @@ const RePost: React.FC<Props> = ({ rePost, reRender, setReRender }) => {
         />
       )}
     </li>
-    //TODO: fix modaldetails
   );
 };
 

@@ -17,3 +17,9 @@ export type IUser = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type IUserBasicData = {
+  _id: string;
+  username: string;
+  profilePicture: string | null;
+};

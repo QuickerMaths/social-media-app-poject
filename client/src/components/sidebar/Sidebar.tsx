@@ -1,51 +1,62 @@
 import { Link } from "react-router-dom";
-import { useAppSelector } from "../../hooks/reduxHooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import { AiOutlineRight, AiOutlineClose } from "react-icons/ai";
-import { useState } from "react";
+import FriendsRequestList from "../friends-request-list/FriendsRequestList";
+import { closeModal, openModal } from "../../features/modalSlice/modalSlice";
 
 const Sidebar = () => {
+  const dispatch = useAppDispatch();
   const { userId, friendsRequests } = useAppSelector(
     (state: RootState) => state.auth
   );
-
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { modals } = useAppSelector((state: RootState) => state.modal);
 
   return (
     <>
       <button
         className="sidebar__toggle-button"
-        onClick={() => setIsOpen(true)}
+        onClick={() => dispatch(openModal("sidebar"))}
       >
         <AiOutlineRight className="sidebar__toggle-icon" />
       </button>
       <div
-        className={`sidebar__overlay ${!isOpen && "is-hidden-overlay"}`}
-        onClick={() => setIsOpen(false)}
+        className={`sidebar__overlay ${
+          !modals["sidebar"] && "is-hidden-overlay"
+        }`}
+        onClick={() => dispatch(closeModal("sidebar"))}
       ></div>
-      <section className={`sidebar ${!isOpen && "is-hidden-sidebar"}`}>
+      <section
+        className={`sidebar ${!modals["sidebar"] && "is-hidden-sidebar"}`}
+      >
         <button
           className="sidebar__close-button"
-          onClick={() => setIsOpen(false)}
+          onClick={() => dispatch(closeModal("sidebar"))}
         >
           <AiOutlineClose className="sidebar__close-icon" />
         </button>
         <nav className="sidebar__navigation">
           <ul className="sidebar__navigation-list">
             <li className="sidebar__navigation-item">
-              <Link to="/">
+              <Link to="/" onClick={() => dispatch(closeModal("sidebar"))}>
                 <p className="sidebar__navigation-link">Home Page</p>
               </Link>
             </li>
             {userId ? (
               <>
                 <li className="sidebar__navigation-item">
-                  <Link to={`/user/${userId}`}>
+                  <Link
+                    to={`/user/${userId}`}
+                    onClick={() => dispatch(closeModal("sidebar"))}
+                  >
                     <p className="sidebar__navigation-link">Profile</p>
                   </Link>
                 </li>
                 <li className="sidebar__navigation-item">
-                  <div className="sidebar__navigation-link">
+                  <div
+                    className="sidebar__navigation-link"
+                    onClick={() => dispatch(openModal("friends-request-list"))}
+                  >
                     Requests
                     {friendsRequests.length > 0 && (
                       <p className="sidebar__friends-requests-count">
@@ -74,6 +85,7 @@ const Sidebar = () => {
           </ul>
         </nav>
       </section>
+      {modals["friends-request-list"] && <FriendsRequestList />}
     </>
   );
 };
