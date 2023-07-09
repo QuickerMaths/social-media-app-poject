@@ -861,6 +861,44 @@ input {
   }
 }
 
+.send-friend-request {
+  margin: 10px 0px;
+}
+.send-friend-request__button {
+  font-family: "Oswald", sans-serif;
+  font-size: 1.2rem;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  background-color: var(--secondary);
+  padding: 8px 10px;
+  border-radius: 50px;
+}
+.send-friend-request__icon {
+  width: 45px;
+  height: 45px;
+  color: white;
+}
+
+.remove-friend {
+  margin: 10px 0px;
+}
+.remove-friend__button {
+  font-family: "Oswald", sans-serif;
+  font-size: 1.2rem;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  background-color: var(--secondary);
+  padding: 8px 10px;
+  border-radius: 50px;
+}
+.remove-friend__icon {
+  width: 45px;
+  height: 45px;
+  color: white;
+}
+
 .friend__img {
   border-radius: 100%;
 }
@@ -1190,7 +1228,12 @@ input {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 50px;
+  gap: 20px;
+}
+@media (min-width: 768px) {
+  .user-profile__presentation {
+    gap: 50px;
+  }
 }
 .user-profile__form {
   position: relative;

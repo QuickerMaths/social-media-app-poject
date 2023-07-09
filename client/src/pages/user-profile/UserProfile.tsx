@@ -9,7 +9,9 @@ import MainLeft from "./subcomponents/MainLeft";
 import MainRight from "./subcomponents/MainRight";
 import ProfileImage from "./subcomponents/ProfileImage";
 import UserProfileImgModal from "../../portals/user-profile-img-modal/UserProfileImgModal";
-import { IUser } from "./types";
+import { IUser, IUserBasicData } from "./types";
+import SendFriendRequest from "../../components/send-friend-request/SendFriendRequest";
+import RemoveFriend from "../../components/remove-friends/RemoveFriend";
 
 const UserProfile = () => {
   const isMobile = useMediaQuery("(max-width: 1024px)");
@@ -49,6 +51,18 @@ const UserProfile = () => {
 
     getUser(userId as string);
   }, [reRenderAddress, userId]);
+
+  const alreadyFriends = (friend: IUserBasicData) =>
+    friend._id === activeUserId;
+
+  const showSendRequestButton =
+    activeUserId &&
+    activeUserId !== userId &&
+    (!user || !(user.friends as IUserBasicData[]).every(alreadyFriends));
+  const showRemoveButton =
+    activeUserId &&
+    activeUserId !== userId &&
+    (!user || (user.friends as IUserBasicData[]).every(alreadyFriends));
 
   //TODO: refactor loading to spinner and use react suspense instead of something like this
 
@@ -97,6 +111,8 @@ const UserProfile = () => {
             {user.firstName} {user.lastName}
           </h3>
         </div>
+        {showSendRequestButton && <SendFriendRequest />}
+        {showRemoveButton && <RemoveFriend />}
       </div>
       {isMobile && (
         <UserProfileMobileNavigation

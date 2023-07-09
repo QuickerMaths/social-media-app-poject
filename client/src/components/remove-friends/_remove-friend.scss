@@ -1,0 +1,16 @@
+.remove-friend {
+  margin: 10px 0px;
+
+  &__button {
+    @include button-reset;
+    background-color: var(--secondary);
+    padding: 8px 10px;
+    border-radius: 50px;
+  }
+
+  &__icon {
+    width: 45px;
+    height: 45px;
+    color: white;
+  }
+}

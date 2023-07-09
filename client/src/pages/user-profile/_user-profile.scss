@@ -6,7 +6,11 @@
 
   &__presentation {
     @include flex-center;
-    gap: 50px;
+    gap: 20px;
+
+    @media (min-width: 768px) {
+      gap: 50px;
+    }
   }
 
   &__form {
