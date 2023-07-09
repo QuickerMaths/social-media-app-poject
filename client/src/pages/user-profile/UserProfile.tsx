@@ -58,11 +58,11 @@ const UserProfile = () => {
   const showSendRequestButton =
     activeUserId &&
     activeUserId !== userId &&
-    (!user || !(user.friends as IUserBasicData[]).every(alreadyFriends));
+    (!user || (user.friends as IUserBasicData[]).every(alreadyFriends));
   const showRemoveButton =
     activeUserId &&
     activeUserId !== userId &&
-    (!user || (user.friends as IUserBasicData[]).every(alreadyFriends));
+    (!user || !(user.friends as IUserBasicData[]).every(alreadyFriends));
 
   //TODO: refactor loading to spinner and use react suspense instead of something like this
 

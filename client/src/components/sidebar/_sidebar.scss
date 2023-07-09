@@ -10,6 +10,7 @@
   height: 100%;
   background-color: var(--primary);
   transition: transform 0.3s ease-in-out;
+  z-index: 20;
 
   @media (min-width: 768px) {
     min-width: 300px;
