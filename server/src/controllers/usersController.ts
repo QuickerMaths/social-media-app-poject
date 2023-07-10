@@ -56,12 +56,14 @@ export const getUserById = async (req: Request, res: Response) => {
 };
 
 export const uploadUserImage = async (req: Request, res: Response) => {
-  if (!req?.body?.path && req?.body?.path !== null)
+  const { userId, path } = req.body;
+
+  if (!path && path !== null)
     return res
       .status(400)
       .json({ status: "FILED", data: { error: "Image is required" } });
 
-  const user = await uploadUserImageService(req.body.id, req.body.path);
+  const user = await uploadUserImageService(userId, path);
 
   if (!user)
     return res

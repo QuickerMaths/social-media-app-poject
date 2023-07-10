@@ -8,14 +8,16 @@ import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import { setProfileImage } from "../../features/authSlice/authSlice";
 import { closeModal } from "../../features/modalSlice/modalSlice";
+import { useUploadUserImageMutation } from "../../features/apiSlice/userApiSlice/userApiSlice";
 
-interface Props {
-  userId: string;
-}
-
-const UserProfileImgModal: React.FC<Props> = ({ userId }) => {
+const UserProfileImgModal = () => {
   const dispatch = useAppDispatch();
   const { modals } = useAppSelector((state: RootState) => state.modal);
+  const { userId } = useAppSelector((state: RootState) => state.auth);
+
+  const [uploadUserImage, { isLoading: isUploading }] =
+    useUploadUserImageMutation();
+
   const { handleSubmit, setFieldValue, errors, touched } = useFormik({
     initialValues: {
       profilePicture: "",
@@ -23,39 +25,31 @@ const UserProfileImgModal: React.FC<Props> = ({ userId }) => {
     //TODO: add validation
     // validationSchema: profileImageValidation,
     onSubmit: async (values) => {
-      await axios.put(
-        `http://localhost:5000/api/users/uploads/${userId}`,
-        {
+      try {
+        await uploadUserImage({
+          userId: userId as string,
           path: await useConvertToBase64(values.profilePicture),
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+        });
 
-      dispatch(
-        setProfileImage(
-          (await useConvertToBase64(values.profilePicture)) as string
-        )
-      );
-      dispatch(closeModal("profileImgModal"));
+        dispatch(
+          setProfileImage(
+            (await useConvertToBase64(values.profilePicture)) as string
+          )
+        );
+        dispatch(closeModal("profileImgModal"));
+      } catch (err: any) {
+        // TODO: add error handling for this (display 413 err message 'payload too large')
+        console.log(err);
+      }
     },
   });
 
   const handleImgDelete = async () => {
-    await axios.put(
-      `http://localhost:5000/api/users/uploads/${userId}`,
-      {
+    await axios.delete(`http://localhost:5000/api/users/uploads/${userId}`, {
+      data: {
         path: null,
       },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    });
 
     dispatch(setProfileImage(null));
     dispatch(closeModal("profileImgModal"));
@@ -73,7 +67,7 @@ const UserProfileImgModal: React.FC<Props> = ({ userId }) => {
           <li className="user-profile-img-modal__item">
             <form className="user-profile__form">
               <label htmlFor="profilePicture" className="user-profile__label">
-                Upload new image
+                {isUploading ? "Uploading..." : "Upload new image"}
               </label>
               {errors.profilePicture && touched.profilePicture && (
                 <p style={{ color: "red" }}>{errors.profilePicture}</p>

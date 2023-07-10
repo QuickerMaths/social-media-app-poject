@@ -10,8 +10,8 @@ import {
 
 router.route("/").get(getAllUsers).put(updateUser).delete(deleteUser);
 
-router.route("/:id").get(getUserById);
+router.route("/uploads").put(uploadUserImage);
 
-router.route("/uploads/:id").put(uploadUserImage);
+router.route("/:id").get(getUserById);
 
 export default router;

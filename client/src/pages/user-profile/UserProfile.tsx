@@ -70,7 +70,7 @@ const UserProfile = () => {
                 onClick={() => dispatch(openModal("profileImgModal"))}
                 style={{ cursor: "pointer" }}
               />
-              <UserProfileImgModal userId={userId} />
+              <UserProfileImgModal />
             </>
           ) : activeUserId === userId ? (
             <ProfileImage userId={userId} />

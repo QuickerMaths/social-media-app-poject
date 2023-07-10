@@ -18,7 +18,7 @@ const UserDetailsModal = () => {
   const [updateUserAddress, { isLoading: isUpdating }] =
     useUpdateUserAddressMutation();
 
-  //TODO: refactor to rtkQuery and formik components
+  //TODO: refactor to formik components
   const { handleChange, handleBlur, errors, touched, values, handleSubmit } =
     useFormik({
       initialValues: {
@@ -36,7 +36,6 @@ const UserDetailsModal = () => {
           });
 
           dispatch(closeModal("userDetailsModal"));
-          console.log("success");
         } catch (err: any) {
           console.log(err);
         }

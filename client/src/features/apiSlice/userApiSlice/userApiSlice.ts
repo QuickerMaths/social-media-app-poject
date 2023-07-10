@@ -28,8 +28,24 @@ export const userApiSlice = apiSlice.injectEndpoints({
         { type: "User", id: req.userId },
       ],
     }),
+    uploadUserImage: builder.mutation({
+      query: (arg) => {
+        const { userId, path } = arg;
+        return {
+          method: "PUT",
+          url: "/api/users/uploads",
+          body: { userId, path },
+        };
+      },
+      invalidatesTags: (result, error, req) => [
+        { type: "User", id: req.userId },
+      ],
+    }),
   }),
 });
 
-export const { useGetUserByIdQuery, useUpdateUserAddressMutation } =
-  userApiSlice;
+export const {
+  useGetUserByIdQuery,
+  useUpdateUserAddressMutation,
+  useUploadUserImageMutation,
+} = userApiSlice;
