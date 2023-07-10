@@ -1,42 +1,39 @@
-import axios from "axios";
 import { useFormik } from "formik";
 import defaultImg from "../../../assets/images/default_img.png";
+import { useUploadUserImageMutation } from "../../../features/apiSlice/userApiSlice/userApiSlice";
 import { setProfileImage } from "../../../features/authSlice/authSlice";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import { useConvertToBase64 } from "../../../hooks/useConvertToBase64";
 import { RootState } from "../../../redux/store";
 import profileImageValidation from "../../../validation/profileImageValidation";
 
-interface Props {
-  userId: string;
-}
-
-const ProfileImage: React.FC<Props> = ({ userId }) => {
+const ProfileImage = () => {
   const dispatch = useAppDispatch();
-  const { userImg } = useAppSelector((state: RootState) => state.auth);
+  const { userImg, userId } = useAppSelector((state: RootState) => state.auth);
+
+  const [uploadUserImage] = useUploadUserImageMutation();
+
   const { setFieldValue, handleSubmit, errors, touched } = useFormik({
     initialValues: {
       profilePicture: "",
     },
     // validationSchema: profileImageValidation,
     onSubmit: async (values) => {
-      await axios.put(
-        `http://localhost:5000/api/users/uploads/${userId}`,
-        {
+      try {
+        await uploadUserImage({
+          userId: userId as string,
           path: await useConvertToBase64(values.profilePicture),
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+        });
 
-      dispatch(
-        setProfileImage(
-          (await useConvertToBase64(values.profilePicture)) as string
-        )
-      );
+        dispatch(
+          setProfileImage(
+            (await useConvertToBase64(values.profilePicture)) as string
+          )
+        );
+      } catch (err: any) {
+        // TODO: add error handling for this (display 413 err message 'payload too large')
+        console.log(err);
+      }
     },
   });
 

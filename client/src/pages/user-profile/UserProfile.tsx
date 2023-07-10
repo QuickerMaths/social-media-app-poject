@@ -73,7 +73,7 @@ const UserProfile = () => {
               <UserProfileImgModal />
             </>
           ) : activeUserId === userId ? (
-            <ProfileImage userId={userId} />
+            <ProfileImage />
           ) : (
             <img
               src={user.profilePicture ? user.profilePicture : defaultImg}
