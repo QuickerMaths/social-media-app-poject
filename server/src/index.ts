@@ -21,6 +21,11 @@ import commentRoute from "./routes/api/commentRoute";
 import rePostRoute from "./routes/api/rePostRoute";
 import friendsRoute from "./routes/api/friendsRoute";
 
+//TODO: implement cache into the server
+//TODO: implement the refresh token
+//TODO: implement pagination
+//TODO: secure all router by verifying the token
+
 //connect to database
 connectDB();
 
