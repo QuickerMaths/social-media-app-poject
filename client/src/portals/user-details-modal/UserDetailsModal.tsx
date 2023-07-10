@@ -5,22 +5,24 @@ import { useFormik } from "formik";
 import { AiOutlineClose } from "react-icons/ai";
 import InputField from "../../components/inputField/InputField";
 import addressValidation from "../../validation/addressValidation";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
+import { RootState } from "../../redux/store";
+import { closeModal } from "../../features/modalSlice/modalSlice";
 
 interface Props {
-  isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   userId: string;
   setRerenderAddress: React.Dispatch<React.SetStateAction<boolean>>;
   reRenderAddress: boolean;
 }
 
 const UserDetailsModal: React.FC<Props> = ({
-  isOpen,
-  setIsOpen,
   userId,
   reRenderAddress,
   setRerenderAddress,
 }) => {
+  const dispatch = useAppDispatch();
+  const { modals } = useAppSelector((state: RootState) => state.modal);
+
   //TODO: refactor to rtkQuery and formik components
   const { handleChange, handleBlur, errors, touched, values, handleSubmit } =
     useFormik({
@@ -49,24 +51,24 @@ const UserDetailsModal: React.FC<Props> = ({
             }
           );
           setRerenderAddress(!reRenderAddress);
-          setIsOpen(false);
+          dispatch(closeModal("userDetailsModal"));
         } catch (err: any) {
           console.log(err);
         }
       },
     });
 
-  if (!isOpen) return null;
+  if (!modals["userDetailsModal"]) return null;
   return ReactDOM.createPortal(
     <div className="user-details-modal">
       <div
         className="user-details-modal__overlay"
-        onClick={() => setIsOpen(false)}
+        onClick={() => dispatch(closeModal("userDetailsModal"))}
       ></div>
       <div className="user-details-modal__content">
         <button
           className="user-details-modal__close"
-          onClick={() => setIsOpen(false)}
+          onClick={() => dispatch(closeModal("userDetailsModal"))}
         >
           <AiOutlineClose className="user-details-modal__close-icon" />
         </button>

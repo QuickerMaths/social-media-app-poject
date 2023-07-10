@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import moment from "moment";
 import { RootState } from "../../redux/store";
-import { useAppSelector } from "../../hooks/reduxHooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import UserDetailsModal from "../../portals/user-details-modal/UserDetailsModal";
 import { IUser } from "../../pages/user-profile/types";
+import { openModal } from "../../features/modalSlice/modalSlice";
 
 interface Props {
   user: IUser;
@@ -16,13 +17,13 @@ const UserDetails: React.FC<Props> = ({
   reRenderAddress,
   setRerenderAddress,
 }) => {
+  const dispatch = useAppDispatch();
   const { createdAt, address, _id: userId } = user;
 
   const { userId: activeUserId } = useAppSelector(
     (state: RootState) => state.auth
   );
 
-  const [isOpen, setIsOpen] = useState(false);
   return (
     <>
       <section className="user-details">
@@ -47,15 +48,13 @@ const UserDetails: React.FC<Props> = ({
         {activeUserId === userId && activeUserId && (
           <button
             className="user-details__edit-button"
-            onClick={() => setIsOpen(true)}
+            onClick={() => dispatch(openModal("userDetailsModal"))}
           >
             Edit
           </button>
         )}
       </section>
       <UserDetailsModal
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
         userId={userId}
         reRenderAddress={reRenderAddress}
         setRerenderAddress={setRerenderAddress}
