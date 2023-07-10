@@ -30,6 +30,8 @@ const HomePage = () => {
     fetchPosts();
   }, [reRender]);
 
+  //TODO: forceRefetch from Rtk query to create infinite scroll
+
   return (
     <section className="home-page">
       <TextArea setReRender={setReRender} reRender={reRender} />
