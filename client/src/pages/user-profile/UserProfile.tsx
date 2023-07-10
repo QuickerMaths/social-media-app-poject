@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router";
-import { useAppSelector } from "../../hooks/reduxHooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import defaultImg from "../../assets/images/default_img.png";
 import useMediaQuery from "../../hooks/useMediaQuery";
@@ -9,14 +9,16 @@ import MainLeft from "./subcomponents/MainLeft";
 import MainRight from "./subcomponents/MainRight";
 import ProfileImage from "./subcomponents/ProfileImage";
 import UserProfileImgModal from "../../portals/user-profile-img-modal/UserProfileImgModal";
-import { IUser, IUserBasicData } from "./types";
+import { IUserBasicData } from "./types";
 import SendFriendRequest from "../../components/send-friend-request/SendFriendRequest";
 import RemoveFriend from "../../components/remove-friends/RemoveFriend";
 import { useGetUserByIdQuery } from "../../features/apiSlice/userApiSlice/userApiSlice";
+import { openModal } from "../../features/modalSlice/modalSlice";
 
 const UserProfile = () => {
   const isMobile = useMediaQuery("(max-width: 1024px)");
   const isDesktop = useMediaQuery("(min-width: 1025px)");
+  const dispatch = useAppDispatch();
   const { userId: activeUserId, userImg } = useAppSelector(
     (state: RootState) => state.auth
   );
@@ -25,9 +27,6 @@ const UserProfile = () => {
   const { userId } = useParams();
 
   const [reRenderAddress, setRerenderAddress] = useState<boolean>(false);
-
-  //TODO: refactor modal open state to redux slice
-  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const { data, isLoading, isSuccess, isFetching, isError, error, refetch } =
     useGetUserByIdQuery(userId as string);
@@ -70,14 +69,10 @@ const UserProfile = () => {
                 className="user-profile__img"
                 width={150}
                 height={150}
-                onClick={() => setIsOpen(true)}
+                onClick={() => dispatch(openModal("profileImgModal"))}
                 style={{ cursor: "pointer" }}
               />
-              <UserProfileImgModal
-                setIsOpen={setIsOpen}
-                isOpen={isOpen}
-                userId={userId}
-              />
+              <UserProfileImgModal userId={userId} />
             </>
           ) : activeUserId === userId ? (
             <ProfileImage userId={userId} />

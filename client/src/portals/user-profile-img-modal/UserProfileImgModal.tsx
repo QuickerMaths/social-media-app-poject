@@ -7,23 +7,20 @@ import profileImageValidation from "../../validation/profileImageValidation";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import { setProfileImage } from "../../features/authSlice/authSlice";
+import { closeModal } from "../../features/modalSlice/modalSlice";
 
 interface Props {
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  isOpen: boolean;
   userId: string;
 }
 
-const UserProfileImgModal: React.FC<Props> = ({
-  setIsOpen,
-  isOpen,
-  userId,
-}) => {
+const UserProfileImgModal: React.FC<Props> = ({ userId }) => {
   const dispatch = useAppDispatch();
+  const { modals } = useAppSelector((state: RootState) => state.modal);
   const { handleSubmit, setFieldValue, errors, touched } = useFormik({
     initialValues: {
       profilePicture: "",
     },
+    //TODO: add validation
     // validationSchema: profileImageValidation,
     onSubmit: async (values) => {
       await axios.put(
@@ -43,7 +40,7 @@ const UserProfileImgModal: React.FC<Props> = ({
           (await useConvertToBase64(values.profilePicture)) as string
         )
       );
-      setIsOpen(false);
+      dispatch(closeModal("profileImgModal"));
     },
   });
 
@@ -61,15 +58,15 @@ const UserProfileImgModal: React.FC<Props> = ({
     );
 
     dispatch(setProfileImage(null));
-    setIsOpen(false);
+    dispatch(closeModal("profileImgModal"));
   };
 
-  if (!isOpen) return null;
+  if (!modals["profileImgModal"]) return null;
   return ReactDOM.createPortal(
     <div className="user-profile-img-modal">
       <div
         className="user-profile-img-modal__overlay"
-        onClick={() => setIsOpen(false)}
+        onClick={() => dispatch(closeModal("profileImgModal"))}
       ></div>
       <div className="user-profile-img-modal__content">
         <ul className="user-profile-img-modal__list">
@@ -89,7 +86,6 @@ const UserProfileImgModal: React.FC<Props> = ({
                 className="user-profile__input"
                 onChange={(e) => {
                   setFieldValue("profilePicture", e.target.files![0]);
-
                   setTimeout(() => {
                     handleSubmit();
                   }, 0);
@@ -109,7 +105,7 @@ const UserProfileImgModal: React.FC<Props> = ({
           <li className="user-profile-img-modal__item">
             <button
               className="user-profile-img-modal__button"
-              onClick={() => setIsOpen(false)}
+              onClick={() => dispatch(closeModal("profileImgModal"))}
             >
               Cancel
             </button>
