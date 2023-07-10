@@ -8,20 +8,15 @@ import addressValidation from "../../validation/addressValidation";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import { closeModal } from "../../features/modalSlice/modalSlice";
+import { useUpdateUserAddressMutation } from "../../features/apiSlice/userApiSlice/userApiSlice";
 
-interface Props {
-  userId: string;
-  setRerenderAddress: React.Dispatch<React.SetStateAction<boolean>>;
-  reRenderAddress: boolean;
-}
-
-const UserDetailsModal: React.FC<Props> = ({
-  userId,
-  reRenderAddress,
-  setRerenderAddress,
-}) => {
+const UserDetailsModal = () => {
   const dispatch = useAppDispatch();
+  const { userId } = useAppSelector((state: RootState) => state.auth);
   const { modals } = useAppSelector((state: RootState) => state.modal);
+
+  const [updateUserAddress, { isLoading: isUpdating }] =
+    useUpdateUserAddressMutation();
 
   //TODO: refactor to rtkQuery and formik components
   const { handleChange, handleBlur, errors, touched, values, handleSubmit } =
@@ -35,23 +30,13 @@ const UserDetailsModal: React.FC<Props> = ({
       validationSchema: addressValidation,
       onSubmit: async (values) => {
         try {
-          await axios.put(
-            "http://localhost:5000/api/users",
-            {
-              userId,
-              street: values.street,
-              city: values.city,
-              state: values.state,
-              zip: values.zip,
-            },
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
-          setRerenderAddress(!reRenderAddress);
+          await updateUserAddress({
+            userId: userId as string,
+            addressToUpdate: values,
+          });
+
           dispatch(closeModal("userDetailsModal"));
+          console.log("success");
         } catch (err: any) {
           console.log(err);
         }
@@ -119,7 +104,7 @@ const UserDetailsModal: React.FC<Props> = ({
             value={values.zip}
           />
           <button type="submit" className="user-details-modal__button">
-            Edit
+            {isUpdating ? "Updating..." : "Update"}
           </button>
         </form>
       </div>

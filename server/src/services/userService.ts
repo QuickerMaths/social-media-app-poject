@@ -6,13 +6,22 @@ export const getAllUsersService = async () => {
   return users;
 };
 // TODO: type body properly
-export const updateUserService = async (body: any) => {
-  const updatedUser = await User.findByIdAndUpdate(body.userId, {
+export const updateUserService = async (
+  userId: string,
+  addressToUpdate: {
+    street: string;
+    city: string;
+    state: string;
+    zip: string;
+  }
+) => {
+  const { street, city, state, zip } = addressToUpdate;
+  const updatedUser = await User.findByIdAndUpdate(userId, {
     address: {
-      street: body.street,
-      city: body.city,
-      state: body.state,
-      zip: body.zip,
+      street,
+      city,
+      state,
+      zip,
     },
   }).exec();
 

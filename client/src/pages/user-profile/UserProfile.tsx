@@ -26,8 +26,6 @@ const UserProfile = () => {
   //getting id from url to enable fetching user data even if opened in new tab
   const { userId } = useParams();
 
-  const [reRenderAddress, setRerenderAddress] = useState<boolean>(false);
-
   const { data, isLoading, isSuccess, isFetching, isError, error, refetch } =
     useGetUserByIdQuery(userId as string);
 
@@ -103,19 +101,11 @@ const UserProfile = () => {
         {isMobile && activePage === "posts" ? (
           <MainRight userId={userId} />
         ) : isMobile && activePage === "details" ? (
-          <MainLeft
-            user={user}
-            reRenderAddress={reRenderAddress}
-            setRerenderAddress={setRerenderAddress}
-          />
+          <MainLeft user={user} />
         ) : (
           isDesktop && (
             <div className="user-profile__main">
-              <MainLeft
-                user={user}
-                reRenderAddress={reRenderAddress}
-                setRerenderAddress={setRerenderAddress}
-              />
+              <MainLeft user={user} />
               <MainRight userId={userId} />
             </div>
           )

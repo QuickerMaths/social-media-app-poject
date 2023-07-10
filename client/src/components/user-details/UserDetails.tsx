@@ -8,15 +8,9 @@ import { openModal } from "../../features/modalSlice/modalSlice";
 
 interface Props {
   user: IUser;
-  setRerenderAddress: React.Dispatch<React.SetStateAction<boolean>>;
-  reRenderAddress: boolean;
 }
 
-const UserDetails: React.FC<Props> = ({
-  user,
-  reRenderAddress,
-  setRerenderAddress,
-}) => {
+const UserDetails: React.FC<Props> = ({ user }) => {
   const dispatch = useAppDispatch();
   const { createdAt, address, _id: userId } = user;
 
@@ -54,11 +48,7 @@ const UserDetails: React.FC<Props> = ({
           </button>
         )}
       </section>
-      <UserDetailsModal
-        userId={userId}
-        reRenderAddress={reRenderAddress}
-        setRerenderAddress={setRerenderAddress}
-      />
+      <UserDetailsModal />
     </>
   );
 };

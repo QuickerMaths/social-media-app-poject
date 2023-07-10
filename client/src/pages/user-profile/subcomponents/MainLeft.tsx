@@ -5,22 +5,12 @@ import { IUser } from "../types";
 
 interface Props {
   user: IUser;
-  reRenderAddress: boolean;
-  setRerenderAddress: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const MainLeft: React.FC<Props> = ({
-  user,
-  reRenderAddress,
-  setRerenderAddress,
-}) => {
+const MainLeft: React.FC<Props> = ({ user }) => {
   return (
     <div className="user-profile__main-left">
-      <UserDetails
-        user={user}
-        reRenderAddress={reRenderAddress}
-        setRerenderAddress={setRerenderAddress}
-      />
+      <UserDetails user={user} />
       <UserFriends user={user} />
     </div>
   );

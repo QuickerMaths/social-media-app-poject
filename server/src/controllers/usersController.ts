@@ -19,14 +19,14 @@ export const getAllUsers = async (req: Request, res: Response) => {
 };
 
 export const updateUser = async (req: Request, res: Response) => {
-  const { userId } = req.body;
+  const { userId, addressToUpdate } = req.body;
 
   if (!userId)
     return res
       .status(400)
       .json({ status: "FAILED", data: { error: "User id is required" } });
 
-  const updatedUser = await updateUserService(userId);
+  const updatedUser = await updateUserService(userId, addressToUpdate);
 
   res.status(201).json({ status: "OK", data: updatedUser });
 };
