@@ -4,6 +4,8 @@ import { RootState, AppDispatch } from "../redux/store";
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
+export type CacheItem<T, ID> = { type: T; id: ID };
+
 export function providesList<
   R extends { id: string | number }[],
   T extends string
@@ -15,3 +17,8 @@ export function providesList<
       ]
     : [{ type: tagType, id: "LIST" }];
 }
+
+export const invalidatesList =
+  <T extends string>(type: T) =>
+  (): readonly [CacheItem<T, "LIST">] =>
+    [{ type, id: "LIST" }] as const;
