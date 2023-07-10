@@ -1,6 +1,4 @@
-import React from "react";
 import ReactDOM from "react-dom";
-import axios from "axios";
 import { useFormik } from "formik";
 import { useConvertToBase64 } from "../../hooks/useConvertToBase64";
 import profileImageValidation from "../../validation/profileImageValidation";
@@ -45,14 +43,16 @@ const UserProfileImgModal = () => {
   });
 
   const handleImgDelete = async () => {
-    await axios.delete(`http://localhost:5000/api/users/uploads/${userId}`, {
-      data: {
+    try {
+      await uploadUserImage({
+        userId: userId as string,
         path: null,
-      },
-    });
-
-    dispatch(setProfileImage(null));
-    dispatch(closeModal("profileImgModal"));
+      });
+      dispatch(setProfileImage(null));
+      dispatch(closeModal("profileImgModal"));
+    } catch (err: any) {
+      console.log(err);
+    }
   };
 
   if (!modals["profileImgModal"]) return null;
