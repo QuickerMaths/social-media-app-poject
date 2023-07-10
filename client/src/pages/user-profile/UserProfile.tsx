@@ -12,6 +12,7 @@ import UserProfileImgModal from "../../portals/user-profile-img-modal/UserProfil
 import { IUser, IUserBasicData } from "./types";
 import SendFriendRequest from "../../components/send-friend-request/SendFriendRequest";
 import RemoveFriend from "../../components/remove-friends/RemoveFriend";
+import { useGetUserByIdQuery } from "../../features/apiSlice/userApiSlice/userApiSlice";
 
 const UserProfile = () => {
   const isMobile = useMediaQuery("(max-width: 1024px)");
@@ -28,120 +29,110 @@ const UserProfile = () => {
   //TODO: refactor modal open state to redux slice
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  //TODO: refactor fetch to rtkQuery
-  const [user, setUser] = useState<IUser | null>(null);
+  const { data, isLoading, isSuccess, isFetching, isError, error, refetch } =
+    useGetUserByIdQuery(userId as string);
 
-  useEffect(() => {
-    const getUser = async (userId: string) => {
-      try {
-        const res = await fetch(`http://localhost:5000/api/users/${userId}`, {
-          method: "GET",
-          headers: {
-            "Access-Control-Allow-Origin": `http://localhost:5000`,
-            "Content-Type": "application/json",
-          },
-        });
-        const { data } = await res.json();
-        console.log(data);
-        setUser(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  let content;
+  if (isFetching || isLoading) {
+    //TODO: create loading component
+    content = <div>Loading...</div>;
+  } else if (isSuccess) {
+    const { data: user } = data;
 
-    getUser(userId as string);
-  }, [reRenderAddress, userId]);
+    const alreadyFriends = (friend: IUserBasicData) =>
+      friend._id === activeUserId;
 
-  const alreadyFriends = (friend: IUserBasicData) =>
-    friend._id === activeUserId;
+    const showSendRequestButton =
+      activeUserId &&
+      activeUserId !== userId &&
+      (!data?.data ||
+        (data?.data.friends as IUserBasicData[]).every(alreadyFriends));
+    const showRemoveButton =
+      activeUserId &&
+      activeUserId !== userId &&
+      (!data?.data ||
+        !(data?.data.friends as IUserBasicData[]).every(alreadyFriends));
 
-  const showSendRequestButton =
-    activeUserId &&
-    activeUserId !== userId &&
-    (!user || (user.friends as IUserBasicData[]).every(alreadyFriends));
-  const showRemoveButton =
-    activeUserId &&
-    activeUserId !== userId &&
-    (!user || !(user.friends as IUserBasicData[]).every(alreadyFriends));
-
-  //TODO: refactor loading to spinner and use react suspense instead of something like this
-
-  if (!user) return <div>Loading...</div>;
-
-  return (
-    <section className="user-profile">
-      <div className="user-profile__presentation">
-        {activeUserId === userId && userImg ? (
-          <>
+    content = (
+      <>
+        <div className="user-profile__presentation">
+          {activeUserId === userId && userImg ? (
+            <>
+              <img
+                src={
+                  userImg && activeUserId === userId
+                    ? userImg
+                    : user.profilePicture
+                    ? user.profilePicture
+                    : defaultImg
+                }
+                alt="user profile image"
+                className="user-profile__img"
+                width={150}
+                height={150}
+                onClick={() => setIsOpen(true)}
+                style={{ cursor: "pointer" }}
+              />
+              <UserProfileImgModal
+                setIsOpen={setIsOpen}
+                isOpen={isOpen}
+                userId={userId}
+              />
+            </>
+          ) : activeUserId === userId ? (
+            <ProfileImage userId={userId} />
+          ) : (
             <img
-              src={
-                userImg && activeUserId === userId
-                  ? userImg
-                  : user.profilePicture
-                  ? user.profilePicture
-                  : defaultImg
-              }
+              src={user.profilePicture ? user.profilePicture : defaultImg}
               alt="user profile image"
               className="user-profile__img"
               width={150}
               height={150}
-              onClick={() => setIsOpen(true)}
-              style={{ cursor: "pointer" }}
             />
-            <UserProfileImgModal
-              setIsOpen={setIsOpen}
-              isOpen={isOpen}
-              userId={userId}
-            />
-          </>
-        ) : activeUserId === userId ? (
-          <ProfileImage userId={userId} />
-        ) : (
-          <img
-            src={user.profilePicture ? user.profilePicture : defaultImg}
-            alt="user profile image"
-            className="user-profile__img"
-            width={150}
-            height={150}
+          )}
+          <div className="user-profile__info">
+            <h2 className="user-profile__username">{user.username}</h2>
+            <h3 className="user-profile__full-name">
+              {user.firstName} {user.lastName}
+            </h3>
+          </div>
+          {showSendRequestButton && <SendFriendRequest />}
+          {showRemoveButton && <RemoveFriend />}
+        </div>
+        {isMobile && (
+          <UserProfileMobileNavigation
+            setActivePage={setActivePage}
+            activePage={activePage}
           />
         )}
-        <div className="user-profile__info">
-          <h2 className="user-profile__username">{user.username}</h2>
-          <h3 className="user-profile__full-name">
-            {user.firstName} {user.lastName}
-          </h3>
-        </div>
-        {showSendRequestButton && <SendFriendRequest />}
-        {showRemoveButton && <RemoveFriend />}
-      </div>
-      {isMobile && (
-        <UserProfileMobileNavigation
-          setActivePage={setActivePage}
-          activePage={activePage}
-        />
-      )}
-      {isMobile && activePage === "posts" ? (
-        <MainRight userId={userId} />
-      ) : isMobile && activePage === "details" ? (
-        <MainLeft
-          user={user}
-          reRenderAddress={reRenderAddress}
-          setRerenderAddress={setRerenderAddress}
-        />
-      ) : (
-        isDesktop && (
-          <div className="user-profile__main">
-            <MainLeft
-              user={user}
-              reRenderAddress={reRenderAddress}
-              setRerenderAddress={setRerenderAddress}
-            />
-            <MainRight userId={userId} />
-          </div>
-        )
-      )}
-    </section>
-  );
+        {isMobile && activePage === "posts" ? (
+          <MainRight userId={userId} />
+        ) : isMobile && activePage === "details" ? (
+          <MainLeft
+            user={user}
+            reRenderAddress={reRenderAddress}
+            setRerenderAddress={setRerenderAddress}
+          />
+        ) : (
+          isDesktop && (
+            <div className="user-profile__main">
+              <MainLeft
+                user={user}
+                reRenderAddress={reRenderAddress}
+                setRerenderAddress={setRerenderAddress}
+              />
+              <MainRight userId={userId} />
+            </div>
+          )
+        )}
+      </>
+    );
+  } else if (isError) {
+    //TODO: handle error properly
+    content = <div>Error</div>;
+  }
+
+  return <section className="user-profile">{content}</section>;
 };
 
 export default UserProfile;

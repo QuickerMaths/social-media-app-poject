@@ -38,6 +38,7 @@ function App() {
           },
         });
         const data = await res.json();
+        //TODO: use onQueryStarted to dispatch this reducer in rtkQuery
         dispatch(
           getAuth({
             username: data.username,
