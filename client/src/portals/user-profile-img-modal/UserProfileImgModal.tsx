@@ -1,7 +1,11 @@
+// External dependencies
 import ReactDOM from "react-dom";
 import { useFormik } from "formik";
-import { useConvertToBase64 } from "../../hooks/useConvertToBase64";
+
+// Internal dependencies
+
 import profileImageValidation from "../../validation/profileImageValidation";
+import { useConvertToBase64 } from "../../hooks/useConvertToBase64";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import { setProfileImage } from "../../features/authSlice/authSlice";

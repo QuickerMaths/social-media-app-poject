@@ -1,11 +1,18 @@
+// External dependencies
+
 import { useFormik } from "formik";
-import defaultImg from "../../../assets/images/default_img.png";
+
+// Internal dependencies
 import { useUploadUserImageMutation } from "../../../features/apiSlice/userApiSlice/userApiSlice";
 import { setProfileImage } from "../../../features/authSlice/authSlice";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import { useConvertToBase64 } from "../../../hooks/useConvertToBase64";
 import { RootState } from "../../../redux/store";
 import profileImageValidation from "../../../validation/profileImageValidation";
+
+// Assets
+
+import defaultImg from "../../../assets/images/default_img.png";
 
 const ProfileImage = () => {
   const dispatch = useAppDispatch();

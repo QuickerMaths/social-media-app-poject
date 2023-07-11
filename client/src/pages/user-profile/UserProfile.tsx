@@ -1,19 +1,26 @@
+// External dependencies
+
 import { useState } from "react";
 import { useParams } from "react-router";
+
+// Internal dependencies
+
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
-import defaultImg from "../../assets/images/default_img.png";
+import { IUserBasicData } from "./types";
+import { useGetUserByIdQuery } from "../../features/apiSlice/userApiSlice/userApiSlice";
+import { openModal } from "../../features/modalSlice/modalSlice";
 import useMediaQuery from "../../hooks/useMediaQuery";
 import UserProfileMobileNavigation from "../../components/user-profile-mobile-navigation/UserProfileMobileNavigation";
 import MainLeft from "./subcomponents/MainLeft";
 import MainRight from "./subcomponents/MainRight";
 import ProfileImage from "./subcomponents/ProfileImage";
 import UserProfileImgModal from "../../portals/user-profile-img-modal/UserProfileImgModal";
-import { IUserBasicData } from "./types";
 import SendFriendRequest from "../../components/send-friend-request/SendFriendRequest";
 import RemoveFriend from "../../components/remove-friends/RemoveFriend";
-import { useGetUserByIdQuery } from "../../features/apiSlice/userApiSlice/userApiSlice";
-import { openModal } from "../../features/modalSlice/modalSlice";
+
+// Assets
+import defaultImg from "../../assets/images/default_img.png";
 
 const UserProfile = () => {
   const isMobile = useMediaQuery("(max-width: 1024px)");
@@ -22,9 +29,9 @@ const UserProfile = () => {
   const { userId: activeUserId, userImg } = useAppSelector(
     (state: RootState) => state.auth
   );
-  const [activePage, setActivePage] = useState<"posts" | "details">("posts");
-  //getting id from url to enable fetching user data even if opened in new tab
   const { userId } = useParams();
+
+  const [activePage, setActivePage] = useState<"posts" | "details">("posts");
 
   const { data, isLoading, isSuccess, isFetching, isError, error, refetch } =
     useGetUserByIdQuery(userId as string);

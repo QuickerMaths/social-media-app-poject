@@ -1,8 +1,13 @@
+// External dependencies
+
 import axios from "axios";
 import { useParams } from "react-router";
+import { AiOutlineUserAdd } from "react-icons/ai";
+
+// Internal dependencies
+
 import { useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
-import { AiOutlineUserAdd } from "react-icons/ai";
 
 const SendFriendRequest = () => {
   const { userId } = useAppSelector((state: RootState) => state.auth);

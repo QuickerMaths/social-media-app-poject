@@ -1,6 +1,11 @@
+// External dependencies
+
 import axios from "axios";
 import { AiOutlineUserDelete } from "react-icons/ai";
 import { useParams } from "react-router";
+
+// Internal dependencies
+
 import { useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 

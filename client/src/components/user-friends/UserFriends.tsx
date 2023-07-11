@@ -1,3 +1,5 @@
+// Internal dependencies
+
 import { IUser, IUserBasicData } from "../../pages/user-profile/types";
 import Friend from "../friend/Friend";
 

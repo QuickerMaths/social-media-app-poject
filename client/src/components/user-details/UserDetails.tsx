@@ -1,5 +1,10 @@
+// External dependencies
+
 import React, { useState } from "react";
 import moment from "moment";
+
+// Internal dependencies
+
 import { RootState } from "../../redux/store";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import UserDetailsModal from "../../portals/user-details-modal/UserDetailsModal";

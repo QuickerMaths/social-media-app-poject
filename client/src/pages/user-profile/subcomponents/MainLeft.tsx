@@ -1,4 +1,9 @@
+// External dependencies
+
 import React from "react";
+
+// Internal dependencies
+
 import UserDetails from "../../../components/user-details/UserDetails";
 import UserFriends from "../../../components/user-friends/UserFriends";
 import { IUser } from "../types";
