@@ -26,7 +26,10 @@ export const postApiSlice = apiSlice.injectEndpoints({
       },
       providesTags: (result, error, arg) => providesList(result?.ids, "Post"),
     }),
-    createPost: builder.mutation<IPost, Partial<IPost>>({
+    createPost: builder.mutation<
+      IPost,
+      Pick<IPost, "postBody" | "_id" | "postImage">
+    >({
       query: (body) => ({
         url: "/api/posts",
         method: "POST",

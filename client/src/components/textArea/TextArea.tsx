@@ -27,7 +27,7 @@ const TextArea = () => {
         _id: userId as string,
         postImage: values.image
           ? ((await useConvertToBase64(values.image)) as string)
-          : undefined,
+          : null,
       });
     },
   });
@@ -44,7 +44,7 @@ const TextArea = () => {
             onChange={handleChange}
             value={values.postBody}
           />
-          <button type="submit" className="feed__button">
+          <button type="submit" className="feed__button" disabled={isUpdating}>
             Public
           </button>
         </div>

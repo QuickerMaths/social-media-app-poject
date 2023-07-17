@@ -8,7 +8,7 @@ export type IPost = {
     username: string;
   };
   postBody: string;
-  postImage: string;
+  postImage: string | null;
   createdAt: string;
   updatedAt: string;
   commentTotal: number;
