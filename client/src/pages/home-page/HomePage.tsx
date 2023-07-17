@@ -19,7 +19,6 @@ const HomePage = () => {
     isError,
     isSuccess,
   } = useGetPostsQuery("");
-  console.log(posts);
 
   let content;
 

@@ -19,7 +19,7 @@ export const postApiSlice = apiSlice.injectEndpoints({
       },
       providesTags: (result, error, arg) => providesList(result?.ids, "Post"),
     }),
-    useGetPostsByUser: builder.query<EntityState<IPost | IRePost>, string>({
+    getPostsByUser: builder.query<EntityState<IPost | IRePost>, string>({
       query: (userId) => `/api/posts/user/${userId}`,
       transformResponse: (response: (IPost | IRePost)[]) => {
         return postAdapter.setAll(postAdapter.getInitialState(), response);
@@ -29,4 +29,4 @@ export const postApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetPostsQuery, useUseGetPostsByUserQuery } = postApiSlice;
+export const { useGetPostsQuery, useGetPostsByUserQuery } = postApiSlice;
