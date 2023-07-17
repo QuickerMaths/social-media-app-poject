@@ -23,6 +23,7 @@ const HomePage = () => {
   let content;
 
   if (isLoading || isFetching) {
+    //TODO: switch for loading spinner
     content = <div>Loading...</div>;
   } else if (isError) {
     content = <div>Error</div>;
@@ -46,7 +47,7 @@ const HomePage = () => {
 
   return (
     <section className="home-page">
-      <TextArea setReRender={setReRender} reRender={reRender} />
+      <TextArea />
       {content}
     </section>
   );

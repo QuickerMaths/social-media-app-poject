@@ -26,6 +26,7 @@ const MainRight: React.FC<Props> = ({ userId }) => {
   let content;
 
   if (isLoading || isFetching) {
+    //TODO: switch for loading spinner
     content = <div>Loading...</div>;
   } else if (isError) {
     content = <div>Error</div>;
@@ -48,10 +49,11 @@ const MainRight: React.FC<Props> = ({ userId }) => {
     );
   }
 
+  //TODO: forceRefetch from Rtk query to create infinite scroll
+
   return (
     <div className="user-profile__main-right">
       <TextArea reRender={reRender} setReRender={setReRender} />
-
       {content}
     </div>
   );

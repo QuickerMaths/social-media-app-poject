@@ -3,7 +3,7 @@ export const useConvertToBase64 = (file: any) => {
     const fileReader = new FileReader();
     fileReader.readAsDataURL(file);
     fileReader.onload = () => {
-      resolve(fileReader.result);
+      resolve(fileReader.result as string);
     };
     fileReader.onerror = (error) => {
       reject(error);
