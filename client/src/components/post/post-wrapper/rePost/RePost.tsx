@@ -1,13 +1,18 @@
+// External dependencies
+
 import React from "react";
+import moment from "moment";
+
+// Internal dependencies
+
+import PostOwner from "../../sumcomponents/PostOwner";
+import PostAction from "../../sumcomponents/PostAction";
+import PostComments from "../../sumcomponents/PostComments";
+import PostDetailsModal from "../../../../portals/post-details-modal/PostDetailsModal";
 import { IRePost } from "../../types";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/reduxHooks";
 import { RootState } from "../../../../redux/store";
-import PostOwner from "../../sumcomponents/PostOwner";
-import moment from "moment";
-import PostAction from "../../sumcomponents/PostAction";
-import PostComments from "../../sumcomponents/PostComments";
 import { openModal } from "../../../../features/modalSlice/modalSlice";
-import PostDetailsModal from "../../../../portals/post-details-modal/PostDetailsModal";
 
 interface Props {
   rePost: IRePost;

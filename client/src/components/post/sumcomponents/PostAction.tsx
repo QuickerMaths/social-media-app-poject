@@ -1,7 +1,12 @@
-import axios from "axios";
+// External dependencies
+
 import React from "react";
+import axios from "axios";
 import { AiOutlineComment, AiOutlineLike } from "react-icons/ai";
 import { BiRepost } from "react-icons/bi";
+
+// Internal dependencies
+
 import { openModal } from "../../../features/modalSlice/modalSlice";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import useToastCreator from "../../../hooks/useToastCreator";

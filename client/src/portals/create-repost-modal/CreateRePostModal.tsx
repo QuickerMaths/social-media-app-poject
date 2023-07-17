@@ -1,12 +1,17 @@
+// External dependencies
+
 import React from "react";
 import ReactDOM from "react-dom";
+import axios from "axios";
+import { useFormik } from "formik";
 import { AiOutlineClose } from "react-icons/ai";
+
+//Internal dependencies
+
 import { IPost } from "../../components/post/types";
 import { closeModal } from "../../features/modalSlice/modalSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
-import { useFormik } from "formik";
-import axios from "axios";
 
 interface Props {
   post: IPost;

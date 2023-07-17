@@ -1,18 +1,23 @@
-import moment from "moment";
+// External dependencies
+
 import React from "react";
 import ReactDOM from "react-dom";
+import moment from "moment";
+import axios from "axios";
+
+// Internal dependencies
+
+import PostAction from "../../components/post/sumcomponents/PostAction";
+import PostComments from "../../components/post/sumcomponents/PostComments";
+import PostOwner from "../../components/post/sumcomponents/PostOwner";
+import PostDetailsPost from "./subcomponents/PostDetailsPost";
+import PostDetailsRePost from "./subcomponents/PostDetailsRePost";
 import { IPost, IRePost } from "../../components/post/types";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import { AiOutlineClose } from "react-icons/ai";
 import { useFormik } from "formik";
 import { closeModal } from "../../features/modalSlice/modalSlice";
-import PostAction from "../../components/post/sumcomponents/PostAction";
-import PostComments from "../../components/post/sumcomponents/PostComments";
-import PostOwner from "../../components/post/sumcomponents/PostOwner";
-import axios from "axios";
-import PostDetailsPost from "./subcomponents/PostDetailsPost";
-import PostDetailsRePost from "./subcomponents/PostDetailsRePost";
 
 interface Props {
   post: IPost | IRePost;

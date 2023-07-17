@@ -1,4 +1,9 @@
+// External dependencies
+
 import React from "react";
+
+// Internal dependencies
+
 import Comment from "../../comment/Comment";
 import { IComment } from "../../comment/types";
 

@@ -1,7 +1,12 @@
-import axios from "axios";
+// External dependencies
+
 import moment from "moment";
 import React from "react";
+import axios from "axios";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
+
+// Internal dependencies
+
 import { openModal } from "../../../features/modalSlice/modalSlice";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import { RootState } from "../../../redux/store";

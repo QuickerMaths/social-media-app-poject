@@ -1,14 +1,21 @@
+// External dependencies
+
 import React from "react";
+import axios from "axios";
 import moment from "moment";
-import defaultImg from "../../assets/images/default_img.png";
+import { AiOutlineDelete, AiOutlineLike } from "react-icons/ai";
+
+// Internal dependencies
+
+import useToastCreator from "../../hooks/useToastCreator";
 import { Link } from "react-router-dom";
 import { IComment } from "./types";
-import axios from "axios";
 import { useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
-import { AiOutlineDelete, AiOutlineLike } from "react-icons/ai";
-import useToastCreator from "../../hooks/useToastCreator";
 
+// Assets
+
+import defaultImg from "../../assets/images/default_img.png";
 interface Props {
   comment: IComment;
   reRender: boolean;

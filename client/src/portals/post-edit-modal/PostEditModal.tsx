@@ -1,11 +1,16 @@
+// External dependencies
+
 import React from "react";
 import ReactDOM from "react-dom";
 import { AiOutlineClose } from "react-icons/ai";
+
+// Internal dependencies
+
+import PostEditImageForm from "./subcomponents/PostEditImageForm";
+import PostEditRePostForm from "./subcomponents/PostEditRePostForm";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import { closeModal } from "../../features/modalSlice/modalSlice";
-import PostEditImageForm from "./subcomponents/PostEditImageForm";
-import PostEditRePostForm from "./subcomponents/PostEditRePostForm";
 import { IPost, IRePost } from "../../components/post/types";
 
 interface Props {

@@ -1,15 +1,13 @@
 // External dependencies
 
 import { useState } from "react";
+import { EntityId } from "@reduxjs/toolkit";
 
 // Internal dependencies
 
-import Post from "../../components/post/post-wrapper/original-post/Post";
 import TextArea from "../../components/textArea/TextArea";
-import RePost from "../../components/post/post-wrapper/rePost/RePost";
-import { useGetPostsQuery } from "../../features/apiSlice/postApiSlice/postApiSlice";
-import { EntityId } from "@reduxjs/toolkit";
 import PostWrapper from "../../components/post/post-wrapper/PostWrapper";
+import { useGetPostsQuery } from "../../features/apiSlice/postApiSlice/postApiSlice";
 
 const HomePage = () => {
   const [reRender, setReRender] = useState<boolean>(false); //TODO: remove reRender state and use query refetch instead

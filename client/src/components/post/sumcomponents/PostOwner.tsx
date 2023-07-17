@@ -1,9 +1,15 @@
+// External dependencies
+
 import React from "react";
 import { Link } from "react-router-dom";
-import defaultImg from "../../../assets/images/default_img.png";
+
+// Internal dependencies
 import { useAppSelector } from "../../../hooks/reduxHooks";
 import { IUserBasicData } from "../../../pages/user-profile/types";
 import { RootState } from "../../../redux/store";
+
+// Assets
+import defaultImg from "../../../assets/images/default_img.png";
 
 interface Props {
   owner: IUserBasicData;
