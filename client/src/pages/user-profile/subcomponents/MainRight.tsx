@@ -5,9 +5,9 @@ import React, { useEffect, useState } from "react";
 // Internal dependencies
 
 import { IPost, IRePost } from "../../../components/post/types";
-import Post from "../../../components/post/originalPost/Post";
+import Post from "../../../components/post/post-wrapper/original-post/Post";
 import TextArea from "../../../components/textArea/TextArea";
-import RePost from "../../../components/post/rePost/RePost";
+import RePost from "../../../components/post/post-wrapper/rePost/RePost";
 
 interface Props {
   userId: string | undefined;

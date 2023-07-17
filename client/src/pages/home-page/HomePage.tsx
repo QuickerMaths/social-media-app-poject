@@ -1,61 +1,56 @@
-import { useEffect, useState } from "react";
-import Post from "../../components/post/originalPost/Post";
+// External dependencies
+
+import { useState } from "react";
+
+// Internal dependencies
+
+import Post from "../../components/post/post-wrapper/original-post/Post";
 import TextArea from "../../components/textArea/TextArea";
-import { IPost, IRePost } from "../../components/post/types";
-import RePost from "../../components/post/rePost/RePost";
+import RePost from "../../components/post/post-wrapper/rePost/RePost";
+import { useGetPostsQuery } from "../../features/apiSlice/postApiSlice/postApiSlice";
+import { EntityId } from "@reduxjs/toolkit";
+import PostWrapper from "../../components/post/post-wrapper/PostWrapper";
 
 const HomePage = () => {
-  //TODO: refactor to Rtk query
-  const [posts, setPosts] = useState<IPost[]>([]);
   const [reRender, setReRender] = useState<boolean>(false); //TODO: remove reRender state and use query refetch instead
-  useEffect(() => {
-    // fetch posts
-    const fetchPosts = async () => {
-      try {
-        const response = await fetch(`http://localhost:5000/api/posts`, {
-          method: "GET",
-          mode: "cors",
-          credentials: "include",
-          headers: {
-            "Access-Control-Allow-Origin": `http://localhost:5000`,
-            "Content-Type": "application/json",
-          },
-        });
-        const data = await response.json();
-        setPosts(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchPosts();
-  }, [reRender]);
+
+  const {
+    data: posts,
+    isLoading,
+    isFetching,
+    isError,
+    isSuccess,
+  } = useGetPostsQuery("");
+  console.log(posts);
+
+  let content;
+
+  if (isLoading || isFetching) {
+    content = <div>Loading...</div>;
+  } else if (isError) {
+    content = <div>Error</div>;
+  } else if (isSuccess) {
+    content = (
+      //TODO: get rid or the setReRender and reRender state
+      <ul className="home-page__posts-list">
+        {posts?.ids.map((postId: EntityId) => (
+          <PostWrapper
+            key={postId}
+            postId={postId}
+            setReRender={setReRender}
+            reRender={reRender}
+          />
+        ))}
+      </ul>
+    );
+  }
 
   //TODO: forceRefetch from Rtk query to create infinite scroll
 
   return (
     <section className="home-page">
       <TextArea setReRender={setReRender} reRender={reRender} />
-      <ul className="home-page__posts-list">
-        {posts
-          .map((post: IPost | IRePost) =>
-            post.isRePost ? (
-              <RePost
-                key={(post as IRePost)._id}
-                rePost={post as IRePost}
-                reRender={reRender}
-                setReRender={setReRender}
-              />
-            ) : (
-              <Post
-                key={(post as IPost)._id}
-                post={post as IPost}
-                setReRender={setReRender}
-                reRender={reRender}
-              /> //TODO: while refactor to rktquery switch sorting posts using entity adapter
-            )
-          )
-          .reverse()}
-      </ul>
+      {content}
     </section>
   );
 };

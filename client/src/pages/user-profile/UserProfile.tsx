@@ -20,6 +20,7 @@ import SendFriendRequest from "../../components/send-friend-request/SendFriendRe
 import RemoveFriend from "../../components/remove-friends/RemoveFriend";
 
 // Assets
+
 import defaultImg from "../../assets/images/default_img.png";
 
 const UserProfile = () => {
