@@ -2,7 +2,6 @@
 
 import moment from "moment";
 import React from "react";
-import axios from "axios";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 
 // Internal dependencies
@@ -17,7 +16,7 @@ interface Props {
 }
 
 const PostEdit: React.FC<Props> = ({ post }) => {
-  const [deletePost, { isLoading: isUpdating, isError, error }] =
+  const [deletePost, { isLoading: isDeleting, isError, error }] =
     useDeletePostMutation();
 
   const dispatch = useAppDispatch();
@@ -39,14 +38,16 @@ const PostEdit: React.FC<Props> = ({ post }) => {
               _id: postId,
             })
           }
+          disabled={isDeleting}
         >
           <AiOutlineDelete className="post__edit-icon" />
         </button>
         <p className="post__createdAt">{moment(createdAt).fromNow()}</p>
-        {isUpdating && <div>Updating...</div>}
+        {isDeleting && <p>Deleting...</p>}
         {isError && <div>{JSON.stringify(error)}</div>}
       </div>
     </>
+    //TODO: add spinner for deleting
   );
 };
 

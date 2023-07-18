@@ -49,11 +49,7 @@ const PostEditModal: React.FC<Props> = ({ post, reRender, setReRender }) => {
             reRender={reRender}
           />
         ) : (
-          <PostEditImageForm
-            post={post as IPost}
-            setReRender={setReRender}
-            reRender={reRender}
-          />
+          <PostEditImageForm post={post as IPost} />
         )}
       </div>
     </div>,

@@ -3,6 +3,7 @@ import { useFormik } from "formik";
 import React from "react";
 import { GrAttachment } from "react-icons/gr";
 import { IPost } from "../../../components/post/types";
+import { useUpdatePostMutation } from "../../../features/apiSlice/postApiSlice/postApiSlice";
 import { closeModal } from "../../../features/modalSlice/modalSlice";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import { useConvertToBase64 } from "../../../hooks/useConvertToBase64";
@@ -10,37 +11,27 @@ import { RootState } from "../../../redux/store";
 
 interface Props {
   post: IPost;
-  setReRender: React.Dispatch<React.SetStateAction<boolean>>;
-  reRender: boolean;
 }
 
-const PostEditImageForm: React.FC<Props> = ({
-  post,
-  reRender,
-  setReRender,
-}) => {
+const PostEditImageForm: React.FC<Props> = ({ post }) => {
   const { _id: postId, postImage, postBody } = post;
+
+  const [updatePost, { isLoading: isUpdating, isError, error }] =
+    useUpdatePostMutation();
+
   const dispatch = useAppDispatch();
-  const { userId } = useAppSelector((state: RootState) => state.auth);
   const { handleSubmit, values, handleChange, setFieldValue } = useFormik({
     initialValues: {
       postBody: postBody,
       postImage: postImage,
     },
     onSubmit: async (values) => {
-      try {
-        await axios.put("http://localhost:5000/api/posts/edit", {
-          postId,
-          userId,
-          postImage: values.postImage,
-          postBody: values.postBody,
-        });
-
-        dispatch(closeModal("editPostModal"));
-        setReRender(!reRender);
-      } catch (err) {
-        console.log(err);
-      }
+      await updatePost({
+        _id: postId,
+        postImage: values.postImage,
+        postBody: values.postBody,
+      });
+      dispatch(closeModal("editPostModal"));
     },
   });
 
@@ -55,6 +46,8 @@ const PostEditImageForm: React.FC<Props> = ({
         onChange={handleChange}
         className="post-edit-modal__text-area"
       />
+      {isUpdating && <p>Updating...</p>}
+      {isError && <p>{JSON.stringify(error)}</p>}
       {values.postImage ? (
         <>
           <label htmlFor="postImage" className="post-edit-modal__label">

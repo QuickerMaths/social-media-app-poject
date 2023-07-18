@@ -56,7 +56,7 @@ export const getPosts = async (req: Request, res: Response) => {
     },
   ]);
 
-  //TODO: stor all posts
+  //TODO: sort all posts
   const allPosts = [...posts, ...rePosts];
 
   if (!allPosts) return res.status(204).json({ message: "No posts found" });
@@ -103,12 +103,10 @@ export const likePost = async (req: Request, res: Response) => {
 };
 
 export const updatePost = async (req: Request, res: Response) => {
-  const { postId, postBody, postImage, userId } = req.body;
+  const { postId, postBody, postImage } = req.body;
 
-  if (!postId || !postBody || !userId)
-    return res
-      .status(400)
-      .json({ message: "Id, userId and post body required" });
+  if (!postId || !postBody)
+    return res.status(400).json({ message: "Post id and body are required" });
 
   const post = await Post.findById(postId);
 

@@ -19,18 +19,30 @@ export const postApiSlice = apiSlice.injectEndpoints({
       transformResponse: (response: (IPost | IRePost)[]) => {
         return postAdapter.setAll(postAdapter.getInitialState(), response);
       },
+      transformErrorResponse: (
+        error: IResponse<number, { message: string }>
+      ) => {
+        return (error.data.message = errorMessageHandler(error.status));
+      },
       providesTags: (result, error, arg) => providesList(result?.ids, "Post"),
     }),
+
     getPostsByUser: builder.query<EntityState<IPost | IRePost>, string>({
       query: (userId) => `/api/posts/user/${userId}`,
       transformResponse: (response: (IPost | IRePost)[]) => {
         return postAdapter.setAll(postAdapter.getInitialState(), response);
       },
+      transformErrorResponse: (
+        error: IResponse<number, { message: string }>
+      ) => {
+        return (error.data.message = errorMessageHandler(error.status));
+      },
       providesTags: (result, error, arg) => providesList(result?.ids, "Post"),
     }),
+
     createPost: builder.mutation<
       IPost,
-      Pick<IPost, "postBody" | "_id" | "postImage">
+      Partial<Pick<IPost, "postBody" | "_id" | "postImage">>
     >({
       query: (body) => ({
         url: "/api/posts",
@@ -44,14 +56,39 @@ export const postApiSlice = apiSlice.injectEndpoints({
       },
       invalidatesTags: invalidatesList("Post"),
     }),
+
     deletePost: builder.mutation<IPost, Pick<IPost, "_id">>({
       query: (body) => ({
         url: "/api/posts",
         method: "DELETE",
         body,
       }),
-      transformErrorResponse: (error) => {
-        return error.data;
+      transformErrorResponse: (
+        error: IResponse<number, { message: string }>
+      ) => {
+        return (error.data.message = errorMessageHandler(error.status));
+      },
+      invalidatesTags: (result, error, req) => [{ type: "Post", id: req._id }],
+    }),
+
+    updatePost: builder.mutation<
+      IPost,
+      Partial<Pick<IPost, "_id" | "postBody" | "postImage">>
+    >({
+      query: (body) => ({
+        url: "/api/posts/edit",
+        method: "PUT",
+        body: {
+          postId: body._id,
+          postBody: body.postBody,
+          postImage: body.postImage,
+          userId: body,
+        },
+      }),
+      transformErrorResponse: (
+        error: IResponse<number, { message: string }>
+      ) => {
+        return (error.data.message = errorMessageHandler(error.status));
       },
       invalidatesTags: (result, error, req) => [{ type: "Post", id: req._id }],
     }),
@@ -63,4 +100,5 @@ export const {
   useGetPostsByUserQuery,
   useCreatePostMutation,
   useDeletePostMutation,
+  useUpdatePostMutation,
 } = postApiSlice;
