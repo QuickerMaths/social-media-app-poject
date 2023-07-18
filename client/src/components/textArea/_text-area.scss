@@ -32,6 +32,17 @@
     @include button-secondary;
   }
 
+  &__error-alert-wrapper {
+    @include container-box-shadow;
+    @include container-padding;
+    @include flex-center;
+    width: 100%;
+  }
+
+  &__error-alert {
+    color: red;
+  }
+
   &__attachment {
     @include flex-center;
     @include container-box-shadow;

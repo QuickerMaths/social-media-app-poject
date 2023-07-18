@@ -39,11 +39,7 @@ const PostWrapper: React.FC<Props> = ({ postId, setReRender, reRender }) => {
         <PostOwner owner={owner} />
         {owner._id === userId ? (
           <>
-            <PostEdit
-              post={isRePost ? (post as IRePost) : (post as IPost)}
-              setReRender={setReRender}
-              reRender={reRender}
-            />
+            <PostEdit post={isRePost ? (post as IRePost) : (post as IPost)} />
             {modals[`${postId}edit`] && (
               <PostEditModal
                 post={isRePost ? (post as IRePost) : (post as IPost)}

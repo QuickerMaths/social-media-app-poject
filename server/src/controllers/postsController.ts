@@ -121,12 +121,12 @@ export const updatePost = async (req: Request, res: Response) => {
 };
 
 export const deletePost = async (req: Request, res: Response) => {
-  const { postId, userId } = req.body;
+  const { _id: postId } = req.body;
 
-  if (!postId || !userId)
+  if (!postId)
     return res.status(400).json({
       status: "FAILED",
-      data: { error: "Post Id and user Id are required" },
+      data: { error: "Post id is required" },
     });
 
   const post = await Post.findById(postId);

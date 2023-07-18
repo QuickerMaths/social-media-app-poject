@@ -5,7 +5,6 @@ import { useFormik } from "formik";
 
 // Internal dependencies
 
-import useToastCreator from "../../hooks/useToastCreator";
 import { useConvertToBase64 } from "../../hooks/useConvertToBase64";
 import { useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
@@ -13,7 +12,7 @@ import { useCreatePostMutation } from "../../features/apiSlice/postApiSlice/post
 
 const TextArea = () => {
   const { userId } = useAppSelector((state: RootState) => state.auth);
-  const [createPost, { isLoading: isUpdating, isError, error }] =
+  const [createPost, { isLoading: isUpdating, error, isError }] =
     useCreatePostMutation();
 
   const { handleChange, values, handleSubmit, setFieldValue } = useFormik({
@@ -22,24 +21,32 @@ const TextArea = () => {
       image: null,
     },
     onSubmit: async (values) => {
-      createPost({
+      await createPost({
         postBody: values.postBody,
         _id: userId as string,
         postImage: values.image
           ? ((await useConvertToBase64(values.image)) as string)
           : null,
       });
+      if (!isUpdating) setFieldValue("postBody", "");
     },
   });
 
   return (
     <>
       <form className="feed__form" onSubmit={handleSubmit}>
+        {isError && (
+          <div className="feed__error-alert-wrapper">
+            <p className="feed__error-alert">{JSON.stringify(error)}</p>
+          </div>
+        )}
         <div className="feed__main">
           <textarea
             name="postBody"
             id="postBody"
-            placeholder="Say something..."
+            placeholder={
+              isUpdating ? "Posting your thoughts..." : "What's on your mind?"
+            }
             className="feed__textarea"
             onChange={handleChange}
             value={values.postBody}
@@ -48,6 +55,7 @@ const TextArea = () => {
             Public
           </button>
         </div>
+
         <div className="feed__attachment">
           <GrAttachment className="feed__attachment-icon" />
           <input
@@ -62,9 +70,6 @@ const TextArea = () => {
           />
         </div>
       </form>
-
-      {isUpdating && <div>Updating...</div>}
-      {isError && useToastCreator("error", JSON.stringify(error))}
     </>
   );
 };

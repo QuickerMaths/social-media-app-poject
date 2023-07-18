@@ -12,7 +12,7 @@ export const verifyJWT = (req: any, res: any, next: any) => {
     token,
     process.env.JTW_REFRESH_SECRET!,
     (err: any, decoded: any) => {
-      if (err) return res.sendStatus(403);
+      if (err) return res.status(403).json({ message: "Invalid token" });
       req.user = decoded.username;
       req.userId = decoded.userId;
       next();

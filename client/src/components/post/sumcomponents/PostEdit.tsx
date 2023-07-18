@@ -8,38 +8,21 @@ import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 // Internal dependencies
 
 import { openModal } from "../../../features/modalSlice/modalSlice";
-import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
-import { RootState } from "../../../redux/store";
+import { useAppDispatch } from "../../../hooks/reduxHooks";
 import { IPost, IRePost } from "../types";
+import { useDeletePostMutation } from "../../../features/apiSlice/postApiSlice/postApiSlice";
 
 interface Props {
   post: IPost | IRePost;
-  setReRender: React.Dispatch<React.SetStateAction<boolean>>;
-  reRender: boolean;
 }
 
-const PostEdit: React.FC<Props> = ({ post, setReRender, reRender }) => {
-  const { createdAt, _id: postId, isRePost } = post;
+const PostEdit: React.FC<Props> = ({ post }) => {
+  const [deletePost, { isLoading: isUpdating, isError, error }] =
+    useDeletePostMutation();
+
   const dispatch = useAppDispatch();
-  const { userId } = useAppSelector((state: RootState) => state.auth);
+  const { createdAt, _id: postId } = post;
 
-  const handlePostDelete = async (userId: string, postId: string) => {
-    try {
-      await axios.delete(
-        `http://localhost:5000/api/${isRePost ? "repost" : "posts"}`,
-        {
-          data: {
-            userId,
-            postId,
-          },
-        }
-      );
-
-      setReRender(!reRender);
-    } catch (err) {
-      console.log(err);
-    }
-  };
   return (
     <>
       <div className="post__edit-wrapper">
@@ -51,11 +34,17 @@ const PostEdit: React.FC<Props> = ({ post, setReRender, reRender }) => {
         </button>
         <button
           className="post__edit-button"
-          onClick={() => handlePostDelete(userId as string, postId)}
+          onClick={() =>
+            deletePost({
+              _id: postId,
+            })
+          }
         >
           <AiOutlineDelete className="post__edit-icon" />
         </button>
         <p className="post__createdAt">{moment(createdAt).fromNow()}</p>
+        {isUpdating && <div>Updating...</div>}
+        {isError && <div>{JSON.stringify(error)}</div>}
       </div>
     </>
   );
