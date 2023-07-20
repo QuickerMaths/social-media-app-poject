@@ -1,6 +1,7 @@
 // External dependencies
 
 import React from "react";
+import { EntityState } from "@reduxjs/toolkit";
 
 // Internal dependencies
 
@@ -12,6 +13,7 @@ import { useAppDispatch, useAppSelector } from "../../../../hooks/reduxHooks";
 import { openModal } from "../../../../features/modalSlice/modalSlice";
 import { RootState } from "../../../../redux/store";
 import { IPost } from "../../types";
+import { IComment } from "../../../comment/types";
 
 interface Props {
   post: IPost;
@@ -34,7 +36,8 @@ const Post: React.FC<Props> = ({ post, setReRender, reRender }) => {
       {commentTotal > 0 && (
         <>
           <PostComments
-            comments={comments}
+            postId={postId}
+            comments={comments as EntityState<IComment>}
             reRender={reRender}
             setReRender={setReRender}
           />

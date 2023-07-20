@@ -6,9 +6,15 @@ import { IPost, IRePost } from "../../../components/post/types";
 import { createEntityAdapter, EntityState } from "@reduxjs/toolkit";
 import { IPostPick, ICreatePostParams, IRePostPick, IResponse } from "../types";
 import { errorMessageHandler } from "../../../utilities/errorMessageHandler";
+import { IComment } from "../../../components/comment/types";
 
 const postAdapter = createEntityAdapter<IPost | IRePost>({
   selectId: (post) => post._id,
+  sortComparer: (a, b) => b.createdAt.localeCompare(a.createdAt),
+});
+
+const commentAdapter = createEntityAdapter<IComment>({
+  selectId: (comment) => comment._id,
   sortComparer: (a, b) => b.createdAt.localeCompare(a.createdAt),
 });
 
@@ -17,7 +23,14 @@ export const postApiSlice = apiSlice.injectEndpoints({
     getPosts: builder.query<EntityState<IPost | IRePost>, string>({
       query: () => "/api/posts",
       transformResponse: (response: (IPost | IRePost)[]) => {
-        return postAdapter.setAll(postAdapter.getInitialState(), response);
+        const posts: (IPost | IRePost)[] = response;
+        posts.forEach((post) => {
+          post.comments = commentAdapter.setAll(
+            commentAdapter.getInitialState(),
+            post.comments as IComment[]
+          );
+        });
+        return postAdapter.setAll(postAdapter.getInitialState(), posts);
       },
       transformErrorResponse: (
         error: IResponse<number, { message: string }>

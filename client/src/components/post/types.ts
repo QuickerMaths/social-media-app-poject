@@ -1,3 +1,4 @@
+import { EntityState } from "@reduxjs/toolkit";
 import { IComment } from "../comment/types";
 
 export type IPost = {
@@ -12,7 +13,7 @@ export type IPost = {
   createdAt: string;
   updatedAt: string;
   commentTotal: number;
-  comments: IComment[];
+  comments: IComment[] | EntityState<IComment>;
   __v: number;
   _id: string;
   rePostsCount: number;
@@ -29,7 +30,7 @@ export type IRePost = {
   originalPost: IPost | string;
   likedBy: string[];
   commentTotal: number;
-  comments: IComment[];
+  comments: IComment[] | EntityState<IComment>;
   isRePost: boolean;
   createdAt: string;
   updatedAt: string;

@@ -9,7 +9,6 @@ import { AiOutlineDelete, AiOutlineLike } from "react-icons/ai";
 
 import useToastCreator from "../../hooks/useToastCreator";
 import { Link } from "react-router-dom";
-import { IComment } from "./types";
 import { useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 
@@ -17,16 +16,32 @@ import { RootState } from "../../redux/store";
 
 import defaultImg from "../../assets/images/default_img.png";
 import { useDeleteCommentMutation } from "../../features/apiSlice/commentApiSlice/commentApiSlice";
+import { EntityId, EntityState } from "@reduxjs/toolkit";
+import { useGetPostsQuery } from "../../features/apiSlice/postApiSlice/postApiSlice";
+import { IComment } from "./types";
+
 interface Props {
-  comment: IComment;
+  commentId: EntityId;
+  postId: EntityId;
   reRender: boolean;
   setReRender: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const Comment: React.FC<Props> = ({
-  comment: { owner, createdAt, commentBody, _id: commentId, postId, likedBy },
+  commentId: commentEntityId,
+  postId: postEntityId,
   reRender,
   setReRender,
 }) => {
+  //TODO: type it
+  const {
+    comment: { owner, createdAt, postId, _id: commentId, commentBody, likedBy },
+  } = useGetPostsQuery("", {
+    selectFromResult: ({ data }) => ({
+      comment: (data?.entities[postEntityId]?.comments as EntityState<IComment>)
+        ?.entities[commentEntityId],
+    }),
+  });
+
   const [deleteComment, { isLoading: isDeleting, error, isError }] =
     useDeleteCommentMutation();
   const { userId } = useAppSelector((state: RootState) => state.auth);
