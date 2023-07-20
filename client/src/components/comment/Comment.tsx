@@ -15,7 +15,10 @@ import { RootState } from "../../redux/store";
 // Assets
 
 import defaultImg from "../../assets/images/default_img.png";
-import { useDeleteCommentMutation } from "../../features/apiSlice/commentApiSlice/commentApiSlice";
+import {
+  useDeleteCommentMutation,
+  useLikeCommentMutation,
+} from "../../features/apiSlice/commentApiSlice/commentApiSlice";
 import { EntityId, EntityState } from "@reduxjs/toolkit";
 import { useGetPostsQuery } from "../../features/apiSlice/postApiSlice/postApiSlice";
 import { IComment } from "./types";
@@ -44,21 +47,9 @@ const Comment: React.FC<Props> = ({
 
   const [deleteComment, { isLoading: isDeleting, error, isError }] =
     useDeleteCommentMutation();
+
+  const [likeComment] = useLikeCommentMutation();
   const { userId } = useAppSelector((state: RootState) => state.auth);
-  //TODO: refactor to rtqQuery
-  const handleDeleteComment = async (commentId: string, postId: string) => {
-    try {
-      await axios.delete("http://localhost:5000/api/comments", {
-        data: {
-          commentId,
-          postId,
-        },
-      });
-      setReRender(!reRender);
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   const handleLikePost = async (commentId: string, userId: string) => {
     try {
@@ -115,7 +106,11 @@ const Comment: React.FC<Props> = ({
                 "You have to be logged in to like this post",
                 "error"
               )
-            : handleLikePost(commentId, userId);
+            : likeComment({
+                _id: commentId,
+                postId,
+                userId: userId as string,
+              });
         }}
       >
         <AiOutlineLike

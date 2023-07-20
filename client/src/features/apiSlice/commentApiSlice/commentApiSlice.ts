@@ -4,6 +4,7 @@ import { apiSlice } from "../apiSlice";
 import { IComment } from "../../../components/comment/types";
 import { IRePostOrPost } from "../types";
 import { postApiSlice } from "../postApiSlice/postApiSlice";
+import { EntityState } from "@reduxjs/toolkit";
 
 export const commentApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -44,10 +45,33 @@ export const commentApiSlice = apiSlice.injectEndpoints({
       async onQueryStarted(
         { _id, postId, userId },
         { dispatch, queryFulfilled }
-      ) {},
+      ) {
+        const result = dispatch(
+          postApiSlice.util.updateQueryData("getPosts", "", (draft) => {
+            const comment = (
+              draft.entities[postId]?.comments as EntityState<IComment>
+            ).entities[_id];
+            if (comment) {
+              if (comment.likedBy.includes(userId)) {
+                comment.likedBy = comment.likedBy.filter((id) => id !== userId);
+              } else {
+                comment.likedBy.push(userId);
+              }
+            }
+          })
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          result.undo();
+        }
+      },
     }),
   }),
 });
 
-export const { useCreateCommentMutation, useDeleteCommentMutation } =
-  commentApiSlice;
+export const {
+  useCreateCommentMutation,
+  useDeleteCommentMutation,
+  useLikeCommentMutation,
+} = commentApiSlice;
