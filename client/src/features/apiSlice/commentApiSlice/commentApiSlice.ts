@@ -3,6 +3,7 @@
 import { apiSlice } from "../apiSlice";
 import { IComment } from "../../../components/comment/types";
 import { IRePostOrPost } from "../types";
+import { postApiSlice } from "../postApiSlice/postApiSlice";
 
 export const commentApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -30,6 +31,21 @@ export const commentApiSlice = apiSlice.injectEndpoints({
         ],
       }
     ),
+
+    likeComment: builder.mutation<
+      IComment,
+      Pick<IComment, "_id" | "postId"> & { userId: string }
+    >({
+      query: ({ _id, userId }) => ({
+        url: `/api/comments`,
+        method: "PUT",
+        body: { commentId: _id, userId },
+      }),
+      async onQueryStarted(
+        { _id, postId, userId },
+        { dispatch, queryFulfilled }
+      ) {},
+    }),
   }),
 });
 
