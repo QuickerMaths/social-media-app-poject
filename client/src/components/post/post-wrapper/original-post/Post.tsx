@@ -49,13 +49,7 @@ const Post: React.FC<Props> = ({ post, setReRender, reRender }) => {
         </>
       )}
 
-      {modals[`${postId}repost`] && (
-        <CreateRePostModal
-          post={post as IPost}
-          reRender={reRender}
-          setReRender={setReRender}
-        />
-      )}
+      {modals[`${postId}repost`] && <CreateRePostModal post={post as IPost} />}
       {modals[`${postId}details`] && (
         <PostDetailsModal
           post={post}

@@ -51,7 +51,7 @@ const RePost: React.FC<Props> = ({ rePost, reRender, setReRender }) => {
         </div>
       )}
 
-      <PostAction post={rePost} setReRender={setReRender} reRender={reRender} />
+      <PostAction post={rePost} />
       {commentTotal > 0 && (
         <>
           <PostComments

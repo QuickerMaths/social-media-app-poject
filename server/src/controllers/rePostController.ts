@@ -51,12 +51,10 @@ export const likeRePost = async (req: Request, res: Response) => {
 };
 
 export const updateRePost = async (req: Request, res: Response) => {
-  const { postId, postBody, userId } = req.body;
+  const { postId, postBody } = req.body;
 
-  if (!postId || !postBody || !userId)
-    return res
-      .status(400)
-      .json({ message: "Id, userId and post body required" });
+  if (!postId || !postBody)
+    return res.status(400).json({ message: "Post id and body are required" });
 
   const rePost = await RePost.findById(postId);
 

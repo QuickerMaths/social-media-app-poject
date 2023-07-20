@@ -12,20 +12,18 @@ import { IPost } from "../../components/post/types";
 import { closeModal } from "../../features/modalSlice/modalSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
+import { useCreatePostMutation } from "../../features/apiSlice/postApiSlice/postApiSlice";
 
 interface Props {
   post: IPost;
-  setReRender: React.Dispatch<React.SetStateAction<boolean>>;
-  reRender: boolean;
 }
 
-const CreateRePostModal: React.FC<Props> = ({
-  post,
-  setReRender,
-  reRender,
-}) => {
-  const { _id: postId } = post;
+const CreateRePostModal: React.FC<Props> = ({ post }) => {
+  const [createPost, { isLoading: isUpdating, error, isError }] =
+    useCreatePostMutation();
+
   const dispatch = useAppDispatch();
+  const { _id: postId } = post;
   const { userId } = useAppSelector((state: RootState) => state.auth);
   const { modals } = useAppSelector((state: RootState) => state.modal);
 
@@ -34,18 +32,13 @@ const CreateRePostModal: React.FC<Props> = ({
       postBody: "",
     },
     onSubmit: async (values) => {
-      try {
-        await axios.post("http://localhost:5000/api/repost", {
-          postId,
-          userId,
-          postBody: values.postBody,
-        });
-
-        dispatch(closeModal(`${postId}repost`));
-        setReRender(!reRender);
-      } catch (err) {
-        console.log(err);
-      }
+      await createPost({
+        postBody: values.postBody,
+        originalPost: postId,
+        _id: userId as string,
+        isRePost: true,
+      });
+      dispatch(closeModal(`${postId}repost`));
     },
   });
 
@@ -64,6 +57,11 @@ const CreateRePostModal: React.FC<Props> = ({
           <AiOutlineClose className="create-repost-modal__close-icon" />
         </button>
         <h2 className="create-repost-modal__title">RePost</h2>
+        {/* 
+          TODO: make it prettier
+        */}
+        {isError && <p>{JSON.stringify(error)}</p>}
+        {isUpdating && <p>Updating...</p>}
         <form onSubmit={handleSubmit} className="create-repost-modal__form">
           <textarea
             rows={5}
