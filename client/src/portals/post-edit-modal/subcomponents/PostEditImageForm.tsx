@@ -1,13 +1,16 @@
-import axios from "axios";
-import { useFormik } from "formik";
+// External dependencies
+
 import React from "react";
+import { useFormik } from "formik";
 import { GrAttachment } from "react-icons/gr";
+
+// Internal dependencies
+
 import { IPost } from "../../../components/post/types";
 import { useUpdatePostMutation } from "../../../features/apiSlice/postApiSlice/postApiSlice";
 import { closeModal } from "../../../features/modalSlice/modalSlice";
-import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
+import { useAppDispatch } from "../../../hooks/reduxHooks";
 import { useConvertToBase64 } from "../../../hooks/useConvertToBase64";
-import { RootState } from "../../../redux/store";
 
 interface Props {
   post: IPost;
@@ -31,7 +34,7 @@ const PostEditImageForm: React.FC<Props> = ({ post }) => {
         postImage: values.postImage,
         postBody: values.postBody,
       });
-      dispatch(closeModal("editPostModal"));
+      dispatch(closeModal(`${postId}edit`));
     },
   });
 
@@ -49,6 +52,7 @@ const PostEditImageForm: React.FC<Props> = ({ post }) => {
       {isUpdating && <p>Updating...</p>}
       {isError && <p>{JSON.stringify(error)}</p>}
       {values.postImage ? (
+        //TODO: upgrade loading and error states
         <>
           <label htmlFor="postImage" className="post-edit-modal__label">
             <GrAttachment className="post-edit-modal__icon" />

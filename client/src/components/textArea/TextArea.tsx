@@ -36,6 +36,7 @@ const TextArea = () => {
     <>
       <form className="feed__form" onSubmit={handleSubmit}>
         {isError && (
+          //TODO: upgrade loading and error states
           <div className="feed__error-alert-wrapper">
             <p className="feed__error-alert">{JSON.stringify(error)}</p>
           </div>

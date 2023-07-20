@@ -82,7 +82,6 @@ export const postApiSlice = apiSlice.injectEndpoints({
           postId: body._id,
           postBody: body.postBody,
           postImage: body.postImage,
-          userId: body,
         },
       }),
       transformErrorResponse: (
@@ -91,6 +90,35 @@ export const postApiSlice = apiSlice.injectEndpoints({
         return (error.data.message = errorMessageHandler(error.status));
       },
       invalidatesTags: (result, error, req) => [{ type: "Post", id: req._id }],
+    }),
+    likePost: builder.mutation<IPost, Pick<IPost, "_id"> & any>({
+      query: ({ _id, userId }) => ({
+        url: "/api/posts",
+        method: "PUT",
+        body: {
+          postId: _id,
+          userId,
+        },
+      }),
+      async onQueryStarted({ _id, userId }, { dispatch, queryFulfilled }) {
+        const result = dispatch(
+          postApiSlice.util.updateQueryData("getPosts", "", (draft) => {
+            const post = draft.entities[_id];
+            if (post) {
+              if (post.likedBy.includes(userId)) {
+                post.likedBy = post.likedBy.filter((id) => id !== userId);
+              } else {
+                post.likedBy.push(userId);
+              }
+            }
+          })
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          result.undo();
+        }
+      },
     }),
   }),
 });
@@ -101,4 +129,5 @@ export const {
   useCreatePostMutation,
   useDeletePostMutation,
   useUpdatePostMutation,
+  useLikePostMutation,
 } = postApiSlice;
