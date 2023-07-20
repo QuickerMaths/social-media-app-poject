@@ -116,10 +116,9 @@ export const postApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: (result, error, req) => [{ type: "Post", id: req._id }],
     }),
 
-    //TODO: type it properly
     likePost: builder.mutation<
       IPost | IRePost,
-      Pick<IPost | IRePost, "_id" | "isRePost"> & any
+      Pick<IPost | IRePost, "_id" | "isRePost"> & { userId: string }
     >({
       query: ({ _id, isRePost, userId }) => ({
         url: `/api/${isRePost ? "repost" : "posts"}`,

@@ -16,6 +16,7 @@ import { RootState } from "../../redux/store";
 // Assets
 
 import defaultImg from "../../assets/images/default_img.png";
+import { useDeleteCommentMutation } from "../../features/apiSlice/commentApiSlice/commentApiSlice";
 interface Props {
   comment: IComment;
   reRender: boolean;
@@ -26,6 +27,8 @@ const Comment: React.FC<Props> = ({
   reRender,
   setReRender,
 }) => {
+  const [deleteComment, { isLoading: isDeleting, error, isError }] =
+    useDeleteCommentMutation();
   const { userId } = useAppSelector((state: RootState) => state.auth);
   //TODO: refactor to rtqQuery
   const handleDeleteComment = async (commentId: string, postId: string) => {
@@ -71,10 +74,15 @@ const Comment: React.FC<Props> = ({
           <div className="comment__wrapper">
             <button
               className="comment__edit-button"
-              onClick={() => handleDeleteComment(commentId, postId)}
+              onClick={() => deleteComment({ _id: commentId, postId })}
             >
               <AiOutlineDelete className="comment__edit-icon" />
             </button>
+            {/* 
+              TODO: make it better
+            */}
+            {isDeleting && <p>Deleting...</p>}
+            {isError && <p>{JSON.stringify(error)}</p>}
             <p className="comment__createdAt">{moment(createdAt).fromNow()}</p>
           </div>
         ) : (
