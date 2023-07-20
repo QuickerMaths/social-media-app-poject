@@ -36,6 +36,7 @@ const PostEdit: React.FC<Props> = ({ post }) => {
           onClick={() =>
             deletePost({
               _id: postId,
+              isRePost: post.isRePost,
             })
           }
           disabled={isDeleting}

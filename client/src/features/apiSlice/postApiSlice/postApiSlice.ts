@@ -57,12 +57,18 @@ export const postApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: invalidatesList("Post"),
     }),
 
-    deletePost: builder.mutation<IPost, Pick<IPost, "_id">>({
-      query: (body) => ({
-        url: "/api/posts",
+    deletePost: builder.mutation<
+      IPost | IRePost,
+      Pick<IPost | IRePost, "_id" | "isRePost">
+    >({
+      query: ({ _id, isRePost }) => ({
+        url: `/api/${isRePost ? "repost" : "posts"}`,
         method: "DELETE",
-        body,
+        body: {
+          _id,
+        },
       }),
+      //TODO: change this error handling
       transformErrorResponse: (
         error: IResponse<number, { message: string }>
       ) => {
@@ -91,6 +97,8 @@ export const postApiSlice = apiSlice.injectEndpoints({
       },
       invalidatesTags: (result, error, req) => [{ type: "Post", id: req._id }],
     }),
+
+    //TODO: type it properly
     likePost: builder.mutation<IPost, Pick<IPost, "_id"> & any>({
       query: ({ _id, userId }) => ({
         url: "/api/posts",

@@ -69,10 +69,9 @@ export const updateRePost = async (req: Request, res: Response) => {
 };
 
 export const deleteRePost = async (req: Request, res: Response) => {
-  const { postId, userId } = req.body;
+  const { _id: postId } = req.body;
 
-  if (!postId || !userId)
-    return res.status(400).json({ message: "Post Id and user Id required" });
+  if (!postId) return res.status(400).json({ message: "Post Id is required" });
 
   const rePost = await RePost.findById(postId);
 
@@ -81,12 +80,11 @@ export const deleteRePost = async (req: Request, res: Response) => {
 
   const originalPost = await Post.findOne({ _id: rePost.originalPost });
 
-  if (!originalPost)
-    return res.status(500).json({ message: "Server Internal Error" });
-
-  //TODO: use middleware fot this action
-  originalPost.rePostsCount -= 1;
-  await originalPost.save();
+  if (originalPost) {
+    //TODO: use middleware fot this action
+    originalPost.rePostsCount -= 1;
+    await originalPost.save();
+  }
 
   const deletedRePost = await rePost.deleteOne();
 

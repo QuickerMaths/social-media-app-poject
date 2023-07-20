@@ -90,11 +90,7 @@ const PostDetailsModal: React.FC<Props> = ({ post, reRender, setReRender }) => {
               ) : (
                 <PostDetailsPost post={post as IPost} />
               )}
-              <PostAction
-                post={post}
-                reRender={reRender}
-                setReRender={setReRender}
-              />
+              <PostAction post={post} />
               {commentTotal > 0 && (
                 <PostComments
                   comments={comments}

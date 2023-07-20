@@ -30,7 +30,7 @@ const Post: React.FC<Props> = ({ post, setReRender, reRender }) => {
       {postImage && (
         <img src={postImage} alt="post image" className="post__image" />
       )}
-      <PostAction post={post} setReRender={setReRender} reRender={reRender} />
+      <PostAction post={post} />
       {commentTotal > 0 && (
         <>
           <PostComments

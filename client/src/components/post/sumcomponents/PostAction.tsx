@@ -16,32 +16,14 @@ import { useLikePostMutation } from "../../../features/apiSlice/postApiSlice/pos
 
 interface Props {
   post: IPost | IRePost;
-  reRender: boolean;
-  setReRender: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const PostAction: React.FC<Props> = ({ post, setReRender, reRender }) => {
+const PostAction: React.FC<Props> = ({ post }) => {
   const [likePost] = useLikePostMutation();
 
   const { likedBy, _id, commentTotal, isRePost } = post;
   const dispatch = useAppDispatch();
   const { userId } = useAppSelector((state: RootState) => state.auth);
-
-  // const handleLikePost = async (postId: string, userId: string) => {
-  //   try {
-  //     await axios.put(
-  //       `http://localhost:5000/api/${isRePost ? "repost" : "posts"}`,
-  //       {
-  //         postId,
-  //         userId,
-  //       }
-  //     );
-  //     //TODO: rtkQuery optimistic updates !
-  //     setReRender(!reRender);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
 
   return (
     <div className="post__bottom-container">
