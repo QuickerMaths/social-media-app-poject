@@ -1,7 +1,6 @@
 // External dependencies
 
 import React from "react";
-import axios from "axios";
 import { AiOutlineComment, AiOutlineLike } from "react-icons/ai";
 import { BiRepost } from "react-icons/bi";
 
@@ -37,7 +36,7 @@ const PostAction: React.FC<Props> = ({ post }) => {
                 "You have to be logged in to like this post",
                 "error"
               )
-            : likePost({ _id, userId });
+            : likePost({ _id, userId, isRePost });
         }}
       >
         <AiOutlineLike

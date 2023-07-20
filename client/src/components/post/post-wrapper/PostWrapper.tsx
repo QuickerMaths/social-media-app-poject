@@ -43,8 +43,6 @@ const PostWrapper: React.FC<Props> = ({ postId, setReRender, reRender }) => {
             {modals[`${postId}edit`] && (
               <PostEditModal
                 post={isRePost ? (post as IRePost) : (post as IPost)}
-                setReRender={setReRender}
-                reRender={reRender}
               />
             )}
           </>

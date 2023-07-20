@@ -15,11 +15,9 @@ import { IPost, IRePost } from "../../components/post/types";
 
 interface Props {
   post: IPost | IRePost;
-  setReRender: React.Dispatch<React.SetStateAction<boolean>>;
-  reRender: boolean;
 }
 
-const PostEditModal: React.FC<Props> = ({ post, reRender, setReRender }) => {
+const PostEditModal: React.FC<Props> = ({ post }) => {
   const { _id: postId, isRePost } = post;
 
   const dispatch = useAppDispatch();
@@ -43,11 +41,7 @@ const PostEditModal: React.FC<Props> = ({ post, reRender, setReRender }) => {
         </button>
         <h2 className="post-edit-modal__title">Edit post</h2>
         {isRePost === true ? (
-          <PostEditRePostForm
-            post={post as IRePost}
-            setReRender={setReRender}
-            reRender={reRender}
-          />
+          <PostEditRePostForm post={post as IRePost} />
         ) : (
           <PostEditImageForm post={post as IPost} />
         )}

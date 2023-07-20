@@ -5,43 +5,39 @@ import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import { RootState } from "../../../redux/store";
 import { useFormik } from "formik";
 import { IRePost } from "../../../components/post/types";
+import { useUpdatePostMutation } from "../../../features/apiSlice/postApiSlice/postApiSlice";
 
 interface Props {
   post: IRePost;
-  setReRender: React.Dispatch<React.SetStateAction<boolean>>;
-  reRender: boolean;
 }
 
-const PostEditRePostForm: React.FC<Props> = ({
-  post,
-  setReRender,
-  reRender,
-}) => {
-  const { _id: postId, postBody } = post;
+const PostEditRePostForm: React.FC<Props> = ({ post }) => {
+  const [updatePost, { isLoading: isUpdating, isError, error }] =
+    useUpdatePostMutation();
+
   const dispatch = useAppDispatch();
-  const { userId } = useAppSelector((state: RootState) => state.auth);
+  const { _id: postId, postBody } = post;
 
   const { handleSubmit, values, handleChange } = useFormik({
     initialValues: {
       postBody: postBody,
     },
     onSubmit: async (values) => {
-      try {
-        await axios.put("http://localhost:5000/api/repost/edit", {
-          postId,
-          userId,
-          postBody: values.postBody,
-        });
-
-        dispatch(closeModal(`${postId}edit`));
-        setReRender(!reRender);
-      } catch (err) {
-        console.log(err);
-      }
+      await updatePost({
+        _id: postId,
+        postBody: values.postBody,
+        isRePost: true,
+      });
+      dispatch(closeModal(`${postId}edit`));
     },
   });
   return (
     <form onSubmit={handleSubmit} className="post-edit-modal__form">
+      {/* 
+        //TODO: make it prettier
+      */}
+      {isUpdating && <p>Updating...</p>}
+      {isError && <p>{JSON.stringify(error)}</p>}
       <textarea
         rows={5}
         cols={10}

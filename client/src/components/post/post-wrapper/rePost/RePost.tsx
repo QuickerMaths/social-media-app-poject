@@ -9,7 +9,7 @@ import PostOwner from "../../sumcomponents/PostOwner";
 import PostAction from "../../sumcomponents/PostAction";
 import PostComments from "../../sumcomponents/PostComments";
 import PostDetailsModal from "../../../../portals/post-details-modal/PostDetailsModal";
-import { IRePost } from "../../types";
+import { IPost, IRePost } from "../../types";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/reduxHooks";
 import { RootState } from "../../../../redux/store";
 import { openModal } from "../../../../features/modalSlice/modalSlice";
@@ -34,20 +34,20 @@ const RePost: React.FC<Props> = ({ rePost, reRender, setReRender }) => {
         </div>
       ) : (
         <div className="re-post">
-          {originalPost.postImage && (
+          {(originalPost as IPost).postImage && (
             <img
-              src={originalPost.postImage}
+              src={(originalPost as IPost).postImage as string}
               alt="post image"
               className="post__image"
             />
           )}
           <div className="post__top-container">
-            <PostOwner owner={originalPost.owner} />
+            <PostOwner owner={(originalPost as IPost).owner} />
             <p className="post__createdAt">
-              {moment(originalPost.createdAt).fromNow()}
+              {moment((originalPost as IPost).createdAt).fromNow()}
             </p>
           </div>
-          <p className="post__body">{originalPost.postBody}</p>
+          <p className="post__body">{(originalPost as IPost).postBody}</p>
         </div>
       )}
 

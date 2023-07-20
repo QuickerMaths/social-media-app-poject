@@ -97,16 +97,21 @@ export const postApiSlice = apiSlice.injectEndpoints({
 
     updatePost: builder.mutation<
       IPost,
-      Partial<Pick<IPost, "_id" | "postBody" | "postImage">>
+      ICreatePost | Omit<ICreateRePost, "originalPost">
     >({
-      query: (body) => ({
-        url: "/api/posts/edit",
+      query: ({ postBody, _id, isRePost, postImage }: ICreatePostParams) => ({
+        url: `/api/${isRePost ? "repost" : "posts"}/edit`,
         method: "PUT",
-        body: {
-          postId: body._id,
-          postBody: body.postBody,
-          postImage: body.postImage,
-        },
+        body: isRePost
+          ? {
+              postBody,
+              postId: _id,
+            }
+          : {
+              postBody,
+              postImage,
+              postId: _id,
+            },
       }),
       transformErrorResponse: (
         error: IResponse<number, { message: string }>
@@ -117,9 +122,12 @@ export const postApiSlice = apiSlice.injectEndpoints({
     }),
 
     //TODO: type it properly
-    likePost: builder.mutation<IPost, Pick<IPost, "_id"> & any>({
-      query: ({ _id, userId }) => ({
-        url: "/api/posts",
+    likePost: builder.mutation<
+      IPost | IRePost,
+      Pick<IPost | IRePost, "_id" | "isRePost"> & any
+    >({
+      query: ({ _id, isRePost, userId }) => ({
+        url: `/api/${isRePost ? "repost" : "posts"}`,
         method: "PUT",
         body: {
           postId: _id,
