@@ -18,6 +18,7 @@ import { RootState } from "../../redux/store";
 import { AiOutlineClose } from "react-icons/ai";
 import { useFormik } from "formik";
 import { closeModal } from "../../features/modalSlice/modalSlice";
+import { useCreateCommentMutation } from "../../features/apiSlice/commentApiSlice/commentApiSlice";
 
 interface Props {
   post: IPost | IRePost;
@@ -26,6 +27,8 @@ interface Props {
 }
 
 const PostDetailsModal: React.FC<Props> = ({ post, reRender, setReRender }) => {
+  const [createComment, { isLoading: isUpdating, error, isError }] =
+    useCreateCommentMutation();
   const {
     _id: postId,
     isRePost,
@@ -43,18 +46,14 @@ const PostDetailsModal: React.FC<Props> = ({ post, reRender, setReRender }) => {
       commentBody: "",
     },
     onSubmit: async (values) => {
-      try {
-        await axios.post("http://localhost:5000/api/comments", {
-          commentBody: values.commentBody,
-          postId,
-          userId,
-          isRePost,
-        });
-        values.commentBody = "";
-        setReRender(!reRender);
-      } catch (err) {
-        console.log(err);
-      }
+      await createComment({
+        commentBody: values.commentBody,
+        _id: postId,
+        userId: userId as string,
+        isRePost,
+      });
+
+      values.commentBody = "";
     },
   });
 
@@ -100,6 +99,11 @@ const PostDetailsModal: React.FC<Props> = ({ post, reRender, setReRender }) => {
               )}
             </div>
             <form onSubmit={handleSubmit} className="post-details-modal__form">
+              {/* 
+                TODO: make it better
+              */}
+              {isUpdating && <p>Updating...</p>}
+              {isError && <p>{JSON.stringify(error)}</p>}
               <input
                 name="commentBody"
                 id="commentBody"

@@ -4,12 +4,7 @@ import { apiSlice } from "../apiSlice";
 import { invalidatesList, providesList } from "../../../hooks/reduxHooks";
 import { IPost, IRePost } from "../../../components/post/types";
 import { createEntityAdapter, EntityState } from "@reduxjs/toolkit";
-import {
-  ICreatePost,
-  ICreatePostParams,
-  ICreateRePost,
-  IResponse,
-} from "../types";
+import { IPostPick, ICreatePostParams, IRePostPick, IResponse } from "../types";
 import { errorMessageHandler } from "../../../utilities/errorMessageHandler";
 
 const postAdapter = createEntityAdapter<IPost | IRePost>({
@@ -45,7 +40,7 @@ export const postApiSlice = apiSlice.injectEndpoints({
       providesTags: (result, error, arg) => providesList(result?.ids, "Post"),
     }),
 
-    createPost: builder.mutation<IPost | IRePost, ICreatePost | ICreateRePost>({
+    createPost: builder.mutation<IPost | IRePost, IPostPick | IRePostPick>({
       query: ({
         postBody,
         _id,
@@ -97,7 +92,7 @@ export const postApiSlice = apiSlice.injectEndpoints({
 
     updatePost: builder.mutation<
       IPost,
-      ICreatePost | Omit<ICreateRePost, "originalPost">
+      IPostPick | Omit<IRePostPick, "originalPost">
     >({
       query: ({ postBody, _id, isRePost, postImage }: ICreatePostParams) => ({
         url: `/api/${isRePost ? "repost" : "posts"}/edit`,

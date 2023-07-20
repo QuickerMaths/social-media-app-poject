@@ -5,11 +5,13 @@ export type IResponse<K, T> = {
   data: T;
 };
 
-export type ICreatePost = Partial<
+export type IRePostOrPost = Pick<IPost | IRePost, "isRePost" | "_id">;
+
+export type IPostPick = Partial<
   Pick<IPost, "postBody" | "postImage" | "_id" | "isRePost">
 >;
 
-export type ICreateRePost = Partial<
+export type IRePostPick = Partial<
   Pick<IRePost, "postBody" | "originalPost" | "_id" | "isRePost">
 >;
 
