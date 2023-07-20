@@ -26,14 +26,10 @@ import { IComment } from "./types";
 interface Props {
   commentId: EntityId;
   postId: EntityId;
-  reRender: boolean;
-  setReRender: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const Comment: React.FC<Props> = ({
   commentId: commentEntityId,
   postId: postEntityId,
-  reRender,
-  setReRender,
 }) => {
   //TODO: type it
   const {
@@ -50,18 +46,6 @@ const Comment: React.FC<Props> = ({
 
   const [likeComment] = useLikeCommentMutation();
   const { userId } = useAppSelector((state: RootState) => state.auth);
-
-  const handleLikePost = async (commentId: string, userId: string) => {
-    try {
-      await axios.put("http://localhost:5000/api/comments", {
-        commentId,
-        userId,
-      });
-      setReRender(!reRender);
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   return (
     <li className="comment">

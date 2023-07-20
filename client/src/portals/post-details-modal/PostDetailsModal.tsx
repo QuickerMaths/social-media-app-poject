@@ -19,14 +19,14 @@ import { AiOutlineClose } from "react-icons/ai";
 import { useFormik } from "formik";
 import { closeModal } from "../../features/modalSlice/modalSlice";
 import { useCreateCommentMutation } from "../../features/apiSlice/commentApiSlice/commentApiSlice";
+import { EntityState } from "@reduxjs/toolkit";
+import { IComment } from "../../components/comment/types";
 
 interface Props {
   post: IPost | IRePost;
-  reRender: boolean;
-  setReRender: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const PostDetailsModal: React.FC<Props> = ({ post, reRender, setReRender }) => {
+const PostDetailsModal: React.FC<Props> = ({ post }) => {
   const [createComment, { isLoading: isUpdating, error, isError }] =
     useCreateCommentMutation();
   const {
@@ -92,9 +92,8 @@ const PostDetailsModal: React.FC<Props> = ({ post, reRender, setReRender }) => {
               <PostAction post={post} />
               {commentTotal > 0 && (
                 <PostComments
-                  comments={comments}
-                  reRender={reRender}
-                  setReRender={setReRender}
+                  postId={postId}
+                  comments={comments as EntityState<IComment>}
                 />
               )}
             </div>

@@ -2,6 +2,7 @@
 
 import React from "react";
 import moment from "moment";
+import { EntityState } from "@reduxjs/toolkit";
 
 // Internal dependencies
 
@@ -13,14 +14,13 @@ import { IPost, IRePost } from "../../types";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/reduxHooks";
 import { RootState } from "../../../../redux/store";
 import { openModal } from "../../../../features/modalSlice/modalSlice";
+import { IComment } from "../../../comment/types";
 
 interface Props {
   rePost: IRePost;
-  reRender: boolean;
-  setReRender: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const RePost: React.FC<Props> = ({ rePost, reRender, setReRender }) => {
+const RePost: React.FC<Props> = ({ rePost }) => {
   const { comments, commentTotal, originalPost, _id: postId } = rePost;
 
   const dispatch = useAppDispatch();
@@ -55,9 +55,8 @@ const RePost: React.FC<Props> = ({ rePost, reRender, setReRender }) => {
       {commentTotal > 0 && (
         <>
           <PostComments
-            comments={comments}
-            reRender={reRender}
-            setReRender={setReRender}
+            postId={postId}
+            comments={comments as EntityState<IComment>}
           />
           {commentTotal > 2 && (
             <button
@@ -69,13 +68,7 @@ const RePost: React.FC<Props> = ({ rePost, reRender, setReRender }) => {
           )}
         </>
       )}
-      {modals[`${postId}details`] && (
-        <PostDetailsModal
-          post={rePost}
-          reRender={reRender}
-          setReRender={setReRender}
-        />
-      )}
+      {modals[`${postId}details`] && <PostDetailsModal post={rePost} />}
     </>
   );
 };

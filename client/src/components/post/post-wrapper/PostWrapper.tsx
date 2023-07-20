@@ -18,11 +18,9 @@ import { IPost, IRePost } from "../types";
 
 interface Props {
   postId: EntityId;
-  reRender: boolean;
-  setReRender: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const PostWrapper: React.FC<Props> = ({ postId, setReRender, reRender }) => {
+const PostWrapper: React.FC<Props> = ({ postId }) => {
   const { userId } = useAppSelector((state: RootState) => state.auth);
   const { modals } = useAppSelector((state: RootState) => state.modal);
   const { post } = useGetPostsQuery("", {
@@ -52,17 +50,9 @@ const PostWrapper: React.FC<Props> = ({ postId, setReRender, reRender }) => {
       </div>
       <p className="post__body">{postBody}</p>
       {isRePost ? (
-        <RePost
-          rePost={post as IRePost}
-          reRender={reRender}
-          setReRender={setReRender}
-        />
+        <RePost rePost={post as IRePost} />
       ) : (
-        <Post
-          post={post as IPost}
-          reRender={reRender}
-          setReRender={setReRender}
-        />
+        <Post post={post as IPost} />
       )}
     </li>
   );

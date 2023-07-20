@@ -17,11 +17,9 @@ import { IComment } from "../../../comment/types";
 
 interface Props {
   post: IPost;
-  reRender: boolean;
-  setReRender: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Post: React.FC<Props> = ({ post, setReRender, reRender }) => {
+const Post: React.FC<Props> = ({ post }) => {
   const { postImage, comments, commentTotal, _id: postId } = post;
 
   const dispatch = useAppDispatch();
@@ -38,8 +36,6 @@ const Post: React.FC<Props> = ({ post, setReRender, reRender }) => {
           <PostComments
             postId={postId}
             comments={comments as EntityState<IComment>}
-            reRender={reRender}
-            setReRender={setReRender}
           />
           {commentTotal > 2 && (
             <button
@@ -53,13 +49,7 @@ const Post: React.FC<Props> = ({ post, setReRender, reRender }) => {
       )}
 
       {modals[`${postId}repost`] && <CreateRePostModal post={post as IPost} />}
-      {modals[`${postId}details`] && (
-        <PostDetailsModal
-          post={post}
-          reRender={reRender}
-          setReRender={setReRender}
-        />
-      )}
+      {modals[`${postId}details`] && <PostDetailsModal post={post} />}
     </>
 
     //TODO: make sure that caching data works here in postdetailsmodal

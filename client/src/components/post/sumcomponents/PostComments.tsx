@@ -11,26 +11,13 @@ import { IComment } from "../../comment/types";
 interface Props {
   comments: EntityState<IComment>;
   postId: EntityId;
-  reRender: boolean;
-  setReRender: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const PostComments: React.FC<Props> = ({
-  comments,
-  postId,
-  reRender,
-  setReRender,
-}) => {
+const PostComments: React.FC<Props> = ({ comments, postId }) => {
   return (
     <ul className="post__comments-container">
       {comments.ids.map((commentId: EntityId) => (
-        <Comment
-          key={commentId}
-          commentId={commentId}
-          postId={postId}
-          reRender={reRender}
-          setReRender={setReRender}
-        />
+        <Comment key={commentId} commentId={commentId} postId={postId} />
       ))}
     </ul>
   );

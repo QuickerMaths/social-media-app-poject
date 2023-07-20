@@ -1,6 +1,5 @@
 // External dependencies
 
-import { useState } from "react";
 import { EntityId } from "@reduxjs/toolkit";
 
 // Internal dependencies
@@ -10,8 +9,6 @@ import PostWrapper from "../../components/post/post-wrapper/PostWrapper";
 import { useGetPostsQuery } from "../../features/apiSlice/postApiSlice/postApiSlice";
 
 const HomePage = () => {
-  const [reRender, setReRender] = useState<boolean>(false); //TODO: remove reRender state and use query refetch instead
-
   const {
     data: posts,
     isLoading,
@@ -32,12 +29,7 @@ const HomePage = () => {
       //TODO: get rid or the setReRender and reRender state
       <ul className="home-page__posts-list">
         {posts?.ids.map((postId: EntityId) => (
-          <PostWrapper
-            key={postId}
-            postId={postId}
-            setReRender={setReRender}
-            reRender={reRender}
-          />
+          <PostWrapper key={postId} postId={postId} />
         ))}
       </ul>
     );
