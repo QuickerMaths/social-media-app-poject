@@ -31,15 +31,21 @@ const Comment: React.FC<Props> = ({
   commentId: commentEntityId,
   postId: postEntityId,
 }) => {
-  //TODO: type it
-  const {
-    comment: { owner, createdAt, postId, _id: commentId, commentBody, likedBy },
-  } = useGetPostsQuery("", {
+  const { comment } = useGetPostsQuery("", {
     selectFromResult: ({ data }) => ({
       comment: (data?.entities[postEntityId]?.comments as EntityState<IComment>)
         ?.entities[commentEntityId],
     }),
   });
+
+  const {
+    owner,
+    createdAt,
+    postId,
+    _id: commentId,
+    commentBody,
+    likedBy,
+  } = comment as IComment;
 
   const [deleteComment, { isLoading: isDeleting, error, isError }] =
     useDeleteCommentMutation();

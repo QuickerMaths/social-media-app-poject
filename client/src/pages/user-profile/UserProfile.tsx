@@ -34,7 +34,7 @@ const UserProfile = () => {
 
   const [activePage, setActivePage] = useState<"posts" | "details">("posts");
 
-  const { data, isLoading, isSuccess, isFetching, isError, error, refetch } =
+  const { data, isLoading, isSuccess, isFetching, isError } =
     useGetUserByIdQuery(userId as string);
 
   let content;
