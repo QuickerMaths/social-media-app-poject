@@ -1,0 +1,7 @@
+.users-list {
+  @include flex-column;
+  justify-content: flex-start;
+  flex-grow: 6;
+  padding: 50px 0px;
+  overflow-y: scroll;
+}

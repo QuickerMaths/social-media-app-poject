@@ -16,6 +16,7 @@ import UserProfile from "./pages/user-profile/UserProfile";
 
 const Login = lazy(() => import("./pages/login/Login"));
 const Register = lazy(() => import("./pages/register/Register"));
+const UsersList = lazy(() => import("./pages/users-list/UsersList"));
 
 function App() {
   //check if user is already loggedin
@@ -62,6 +63,7 @@ function App() {
           <Route path="/" element={<SharedLayout />}>
             <Route index element={<HomePage />} />
             <Route path="/user/:userId" element={<UserProfile />} />
+            <Route path="/users" element={<UsersList />} />
           </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

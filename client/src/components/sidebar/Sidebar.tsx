@@ -53,6 +53,14 @@ const Sidebar = () => {
                   </Link>
                 </li>
                 <li className="sidebar__navigation-item">
+                  <Link
+                    to="/users"
+                    onClick={() => dispatch(closeModal("sidebar"))}
+                  >
+                    <p className="sidebar__navigation-link">Users</p>
+                  </Link>
+                </li>
+                <li className="sidebar__navigation-item">
                   <div
                     className="sidebar__navigation-link"
                     onClick={() => dispatch(openModal("friends-request-list"))}
