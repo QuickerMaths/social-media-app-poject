@@ -5,6 +5,9 @@ import { IResponse } from "../types";
 
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    getAllUsers: builder.query<IResponse<string, IUser[]>, void>({
+      query: () => "/api/users",
+    }),
     getUserById: builder.query<IResponse<string, IUser>, string>({
       query: (userId: string) => ({
         method: "GET",
@@ -45,6 +48,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
+  useGetAllUsersQuery,
   useGetUserByIdQuery,
   useUpdateUserAddressMutation,
   useUploadUserImageMutation,
