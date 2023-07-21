@@ -1,0 +1,14 @@
+.user {
+  @include flex-center;
+
+  &__img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+  }
+
+  &__name {
+    text-align: center;
+  }
+}

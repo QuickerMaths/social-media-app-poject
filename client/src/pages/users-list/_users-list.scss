@@ -4,4 +4,17 @@
   flex-grow: 6;
   padding: 50px 0px;
   overflow-y: scroll;
+
+  &__title {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 2rem;
+  }
+
+  &__list {
+    @include flex-center;
+    flex-wrap: wrap;
+    gap: 30px;
+    width: 100%;
+  }
 }

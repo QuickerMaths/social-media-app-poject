@@ -18,8 +18,4 @@ export type IUser = {
   updatedAt: string;
 };
 
-export type IUserBasicData = {
-  _id: string;
-  username: string;
-  profilePicture: string | null;
-};
+export type IUserBasicData = Pick<IUser, "_id" | "username" | "profilePicture">;

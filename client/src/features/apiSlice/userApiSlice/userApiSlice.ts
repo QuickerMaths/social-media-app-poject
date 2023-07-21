@@ -1,12 +1,19 @@
 import { IUserAddress } from "../../../components/user-details/types";
-import { IUser } from "../../../pages/user-profile/types";
+import { IUser, IUserBasicData } from "../../../pages/user-profile/types";
 import { apiSlice } from "../apiSlice";
 import { IResponse } from "../types";
 
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getAllUsers: builder.query<IResponse<string, IUser[]>, void>({
+    getAllUsers: builder.query<IUserBasicData[], void>({
       query: () => "/api/users",
+      transformResponse: (response: IResponse<string, IUser[]>) => {
+        return response.data.map((user) => ({
+          _id: user._id,
+          username: user.username,
+          profilePicture: user.profilePicture,
+        }));
+      },
     }),
     getUserById: builder.query<IResponse<string, IUser>, string>({
       query: (userId: string) => ({
