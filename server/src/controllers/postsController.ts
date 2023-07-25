@@ -3,6 +3,8 @@ import Post from "../models/Posts";
 import RePost from "../models/RePosts";
 import Comment from "../models/Comments";
 
+//TODO: Fix json responses
+
 export const getPosts = async (req: Request, res: Response) => {
   const posts = await Post.find().populate([
     {

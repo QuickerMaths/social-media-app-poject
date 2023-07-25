@@ -5,13 +5,16 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+// Internal dependencies
+
+import { useUserAuthorizationQuery } from "./features/apiSlice/authApiSlice/authApiSlice";
+
 // components imports
 
 import SharedLayout from "./pages/shared-layout/SharedLayout";
 import HomePage from "./pages/home-page/HomePage";
 import RegisterSuccess from "./pages/register-success/RegisterSuccess";
 import UserProfile from "./pages/user-profile/UserProfile";
-import { useUserAuthorizationQuery } from "./features/apiSlice/authApiSlice/authApiSlice";
 
 // components lazy imports
 
@@ -22,7 +25,7 @@ const UsersList = lazy(() => import("./pages/users-list/UsersList"));
 function App() {
   //check if user is already loggedin
 
-  const {} = useUserAuthorizationQuery("");
+  useUserAuthorizationQuery("");
 
   return (
     <>

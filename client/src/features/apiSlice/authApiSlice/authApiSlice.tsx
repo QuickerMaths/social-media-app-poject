@@ -1,17 +1,25 @@
 // Internal dependencies
 
+import { IUser } from "../../../pages/user-profile/types";
 import { apiSlice } from "../apiSlice";
-import { IAuthProps, IAuthResponse } from "../types";
+import { IAuthProps, IAuthResponse, IResponse } from "../types";
 
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    userAuthorization: builder.query<IAuthResponse, string>({
+    userAuthorization: builder.query<IResponse<string, IAuthResponse>, string>({
       query: () => ({
         url: "/auth/me",
         credentials: "include",
       }),
     }),
-    loginUser: builder.mutation<IAuthResponse, IAuthProps>({
+    logoutUser: builder.mutation<IResponse<string, null>, string>({
+      query: () => ({
+        url: "/api/logout",
+        method: "POST",
+        credentials: "include",
+      }),
+    }),
+    loginUser: builder.mutation<IResponse<string, IAuthResponse>, IAuthProps>({
       query: ({ username, password }) => ({
         url: `/auth`,
         method: "POST",
@@ -25,4 +33,8 @@ export const authApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useUserAuthorizationQuery, useLoginUserMutation } = authApiSlice;
+export const {
+  useUserAuthorizationQuery,
+  useLogoutUserMutation,
+  useLoginUserMutation,
+} = authApiSlice;

@@ -1,32 +1,15 @@
 import { Link } from "react-router-dom";
-import { logOut } from "../../features/authSlice/authSlice";
-import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
+import { useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import defaultImg from "../../assets/images/default_img.png";
-import { AiFillCaretDown } from "react-icons/ai";
+import { useLogoutUserMutation } from "../../features/apiSlice/authApiSlice/authApiSlice";
 
 const Header = () => {
-  const dispatch = useAppDispatch();
   const { username, userId, userImg } = useAppSelector(
     (state: RootState) => state.auth
   );
+  const [logoutUser] = useLogoutUserMutation();
 
-  const handleLogOut = async () => {
-    try {
-      await fetch(`http://localhost:5000/api/logout`, {
-        method: "GET",
-        mode: "cors",
-        credentials: "include",
-        headers: {
-          "Access-Control-Allow-Origin": `http://localhost:5000`,
-          "Content-Type": "application/json",
-        },
-      });
-      dispatch(logOut());
-    } catch (error) {
-      console.log(error);
-    }
-  };
   return (
     <header className="header">
       <div className="header__container">
@@ -53,7 +36,7 @@ const Header = () => {
             </Link>
             <button
               className="header__login-button"
-              onClick={() => handleLogOut()}
+              onClick={() => logoutUser("")}
             >
               LogOut
             </button>

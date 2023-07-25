@@ -11,15 +11,24 @@ export const handleUserAuth = async (req: any, res: any) => {
     cookie,
     process.env.JTW_REFRESH_SECRET!,
     async (err: any, decoded: any) => {
-      if (err) return res.sendStatus(403);
+      if (err)
+        return res.status(403).json({
+          status: "FAILED",
+          data: {
+            error: "Forbidden",
+          },
+        });
 
       const user = await User.findOne({ username: decoded.username }).exec();
 
       res.status(200).json({
-        username: decoded.username,
-        userId: decoded.userId,
-        userImg: user?.profilePicture,
-        friendsRequests: user?.friendsRequests,
+        status: "OK",
+        data: {
+          username: decoded.username,
+          userId: decoded.userId,
+          userImg: user?.profilePicture,
+          friendsRequests: user?.friendsRequests,
+        },
       });
     }
   );
@@ -31,11 +40,20 @@ export const handleLogin = async (req: any, res: any) => {
   if (!username || !password)
     return res
       .status(400)
-      .json({ message: "Missing information. Username and password required" });
+      .json({
+        status: "FAILED",
+        data: { error: "Missing information. Username and password required" },
+      });
 
   const user = await User.findOne({ username }).exec();
 
-  if (!user) return res.sendStatus(401);
+  if (!user)
+    return res.status(401).json({
+      status: "FAILED",
+      data: {
+        error: "Unauthorized",
+      },
+    });
 
   const match = await bcrypt.compare(password, user.password!);
   if (match) {
@@ -65,10 +83,13 @@ export const handleLogin = async (req: any, res: any) => {
     });
 
     res.status(200).json({
-      username,
-      userId: user._id,
-      userImg: user.profilePicture,
-      friendsRequests: user.friendsRequests,
+      status: "OK",
+      data: {
+        username,
+        userId: user._id,
+        userImg: user.profilePicture,
+        friendsRequests: user.friendsRequests,
+      },
     });
   }
 };
