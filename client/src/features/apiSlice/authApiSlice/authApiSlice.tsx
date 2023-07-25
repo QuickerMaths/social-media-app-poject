@@ -5,6 +5,12 @@ import { IAuthProps, IAuthResponse } from "../types";
 
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    userAuthorization: builder.query<IAuthResponse, string>({
+      query: () => ({
+        url: "/auth/me",
+        credentials: "include",
+      }),
+    }),
     loginUser: builder.mutation<IAuthResponse, IAuthProps>({
       query: ({ username, password }) => ({
         url: `/auth`,
@@ -19,4 +25,4 @@ export const authApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useLoginUserMutation } = authApiSlice;
+export const { useUserAuthorizationQuery, useLoginUserMutation } = authApiSlice;

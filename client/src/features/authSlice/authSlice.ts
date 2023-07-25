@@ -18,20 +18,6 @@ export const authSlice = createSlice({
   name: "authSlice",
   initialState,
   reducers: {
-    getAuth: (
-      state,
-      action: PayloadAction<{
-        username: string;
-        userId: string;
-        userImg: string | null;
-        friendsRequests: string[] | [];
-      }>
-    ) => {
-      state.username = action.payload.username;
-      state.userId = action.payload.userId;
-      state.userImg = action.payload.userImg;
-      state.friendsRequests = action.payload.friendsRequests;
-    },
     setProfileImage: (state, action: PayloadAction<string | null>) => {
       state.userImg = action.payload;
     },
@@ -43,6 +29,16 @@ export const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addMatcher(
+      authApiSlice.endpoints.userAuthorization.matchFulfilled,
+      (state, { payload }) => {
+        const { friendsRequests, userId, userImg, username } = payload;
+        state.friendsRequests = friendsRequests;
+        state.userId = userId;
+        state.userImg = userImg;
+        state.username = username;
+      }
+    );
     builder.addMatcher(
       authApiSlice.endpoints.loginUser.matchFulfilled,
       (state, { payload }) => {
@@ -56,5 +52,5 @@ export const authSlice = createSlice({
   },
 });
 
-export const { getAuth, logOut, setProfileImage } = authSlice.actions;
+export const { logOut, setProfileImage } = authSlice.actions;
 export default authSlice.reducer;
