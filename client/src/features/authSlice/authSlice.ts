@@ -1,7 +1,11 @@
+// External dependencies
+
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { authApiSlice } from "../apiSlice/authApiSlice/authApiSlice";
+
+// Internal dependencies
 
 import { IAuthSliceState } from "./types";
+import { authApiSlice } from "../apiSlice/authApiSlice/authApiSlice";
 
 const initialState: IAuthSliceState = {
   username: null,
@@ -42,10 +46,11 @@ export const authSlice = createSlice({
     builder.addMatcher(
       authApiSlice.endpoints.loginUser.matchFulfilled,
       (state, { payload }) => {
-        (state.friendsRequests = payload.friendsRequests),
-          (state.userId = payload.userId);
-        state.userImg = payload.userImg;
-        state.username = payload.username;
+        const { friendsRequests, userId, userImg, username } = payload;
+        state.friendsRequests = friendsRequests;
+        state.userId = userId;
+        state.userImg = userImg;
+        state.username = username;
       }
     );
   },

@@ -22,3 +22,15 @@ export type ICreatePostParams = {
   originalPost?: string;
   postImage?: string;
 };
+
+export type IAuthResponse = {
+  username: string | null;
+  userId: string | null;
+  userImg: string | null;
+  friendsRequests: string[] | [];
+};
+
+export type IAuthProps = {
+  username: string;
+  password: string;
+};
