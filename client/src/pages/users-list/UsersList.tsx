@@ -5,14 +5,20 @@ import { useGetAllUsersQuery } from "../../features/apiSlice/userApiSlice/userAp
 import { IUserBasicData } from "../../pages/user-profile/types";
 
 const UsersList = () => {
-  const { data: users, isLoading, isError, isSuccess } = useGetAllUsersQuery();
+  const {
+    data: users,
+    isLoading,
+    isError,
+    error,
+    isSuccess,
+  } = useGetAllUsersQuery();
 
   let content;
 
   if (isLoading) {
     content = <div>Loading...</div>;
   } else if (isError) {
-    content = <div>{isError}</div>;
+    content = <div>{JSON.stringify(error)}</div>;
   } else if (isSuccess) {
     content = (
       <>

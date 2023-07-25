@@ -1,15 +1,19 @@
+// External dependencies
+
 import { useFormik } from "formik";
 import { Link, useNavigate } from "react-router-dom";
+
+// Internal dependencies
+
 import InputField from "../../components/inputField/InputField";
-import { getAuth } from "../../features/authSlice/authSlice";
-import { useAppDispatch } from "../../hooks/reduxHooks";
 import useToastCreator from "../../hooks/useToastCreator";
 import loginSchema from "../../validation/loginValidation";
+import { useLoginUserMutation } from "../../features/apiSlice/authApiSlice/authApiSlice";
 
 const Login = () => {
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  // TODO: refactor fetch to rtkQuery and formik hooks to formik components
+
+  const [loginUser, { isLoading: isLoginIn }] = useLoginUserMutation();
 
   const { handleChange, handleBlur, errors, touched, values, handleSubmit } =
     useFormik({
@@ -19,36 +23,13 @@ const Login = () => {
       },
       validationSchema: loginSchema,
       onSubmit: async (values) => {
-        try {
-          const result = await fetch(`http://localhost:5000/auth`, {
-            method: "POST",
-            mode: "cors",
-            credentials: "include",
-            headers: {
-              "Access-Control-Allow-Origin": `http://localhost:5000`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              username: values.username,
-              password: values.password,
-            }),
-          });
-
-          const { username, userId, userImg, friendsRequests } =
-            await result.json();
-
-          dispatch(
-            getAuth({
-              username,
-              userId,
-              userImg,
-              friendsRequests,
-            })
-          );
+        await loginUser({
+          username: values.username,
+          password: values.password,
+        });
+        if (!isLoginIn) {
           useToastCreator("You have been logged in successfully", "success");
           navigate("/");
-        } catch (error) {
-          console.log(error);
         }
       },
     });

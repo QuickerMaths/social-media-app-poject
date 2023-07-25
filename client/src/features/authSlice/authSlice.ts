@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { authApiSlice } from "../apiSlice/authApiSlice/authApiSlice";
 
 import { IAuthSliceState } from "./types";
 
@@ -36,6 +37,17 @@ export const authSlice = createSlice({
       state.userImg = null;
       state.friendsRequests = [];
     },
+  },
+  extraReducers: (builder) => {
+    builder.addMatcher(
+      authApiSlice.endpoints.loginUser.matchFulfilled,
+      (state, { payload }) => {
+        (state.friendsRequests = payload.friendsRequests),
+          (state.userId = payload.userId);
+        state.userImg = payload.userImg;
+        state.username = payload.username;
+      }
+    );
   },
 });
 
