@@ -1,4 +1,5 @@
 import { IPost, IRePost } from "../../components/post/types";
+import { IUserBasicData } from "../../pages/user-profile/types";
 
 export type IResponse<K, T> = {
   status: K;
@@ -33,4 +34,9 @@ export type IAuthResponse = {
 export type IAuthProps = {
   username: string;
   password: string;
+};
+
+export type IFriendsRequestResponse = {
+  _id: string;
+  friendsRequests: IUserBasicData[];
 };
