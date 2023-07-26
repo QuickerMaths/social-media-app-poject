@@ -9,6 +9,6 @@ export const apiSlice = createApi({
       ["x-requested-with"]: "XMLHttpRequest",
     },
   }),
-  tagTypes: ["User", "Post"],
+  tagTypes: ["User", "Post", "Request"],
   endpoints: (builder) => ({}),
 });

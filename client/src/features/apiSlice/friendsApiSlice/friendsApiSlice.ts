@@ -1,10 +1,16 @@
-import { IUserBasicData } from "../../../pages/user-profile/types";
+import { createEntityAdapter, EntityState } from "@reduxjs/toolkit";
+import { providesList } from "../../../hooks/reduxHooks";
+import { errorMessageHandler } from "../../../utilities/errorMessageHandler";
 import { apiSlice } from "../apiSlice";
-import { IFriendsRequestResponse, IResponse } from "../types";
+import { IFriendsRequestResponse, IResponse, IRequest } from "../types";
+
+const requestAdapter = createEntityAdapter<IRequest>({
+  selectId: (request) => request._id,
+});
 
 export const friendsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getFriendsRequests: builder.query<IUserBasicData[], string>({
+    getFriendsRequests: builder.query<EntityState<IRequest>, string>({
       query: (userId: string) => ({
         url: `/api/friends/requests/${userId}`,
         credentials: "include",
@@ -12,8 +18,16 @@ export const friendsApiSlice = apiSlice.injectEndpoints({
       transformResponse: (
         response: IResponse<string, IFriendsRequestResponse>
       ) => {
-        return response.data.friendsRequests;
+        return requestAdapter.setAll(
+          requestAdapter.getInitialState(),
+          response.data.friendsRequests
+        );
       },
+      //   transformErrorResponse: (error: IResponse<number, { error: string }>) => {
+      //     return (error.data.error = errorMessageHandler(error.status));
+      //   },
+      providesTags: (result, error, arg) =>
+        providesList(result?.ids, "Request"),
     }),
   }),
 });

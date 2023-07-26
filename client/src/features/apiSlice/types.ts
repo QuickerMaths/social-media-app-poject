@@ -36,7 +36,9 @@ export type IAuthProps = {
   password: string;
 };
 
+export type IRequest = IUserBasicData;
+
 export type IFriendsRequestResponse = {
   _id: string;
-  friendsRequests: IUserBasicData[];
+  friendsRequests: IRequest[];
 };

@@ -11,6 +11,7 @@ import { RootState } from "../../redux/store";
 import { AiOutlineLeft } from "react-icons/ai";
 import { closeModal } from "../../features/modalSlice/modalSlice";
 import { useGetFriendsRequestsQuery } from "../../features/apiSlice/friendsApiSlice/friendsApiSlice";
+import { EntityId } from "@reduxjs/toolkit";
 
 const FriendsRequestList = () => {
   const dispatch = useAppDispatch();
@@ -39,13 +40,8 @@ const FriendsRequestList = () => {
     content = (
       <ul className="friends-request-list__list">
         {requestsCount.length > 0 ? (
-          friendsRequests.map((request: IUserBasicData) => (
-            <FriendsRequest
-              key={request._id}
-              request={request}
-              setReRender={setReRender}
-              reRender={reRender}
-            />
+          friendsRequests.ids.map((requestId: EntityId) => (
+            <FriendsRequest key={requestId} requestId={requestId} />
           ))
         ) : (
           <p className="friends-request-list__empty-list-message">
