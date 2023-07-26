@@ -16,7 +16,6 @@ const FriendsRequest: React.FC<Props> = ({
   setReRender,
   reRender,
 }) => {
-  const dispatch = useAppDispatch();
   const { userId } = useAppSelector((state: RootState) => state.auth);
   const { _id: userToAddId } = request;
 

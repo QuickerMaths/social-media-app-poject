@@ -1,6 +1,5 @@
 // Internal dependencies
 
-import { IUser } from "../../../pages/user-profile/types";
 import { apiSlice } from "../apiSlice";
 import { IAuthProps, IAuthResponse, IResponse } from "../types";
 

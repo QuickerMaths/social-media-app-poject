@@ -14,7 +14,6 @@ const FriendsRequestList: React.FC<Props> = () => {
   const { userId, friendsRequests: requestsCount } = useAppSelector(
     (state: RootState) => state.auth
   );
-  const { modals } = useAppSelector((state: RootState) => state.modal);
 
   const [friendsRequests, setFriendsRequests] = useState<IUserBasicData[]>([]);
   const [reRender, setReRender] = useState<boolean>(false);
