@@ -1,8 +1,13 @@
 import { createEntityAdapter, EntityState } from "@reduxjs/toolkit";
-import { providesList } from "../../../hooks/reduxHooks";
+import { invalidatesList, providesList } from "../../../hooks/reduxHooks";
 import { errorMessageHandler } from "../../../utilities/errorMessageHandler";
 import { apiSlice } from "../apiSlice";
-import { IFriendsRequestResponse, IResponse, IRequest } from "../types";
+import {
+  IFriendsRequestResponse,
+  IResponse,
+  IRequest,
+  IResolveFriendRequestProps,
+} from "../types";
 
 const requestAdapter = createEntityAdapter<IRequest>({
   selectId: (request) => request._id,
@@ -29,7 +34,25 @@ export const friendsApiSlice = apiSlice.injectEndpoints({
       providesTags: (result, error, arg) =>
         providesList(result?.ids, "Request"),
     }),
+    resolveFriendRequest: builder.mutation<
+      IRequest,
+      IResolveFriendRequestProps
+    >({
+      query: ({ action, userId, userToAddId }) => ({
+        url: `/api/friends/${action}`,
+        method: "PUT",
+        credentials: "include",
+        body: {
+          userId,
+          userToAddId,
+        },
+      }),
+      invalidatesTags: (result, error, req) => [
+        { type: "Request", id: (result as IRequest)._id },
+      ],
+    }),
   }),
 });
 
-export const { useGetFriendsRequestsQuery } = friendsApiSlice;
+export const { useGetFriendsRequestsQuery, useResolveFriendRequestMutation } =
+  friendsApiSlice;

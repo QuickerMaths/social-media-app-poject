@@ -7,6 +7,7 @@ import { closeModal, openModal } from "../../features/modalSlice/modalSlice";
 
 const Sidebar = () => {
   const dispatch = useAppDispatch();
+  //TODO: update friendsRequests state while starting resolveFriendRequest query
   const { userId, friendsRequests } = useAppSelector(
     (state: RootState) => state.auth
   );

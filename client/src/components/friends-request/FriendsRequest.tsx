@@ -9,7 +9,11 @@ import PostOwner from "../post/sumcomponents/PostOwner";
 import { useAppSelector } from "../../hooks/reduxHooks";
 import { IUserBasicData } from "../../pages/user-profile/types";
 import { RootState } from "../../redux/store";
-import { useGetFriendsRequestsQuery } from "../../features/apiSlice/friendsApiSlice/friendsApiSlice";
+import {
+  useGetFriendsRequestsQuery,
+  useResolveFriendRequestMutation,
+} from "../../features/apiSlice/friendsApiSlice/friendsApiSlice";
+import { IRequest } from "../../features/apiSlice/types";
 
 interface Props {
   requestId: EntityId;
@@ -17,32 +21,16 @@ interface Props {
 
 const FriendsRequest: React.FC<Props> = ({ requestId }) => {
   const { userId } = useAppSelector((state: RootState) => state.auth);
+
   const { request } = useGetFriendsRequestsQuery(userId as string, {
     selectFromResult: ({ data }) => ({
       request: data?.entities[requestId],
     }),
   });
 
-  // //TODO: refactor to rtkQuery
-  // const handleRequest = async (
-  //   userId: string,
-  //   userToAddId: string,
-  //   action: "accept" | "reject"
-  // ) => {
-  //   try {
-  //     const res = await axios.put(
-  //       `http://localhost:5000/api/friends/${action}`,
-  //       {
-  //         userId,
-  //         userToAddId,
-  //       }
-  //     );
-  //     console.log(res);
-  //     setReRender(!reRender);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
+  const { _id: userToAddId } = request as IRequest;
+
+  const [resolveFriendRequest] = useResolveFriendRequestMutation();
 
   //TODO: close modal after clicking on post owner
   return (
@@ -51,17 +39,25 @@ const FriendsRequest: React.FC<Props> = ({ requestId }) => {
       <div className="request__button-container">
         <button
           className="request__button request__button--accept"
-          // onClick={() =>
-          //   handleRequest(userId as string, userToAddId as string, "accept")
-          // }
+          onClick={() =>
+            resolveFriendRequest({
+              userId: userId as string,
+              userToAddId,
+              action: "accept",
+            })
+          }
         >
           Accept
         </button>
         <button
           className="request__button request__button--decline"
-          // onClick={() =>
-          //   handleRequest(userId as string, userToAddId as string, "reject")
-          // }
+          onClick={() =>
+            resolveFriendRequest({
+              userId: userId as string,
+              userToAddId,
+              action: "reject",
+            })
+          }
         >
           Decline
         </button>

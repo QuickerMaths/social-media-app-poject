@@ -1,12 +1,7 @@
-// External dependencies
-
-import { useState } from "react";
-
 //Internal dependencies
 
 import FriendsRequest from "../friends-request/FriendsRequest";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
-import { IUserBasicData } from "../../pages/user-profile/types";
 import { RootState } from "../../redux/store";
 import { AiOutlineLeft } from "react-icons/ai";
 import { closeModal } from "../../features/modalSlice/modalSlice";
@@ -19,8 +14,6 @@ const FriendsRequestList = () => {
     (state: RootState) => state.auth
   );
 
-  const [reRender, setReRender] = useState<boolean>(false);
-
   const {
     data: friendsRequests,
     isLoading,
@@ -31,6 +24,7 @@ const FriendsRequestList = () => {
   } = useGetFriendsRequestsQuery(userId as string);
 
   let content;
+  //TODO: add loading component and error
 
   if (isLoading || isFetching) {
     content = <div>Loading...</div>;

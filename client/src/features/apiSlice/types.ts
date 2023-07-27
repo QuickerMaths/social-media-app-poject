@@ -42,3 +42,9 @@ export type IFriendsRequestResponse = {
   _id: string;
   friendsRequests: IRequest[];
 };
+
+export type IResolveFriendRequestProps = {
+  userId: string;
+  userToAddId: string;
+  action: "accept" | "reject";
+};
