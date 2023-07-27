@@ -11,11 +11,9 @@ import MainLeft from "./subcomponents/MainLeft";
 import MainRight from "./subcomponents/MainRight";
 import ProfileImage from "./subcomponents/ProfileImage";
 import UserProfileImgModal from "../../portals/user-profile-img-modal/UserProfileImgModal";
-import SendFriendRequest from "../../components/send-friend-request/SendFriendRequest";
-import RemoveFriend from "../../components/remove-friends/RemoveFriend";
+import FriendAction from "./subcomponents/FriendAction";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
-import { IUser, IUserBasicData } from "./types";
 import { useGetUserByIdQuery } from "../../features/apiSlice/userApiSlice/userApiSlice";
 import { openModal } from "../../features/modalSlice/modalSlice";
 
@@ -50,18 +48,6 @@ const UserProfile = () => {
     //TODO: handle error properly
     content = <div>Error</div>;
   } else if (isSuccess) {
-    const alreadyFriends = (activeUserId: string, user: IUser) => {};
-
-    // const showSendRequestButton =
-    //   activeUserId &&
-    //   activeUserId !== userId &&
-    //   (!user || (user.friends as IUserBasicData[]).every(alreadyFriends));
-
-    // const showRemoveButton =
-    //   activeUserId &&
-    //   activeUserId !== userId &&
-    //   (!user || !(user.friends as IUserBasicData[]).every(alreadyFriends));
-
     content = (
       <>
         <div className="user-profile__presentation">
@@ -101,8 +87,7 @@ const UserProfile = () => {
               {user.firstName} {user.lastName}
             </h3>
           </div>
-          {/* {showSendRequestButton && <SendFriendRequest />}
-          {showRemoveButton && <RemoveFriend />} */}
+          <FriendAction user={user} />
         </div>
         {isMobile && (
           <UserProfileMobileNavigation
