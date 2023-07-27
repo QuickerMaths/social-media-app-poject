@@ -1,7 +1,17 @@
+// External dependencies
+
+import { createEntityAdapter } from "@reduxjs/toolkit";
+
+// Internal dependencies
+
 import { IUserAddress } from "../../../components/user-details/types";
 import { IUser, IUserBasicData } from "../../../pages/user-profile/types";
 import { apiSlice } from "../apiSlice";
 import { IResponse } from "../types";
+
+const friendsAdapter = createEntityAdapter<IUserBasicData>({
+  selectId: (friend) => friend._id,
+});
 
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -15,19 +25,25 @@ export const userApiSlice = apiSlice.injectEndpoints({
         }));
       },
     }),
-    getUserById: builder.query<IResponse<string, IUser>, string>({
+    getUserById: builder.query<IUser, string>({
       query: (userId: string) => ({
         method: "GET",
         url: `/api/users/${userId}`,
       }),
+      transformResponse: (response: IResponse<string, IUser>) => {
+        response.data.friends = friendsAdapter.setAll(
+          friendsAdapter.getInitialState(),
+          response.data.friends as IUserBasicData[]
+        );
+        return response.data;
+      },
       providesTags: (result, error, id) => [{ type: "User", id }],
     }),
     updateUserAddress: builder.mutation<
       IResponse<string, IUser>,
       { userId: string; addressToUpdate: IUserAddress }
     >({
-      query: (arg) => {
-        const { userId, addressToUpdate } = arg;
+      query: ({ userId, addressToUpdate }) => {
         return {
           method: "PUT",
           url: "/api/users",
@@ -38,9 +54,11 @@ export const userApiSlice = apiSlice.injectEndpoints({
         { type: "User", id: req.userId },
       ],
     }),
-    uploadUserImage: builder.mutation({
-      query: (arg) => {
-        const { userId, path } = arg;
+    uploadUserImage: builder.mutation<
+      IResponse<string, IUser>,
+      { userId: string; path: string }
+    >({
+      query: ({ userId, path }) => {
         return {
           method: "PUT",
           url: "/api/users/uploads",

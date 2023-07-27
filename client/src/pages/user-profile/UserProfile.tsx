@@ -5,11 +5,6 @@ import { useParams } from "react-router";
 
 // Internal dependencies
 
-import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
-import { RootState } from "../../redux/store";
-import { IUserBasicData } from "./types";
-import { useGetUserByIdQuery } from "../../features/apiSlice/userApiSlice/userApiSlice";
-import { openModal } from "../../features/modalSlice/modalSlice";
 import useMediaQuery from "../../hooks/useMediaQuery";
 import UserProfileMobileNavigation from "../../components/user-profile-mobile-navigation/UserProfileMobileNavigation";
 import MainLeft from "./subcomponents/MainLeft";
@@ -18,6 +13,11 @@ import ProfileImage from "./subcomponents/ProfileImage";
 import UserProfileImgModal from "../../portals/user-profile-img-modal/UserProfileImgModal";
 import SendFriendRequest from "../../components/send-friend-request/SendFriendRequest";
 import RemoveFriend from "../../components/remove-friends/RemoveFriend";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
+import { RootState } from "../../redux/store";
+import { IUser, IUserBasicData } from "./types";
+import { useGetUserByIdQuery } from "../../features/apiSlice/userApiSlice/userApiSlice";
+import { openModal } from "../../features/modalSlice/modalSlice";
 
 // Assets
 
@@ -34,29 +34,33 @@ const UserProfile = () => {
 
   const [activePage, setActivePage] = useState<"posts" | "details">("posts");
 
-  const { data, isLoading, isSuccess, isFetching, isError } =
-    useGetUserByIdQuery(userId as string);
+  const {
+    data: user,
+    isLoading,
+    isSuccess,
+    isFetching,
+    isError,
+  } = useGetUserByIdQuery(userId as string);
 
   let content;
   if (isFetching || isLoading) {
     //TODO: create loading component
     content = <div>Loading...</div>;
+  } else if (isError) {
+    //TODO: handle error properly
+    content = <div>Error</div>;
   } else if (isSuccess) {
-    const { data: user } = data;
+    const alreadyFriends = (activeUserId: string, user: IUser) => {};
 
-    const alreadyFriends = (friend: IUserBasicData) =>
-      friend._id === activeUserId;
+    // const showSendRequestButton =
+    //   activeUserId &&
+    //   activeUserId !== userId &&
+    //   (!user || (user.friends as IUserBasicData[]).every(alreadyFriends));
 
-    const showSendRequestButton =
-      activeUserId &&
-      activeUserId !== userId &&
-      (!data?.data ||
-        (data?.data.friends as IUserBasicData[]).every(alreadyFriends));
-    const showRemoveButton =
-      activeUserId &&
-      activeUserId !== userId &&
-      (!data?.data ||
-        !(data?.data.friends as IUserBasicData[]).every(alreadyFriends));
+    // const showRemoveButton =
+    //   activeUserId &&
+    //   activeUserId !== userId &&
+    //   (!user || !(user.friends as IUserBasicData[]).every(alreadyFriends));
 
     content = (
       <>
@@ -97,8 +101,8 @@ const UserProfile = () => {
               {user.firstName} {user.lastName}
             </h3>
           </div>
-          {showSendRequestButton && <SendFriendRequest />}
-          {showRemoveButton && <RemoveFriend />}
+          {/* {showSendRequestButton && <SendFriendRequest />}
+          {showRemoveButton && <RemoveFriend />} */}
         </div>
         {isMobile && (
           <UserProfileMobileNavigation
@@ -120,11 +124,7 @@ const UserProfile = () => {
         )}
       </>
     );
-  } else if (isError) {
-    //TODO: handle error properly
-    content = <div>Error</div>;
   }
-
   return <section className="user-profile">{content}</section>;
 };
 

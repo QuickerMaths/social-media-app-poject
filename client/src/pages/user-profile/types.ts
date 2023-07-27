@@ -1,3 +1,5 @@
+import { EntityState } from "@reduxjs/toolkit";
+
 export type IUser = {
   _id: string;
   username: string;
@@ -5,8 +7,8 @@ export type IUser = {
   firstName: string;
   lastName: string;
   profilePicture: string | null;
-  friends: string[] | IUserBasicData[];
-  friendsRequests: string[] | IUserBasicData[];
+  friends: IUserBasicData[] | EntityState<IUserBasicData>;
+  friendsRequests: IUserBasicData[];
   address: {
     street: string;
     city: string;
