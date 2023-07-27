@@ -177,12 +177,10 @@ export const deleteFromFriendsList = async (req: Request, res: Response) => {
   const { friendToDeleteId, userId } = req.body;
 
   if (!friendToDeleteId || !userId)
-    return res
-      .status(400)
-      .json({
-        status: "FAILED",
-        data: { error: "User and user to add ids are required" },
-      });
+    return res.status(400).json({
+      status: "FAILED",
+      data: { error: "User and user to add ids are required" },
+    });
 
   const user = await User.findById(userId);
 
@@ -207,5 +205,5 @@ export const deleteFromFriendsList = async (req: Request, res: Response) => {
       .json({ status: "FAILED", data: { error: "Server Internal Error" } });
   }
 
-  return res.status(204).json({ status: "OK", data: friendToDelete });
+  return res.status(204).json({ status: "OK", data: "No content" });
 };

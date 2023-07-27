@@ -1,5 +1,6 @@
 import { createEntityAdapter, EntityState } from "@reduxjs/toolkit";
 import { invalidatesList, providesList } from "../../../hooks/reduxHooks";
+import { IUser } from "../../../pages/user-profile/types";
 import { errorMessageHandler } from "../../../utilities/errorMessageHandler";
 import { apiSlice } from "../apiSlice";
 import {
@@ -49,10 +50,29 @@ export const friendsApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: (result, error, req) => [
         { type: "Request", id: (result as IRequest)._id },
+        { type: "User", id: req.userId },
+        { type: "User", id: req.userToAddId },
+      ],
+    }),
+    deleteFriend: builder.mutation<
+      string,
+      { userId: string; friendToDeleteId: string }
+    >({
+      query: ({ userId, friendToDeleteId }) => ({
+        url: "/api/friends",
+        method: "DELETE",
+        body: { userId, friendToDeleteId },
+      }),
+      invalidatesTags: (result, error, req) => [
+        { type: "User", id: req.userId },
+        { type: "User", id: req.friendToDeleteId },
       ],
     }),
   }),
 });
 
-export const { useGetFriendsRequestsQuery, useResolveFriendRequestMutation } =
-  friendsApiSlice;
+export const {
+  useGetFriendsRequestsQuery,
+  useResolveFriendRequestMutation,
+  useDeleteFriendMutation,
+} = friendsApiSlice;

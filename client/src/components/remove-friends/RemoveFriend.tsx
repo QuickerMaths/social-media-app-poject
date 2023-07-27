@@ -3,6 +3,7 @@
 import axios from "axios";
 import { AiOutlineUserDelete } from "react-icons/ai";
 import { useParams } from "react-router";
+import { useDeleteFriendMutation } from "../../features/apiSlice/friendsApiSlice/friendsApiSlice";
 
 // Internal dependencies
 
@@ -13,25 +14,16 @@ const RemoveFriend = () => {
   const { userId } = useAppSelector((state: RootState) => state.auth);
   const { userId: friendToDeleteId } = useParams();
 
-  const handleSendFriendRequest = async (
-    userId: string,
-    friendToDeleteId: string
-  ) => {
-    try {
-      const res = await axios.delete("http://localhost:5000/api/friends", {
-        data: { userId, friendToDeleteId },
-      });
-      console.log(res);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  const [deleteFriend] = useDeleteFriendMutation();
 
   return (
     <section className="send-friend-request">
       <button
         onClick={() =>
-          handleSendFriendRequest(userId as string, friendToDeleteId as string)
+          deleteFriend({
+            userId: userId as string,
+            friendToDeleteId: friendToDeleteId as string,
+          })
         }
         className="send-friend-request__button"
       >
