@@ -1,6 +1,6 @@
 import { createEntityAdapter, EntityState } from "@reduxjs/toolkit";
 import { invalidatesList, providesList } from "../../../hooks/reduxHooks";
-import { IUser } from "../../../pages/user-profile/types";
+import { IUser, IUserBasicData } from "../../../pages/user-profile/types";
 import { errorMessageHandler } from "../../../utilities/errorMessageHandler";
 import { apiSlice } from "../apiSlice";
 import {
@@ -12,6 +12,10 @@ import {
 
 const requestAdapter = createEntityAdapter<IRequest>({
   selectId: (request) => request._id,
+});
+
+const friendsAdapter = createEntityAdapter<IUserBasicData>({
+  selectId: (friend) => friend._id,
 });
 
 export const friendsApiSlice = apiSlice.injectEndpoints({
@@ -34,6 +38,19 @@ export const friendsApiSlice = apiSlice.injectEndpoints({
       //   },
       providesTags: (result, error, arg) =>
         providesList(result?.ids, "Request"),
+    }),
+    // TODO: use this to display all users friends in special portal or component
+    getFriendsByUserId: builder.query<EntityState<IUserBasicData>, string>({
+      query: (userId: string) => ({
+        url: `/api/friends/${userId}`,
+        credentials: "include",
+      }),
+      transformResponse: (response: IResponse<string, IUser>) => {
+        return friendsAdapter.setAll(
+          friendsAdapter.getInitialState(),
+          response.data.friends as IUserBasicData[]
+        );
+      },
     }),
     resolveFriendRequest: builder.mutation<
       IRequest,

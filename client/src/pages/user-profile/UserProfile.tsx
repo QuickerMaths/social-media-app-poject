@@ -40,6 +40,8 @@ const UserProfile = () => {
     isError,
   } = useGetUserByIdQuery(userId as string);
 
+  console.log(user);
+
   let content;
   if (isFetching || isLoading) {
     //TODO: create loading component

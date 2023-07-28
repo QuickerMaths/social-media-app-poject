@@ -2,14 +2,7 @@ import { Request, Response } from "express";
 import User from "../models/Users";
 
 export const getFriendsByUser = async (req: Request, res: Response) => {
-  const { userId } = req.body;
-
-  if (!userId)
-    return res
-      .status(400)
-      .json({ status: "FAILED", data: { error: "User id is required" } });
-
-  const usersFriends = await User.findById(userId)
+  const usersFriends = await User.findById(req.params.id)
     .select("friends")
     .populate([
       {
