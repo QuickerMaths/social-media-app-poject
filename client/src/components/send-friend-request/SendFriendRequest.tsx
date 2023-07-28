@@ -1,6 +1,5 @@
 // External dependencies
 
-import axios from "axios";
 import { useParams } from "react-router";
 import { AiOutlineUserAdd } from "react-icons/ai";
 
@@ -8,30 +7,22 @@ import { AiOutlineUserAdd } from "react-icons/ai";
 
 import { useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
+import { useSendFriendRequestMutation } from "../../features/apiSlice/friendsApiSlice/friendsApiSlice";
 
 const SendFriendRequest = () => {
   const { userId } = useAppSelector((state: RootState) => state.auth);
   const { userId: userToAddId } = useParams();
 
-  const handleSendFriendRequest = async (
-    userId: string,
-    userToAddId: string
-  ) => {
-    try {
-      const res = await axios.put("http://localhost:5000/api/friends", {
-        userId,
-        userToAddId,
-      });
-      console.log(res);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  const [sendFriendRequest] = useSendFriendRequestMutation();
+
   return (
     <section className="send-friend-request">
       <button
         onClick={() =>
-          handleSendFriendRequest(userId as string, userToAddId as string)
+          sendFriendRequest({
+            userId: userId as string,
+            userToAddId: userToAddId as string,
+          })
         }
         className="send-friend-request__button"
       >

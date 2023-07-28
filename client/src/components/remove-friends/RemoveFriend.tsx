@@ -1,13 +1,12 @@
 // External dependencies
 
-import axios from "axios";
 import { AiOutlineUserDelete } from "react-icons/ai";
 import { useParams } from "react-router";
-import { useDeleteFriendMutation } from "../../features/apiSlice/friendsApiSlice/friendsApiSlice";
 
 // Internal dependencies
 
 import { useAppSelector } from "../../hooks/reduxHooks";
+import { useDeleteFriendMutation } from "../../features/apiSlice/friendsApiSlice/friendsApiSlice";
 import { RootState } from "../../redux/store";
 
 const RemoveFriend = () => {

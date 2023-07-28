@@ -8,7 +8,7 @@ export type IUser = {
   lastName: string;
   profilePicture: string | null;
   friends: IUserBasicData[] | EntityState<IUserBasicData>;
-  friendsRequests: IUserBasicData[];
+  friendsRequests: string[] | IUserBasicData[];
   address: {
     street: string;
     city: string;

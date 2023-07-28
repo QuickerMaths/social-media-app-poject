@@ -3,6 +3,7 @@
 import React from "react";
 import { EntityState } from "@reduxjs/toolkit";
 import { useParams } from "react-router";
+import { AiOutlineUserSwitch } from "react-icons/ai";
 
 // Internal dependencies
 
@@ -22,29 +23,30 @@ const FriendAction: React.FC<Props> = ({ user }) => {
   );
   const { userId } = useParams();
 
-  const alreadyFriends = (
-    userId: string,
-    userFriends: EntityState<IUserBasicData>
-  ) => {
-    return userFriends.ids.includes(userId);
-  };
-
-  const showSendRequestButton =
-    activeUserId &&
-    activeUserId !== userId &&
-    !alreadyFriends(activeUserId, user.friends as EntityState<IUserBasicData>);
-
-  const showRemoveButton =
-    activeUserId &&
-    activeUserId !== userId &&
-    alreadyFriends(activeUserId, user.friends as EntityState<IUserBasicData>);
-
   let content;
 
-  if (showSendRequestButton) {
-    content = <SendFriendRequest />;
-  } else if (showRemoveButton) {
-    content = <RemoveFriend />;
+  if (activeUserId && activeUserId !== userId) {
+    const alreadyFriends = (
+      user.friends as EntityState<IUserBasicData>
+    ).ids.includes(activeUserId);
+
+    const requestAlreadySent = (user.friendsRequests as string[]).includes(
+      activeUserId
+    );
+
+    if (!alreadyFriends && !requestAlreadySent) {
+      content = <SendFriendRequest />;
+    } else if (alreadyFriends) {
+      content = <RemoveFriend />;
+    } else if (requestAlreadySent && !alreadyFriends) {
+      content = (
+        <section className="send-friend-request">
+          <button className="send-friend-request__button">
+            <AiOutlineUserSwitch className="send-friend-request__icon" />
+          </button>
+        </section>
+      );
+    }
   }
 
   return <>{content}</>;

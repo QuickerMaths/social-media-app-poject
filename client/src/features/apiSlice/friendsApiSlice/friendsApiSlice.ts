@@ -68,6 +68,22 @@ export const friendsApiSlice = apiSlice.injectEndpoints({
         { type: "User", id: req.friendToDeleteId },
       ],
     }),
+    sendFriendRequest: builder.mutation<
+      IUser,
+      { userId: string; userToAddId: string }
+    >({
+      query: ({ userId, userToAddId }) => ({
+        url: "/api/friends",
+        method: "PUT",
+        body: { userId, userToAddId },
+      }),
+      transformResponse: (response: IResponse<string, IUser>) => {
+        return response.data;
+      },
+      invalidatesTags: (result, error, req) => [
+        { type: "User", id: req.userToAddId },
+      ],
+    }),
   }),
 });
 
@@ -75,4 +91,5 @@ export const {
   useGetFriendsRequestsQuery,
   useResolveFriendRequestMutation,
   useDeleteFriendMutation,
+  useSendFriendRequestMutation,
 } = friendsApiSlice;
