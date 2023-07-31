@@ -44,6 +44,7 @@ const FriendsRequest: React.FC<Props> = ({ requestId }) => {
               userId: userId as string,
               userToAddId,
               action: "accept",
+              requestId: (request as IUserBasicData)._id,
             })
           }
         >
@@ -56,6 +57,7 @@ const FriendsRequest: React.FC<Props> = ({ requestId }) => {
               userId: userId as string,
               userToAddId,
               action: "reject",
+              requestId: (request as IUserBasicData)._id,
             })
           }
         >

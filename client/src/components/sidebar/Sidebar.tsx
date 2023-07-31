@@ -1,8 +1,13 @@
+// External dependencies
+
 import { Link } from "react-router-dom";
+import { AiOutlineRight, AiOutlineClose } from "react-icons/ai";
+
+// Internal dependencies
+
+import FriendsRequestList from "../friends-request-list/FriendsRequestList";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
-import { AiOutlineRight, AiOutlineClose } from "react-icons/ai";
-import FriendsRequestList from "../friends-request-list/FriendsRequestList";
 import { closeModal, openModal } from "../../features/modalSlice/modalSlice";
 
 const Sidebar = () => {

@@ -47,4 +47,5 @@ export type IResolveFriendRequestProps = {
   userId: string;
   userToAddId: string;
   action: "accept" | "reject";
+  requestId: string;
 };

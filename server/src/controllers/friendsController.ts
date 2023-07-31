@@ -97,8 +97,8 @@ export const acceptFriendRequest = async (req: Request, res: Response) => {
 
   if (!user)
     return res
-      .status(400)
-      .json({ status: "FAILED", data: { error: "No user found" } });
+      .status(500)
+      .json({ status: "FAILED", data: { error: "Server Internal Error" } });
 
   const userToAdd = await User.findById(userToAddId);
 
@@ -125,7 +125,8 @@ export const acceptFriendRequest = async (req: Request, res: Response) => {
       .json({ status: "FAILED", data: { error: "Server Internal Error" } });
   }
 
-  return res.status(200).json({ status: "FAILED", data: user });
+  const updatedUser = await User.findById(userId);
+  return res.status(200).json({ status: "OK", data: updatedUser });
 };
 
 export const rejectFriendRequest = async (req: Request, res: Response) => {

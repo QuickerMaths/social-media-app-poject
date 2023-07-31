@@ -20,6 +20,19 @@ const friendsAdapter = createEntityAdapter<IUserBasicData>({
 
 export const friendsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    // TODO: use this to display all users friends in special portal or component
+    getFriendsByUserId: builder.query<EntityState<IUserBasicData>, string>({
+      query: (userId: string) => ({
+        url: `/api/friends/${userId}`,
+        credentials: "include",
+      }),
+      transformResponse: (response: IResponse<string, IUser>) => {
+        return friendsAdapter.setAll(
+          friendsAdapter.getInitialState(),
+          response.data.friends as IUserBasicData[]
+        );
+      },
+    }),
     getFriendsRequests: builder.query<EntityState<IRequest>, string>({
       query: (userId: string) => ({
         url: `/api/friends/requests/${userId}`,
@@ -39,23 +52,7 @@ export const friendsApiSlice = apiSlice.injectEndpoints({
       providesTags: (result, error, arg) =>
         providesList(result?.ids, "Request"),
     }),
-    // TODO: use this to display all users friends in special portal or component
-    getFriendsByUserId: builder.query<EntityState<IUserBasicData>, string>({
-      query: (userId: string) => ({
-        url: `/api/friends/${userId}`,
-        credentials: "include",
-      }),
-      transformResponse: (response: IResponse<string, IUser>) => {
-        return friendsAdapter.setAll(
-          friendsAdapter.getInitialState(),
-          response.data.friends as IUserBasicData[]
-        );
-      },
-    }),
-    resolveFriendRequest: builder.mutation<
-      IRequest,
-      IResolveFriendRequestProps
-    >({
+    resolveFriendRequest: builder.mutation<IUser, IResolveFriendRequestProps>({
       query: ({ action, userId, userToAddId }) => ({
         url: `/api/friends/${action}`,
         method: "PUT",
@@ -65,10 +62,13 @@ export const friendsApiSlice = apiSlice.injectEndpoints({
           userToAddId,
         },
       }),
+      transformResponse: (response: IResponse<string, IUser>) => {
+        return response.data;
+      },
       invalidatesTags: (result, error, req) => [
-        { type: "Request", id: (result as IRequest)._id },
         { type: "User", id: req.userId },
         { type: "User", id: req.userToAddId },
+        { type: "Request", id: req.requestId },
       ],
     }),
     deleteFriend: builder.mutation<
@@ -105,6 +105,7 @@ export const friendsApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
+  useGetFriendsByUserIdQuery,
   useGetFriendsRequestsQuery,
   useResolveFriendRequestMutation,
   useDeleteFriendMutation,
