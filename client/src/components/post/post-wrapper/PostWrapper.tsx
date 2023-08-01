@@ -11,10 +11,6 @@ import PostEdit from "../sumcomponents/PostEdit";
 import PostOwner from "../sumcomponents/PostOwner";
 import Post from "./original-post/Post";
 import RePost from "./rePost/RePost";
-import {
-  useGetPostsByUserQuery,
-  useGetPostsQuery,
-} from "../../../features/apiSlice/postApiSlice/postApiSlice";
 import { useAppSelector } from "../../../hooks/reduxHooks";
 import { RootState } from "../../../redux/store";
 import { IPost, IRePost } from "../types";

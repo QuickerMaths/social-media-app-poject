@@ -16,6 +16,7 @@ const UsersList = () => {
   let content;
 
   if (isLoading) {
+    //TODO: loading handler
     content = <div>Loading...</div>;
   } else if (isError) {
     content = <div>{JSON.stringify(error)}</div>;
@@ -31,8 +32,6 @@ const UsersList = () => {
       </>
     );
   }
-
-  console.log(users);
 
   return <section className="users-list">{content}</section>;
 };

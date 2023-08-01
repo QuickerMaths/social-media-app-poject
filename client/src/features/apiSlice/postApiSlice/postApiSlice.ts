@@ -22,8 +22,8 @@ export const postApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getPosts: builder.query<EntityState<IPost | IRePost>, string>({
       query: () => "/api/posts",
-      transformResponse: (response: (IPost | IRePost)[]) => {
-        const posts: (IPost | IRePost)[] = response;
+      transformResponse: (response: IResponse<string, (IPost | IRePost)[]>) => {
+        const posts: (IPost | IRePost)[] = response.data;
         posts.forEach((post) => {
           post.comments = commentAdapter.setAll(
             commentAdapter.getInitialState(),
@@ -32,35 +32,25 @@ export const postApiSlice = apiSlice.injectEndpoints({
         });
         return postAdapter.setAll(postAdapter.getInitialState(), posts);
       },
-      transformErrorResponse: (
-        error: IResponse<number, { message: string }>
-      ) => {
-        return (error.data.message = errorMessageHandler(error.status));
+      transformErrorResponse: (error: IResponse<number, { error: string }>) => {
+        return (error.data.error = errorMessageHandler(error.status));
       },
       providesTags: (result, error, arg) => providesList(result?.ids, "Post"),
     }),
 
     getPostsByUser: builder.query<EntityState<IPost | IRePost>, string>({
       query: (userId) => `/api/posts/user/${userId}`,
-      transformResponse: (response: (IPost | IRePost)[]) => {
-        return postAdapter.setAll(postAdapter.getInitialState(), response);
+      transformResponse: (response: IResponse<string, (IPost | IRePost)[]>) => {
+        return postAdapter.setAll(postAdapter.getInitialState(), response.data);
       },
-      transformErrorResponse: (
-        error: IResponse<number, { message: string }>
-      ) => {
-        return (error.data.message = errorMessageHandler(error.status));
+      transformErrorResponse: (error: IResponse<number, { error: string }>) => {
+        return (error.data.error = errorMessageHandler(error.status));
       },
       providesTags: (result, error, arg) => providesList(result?.ids, "Post"),
     }),
 
-    createPost: builder.mutation<IPost | IRePost, IPostPick | IRePostPick>({
-      query: ({
-        postBody,
-        _id,
-        isRePost,
-        originalPost,
-        postImage,
-      }: ICreatePostParams) => ({
+    createPost: builder.mutation<IPost | IRePost, ICreatePostParams>({
+      query: ({ postBody, _id, isRePost, originalPost, postImage }) => ({
         url: `/api/${isRePost ? "repost" : "posts"}`,
         method: "POST",
         body: isRePost
@@ -75,16 +65,17 @@ export const postApiSlice = apiSlice.injectEndpoints({
               _id,
             },
       }),
-      transformErrorResponse: (
-        error: IResponse<number, { message: string }>
-      ) => {
-        return (error.data.message = errorMessageHandler(error.status));
+      transformResponse: (response: IResponse<string, IPost | IRePost>) => {
+        return response.data;
+      },
+      transformErrorResponse: (error: IResponse<number, { error: string }>) => {
+        return (error.data.error = errorMessageHandler(error.status));
       },
       invalidatesTags: invalidatesList("Post"),
     }),
 
     deletePost: builder.mutation<
-      IPost | IRePost,
+      null,
       Pick<IPost | IRePost, "_id" | "isRePost">
     >({
       query: ({ _id, isRePost }) => ({
@@ -94,20 +85,17 @@ export const postApiSlice = apiSlice.injectEndpoints({
           _id,
         },
       }),
-      //TODO: change this error handling
-      transformErrorResponse: (
-        error: IResponse<number, { message: string }>
-      ) => {
-        return (error.data.message = errorMessageHandler(error.status));
+      transformErrorResponse: (error: IResponse<number, { error: string }>) => {
+        return (error.data.error = errorMessageHandler(error.status));
       },
       invalidatesTags: (result, error, req) => [{ type: "Post", id: req._id }],
     }),
 
     updatePost: builder.mutation<
       IPost,
-      IPostPick | Omit<IRePostPick, "originalPost">
+      IPostPick | Omit<ICreatePostParams, "originalPost">
     >({
-      query: ({ postBody, _id, isRePost, postImage }: ICreatePostParams) => ({
+      query: ({ postBody, _id, isRePost, postImage }) => ({
         url: `/api/${isRePost ? "repost" : "posts"}/edit`,
         method: "PUT",
         body: isRePost
@@ -121,10 +109,11 @@ export const postApiSlice = apiSlice.injectEndpoints({
               postId: _id,
             },
       }),
-      transformErrorResponse: (
-        error: IResponse<number, { message: string }>
-      ) => {
-        return (error.data.message = errorMessageHandler(error.status));
+      transformResponse: (response: IResponse<string, IPost>) => {
+        return response.data;
+      },
+      transformErrorResponse: (error: IResponse<number, { error: string }>) => {
+        return (error.data.error = errorMessageHandler(error.status));
       },
       invalidatesTags: (result, error, req) => [{ type: "Post", id: req._id }],
     }),
@@ -159,6 +148,12 @@ export const postApiSlice = apiSlice.injectEndpoints({
         } catch {
           result.undo();
         }
+      },
+      transformResponse: (response: IResponse<string, IPost | IRePost>) => {
+        return response.data;
+      },
+      transformErrorResponse: (error: IResponse<number, { error: string }>) => {
+        return (error.data.error = errorMessageHandler(error.status));
       },
     }),
   }),
