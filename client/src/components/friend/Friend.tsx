@@ -3,6 +3,7 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
 import { EntityId, EntityState } from "@reduxjs/toolkit";
+import { skipToken } from "@reduxjs/toolkit/dist/query";
 
 //Internal dependencies
 
@@ -18,7 +19,7 @@ interface Props {
 }
 const Friend: React.FC<Props> = ({ friendId }) => {
   const { userId } = useParams();
-  const { friend } = useGetUserByIdQuery(userId as string, {
+  const { friend } = useGetUserByIdQuery(userId ?? skipToken, {
     selectFromResult: ({ data }) => ({
       friend: (data?.friends as EntityState<IUserBasicData>)?.entities[
         friendId

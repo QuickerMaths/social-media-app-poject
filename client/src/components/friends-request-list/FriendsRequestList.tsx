@@ -1,12 +1,16 @@
+// External dependencies
+
+import { EntityId } from "@reduxjs/toolkit";
+import { skipToken } from "@reduxjs/toolkit/dist/query";
+import { AiOutlineLeft } from "react-icons/ai";
+
 //Internal dependencies
 
 import FriendsRequest from "../friends-request/FriendsRequest";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
-import { AiOutlineLeft } from "react-icons/ai";
 import { closeModal } from "../../features/modalSlice/modalSlice";
 import { useGetFriendsRequestsQuery } from "../../features/apiSlice/friendsApiSlice/friendsApiSlice";
-import { EntityId } from "@reduxjs/toolkit";
 
 const FriendsRequestList = () => {
   const dispatch = useAppDispatch();
@@ -21,7 +25,7 @@ const FriendsRequestList = () => {
     isSuccess,
     isError,
     error,
-  } = useGetFriendsRequestsQuery(userId as string);
+  } = useGetFriendsRequestsQuery(userId ?? skipToken);
 
   let content;
   //TODO: add loading component and error

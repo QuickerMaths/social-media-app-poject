@@ -4,7 +4,7 @@ import { apiSlice } from "../apiSlice";
 import { invalidatesList, providesList } from "../../../hooks/reduxHooks";
 import { IPost, IRePost } from "../../../components/post/types";
 import { createEntityAdapter, EntityState } from "@reduxjs/toolkit";
-import { IPostPick, ICreatePostParams, IRePostPick, IResponse } from "../types";
+import { IPostPick, ICreatePostParams, IResponse } from "../types";
 import { errorMessageHandler } from "../../../utilities/errorMessageHandler";
 import { IComment } from "../../../components/comment/types";
 
@@ -33,7 +33,7 @@ export const postApiSlice = apiSlice.injectEndpoints({
         return postAdapter.setAll(postAdapter.getInitialState(), posts);
       },
       transformErrorResponse: (error: IResponse<number, { error: string }>) => {
-        return (error.data.error = errorMessageHandler(error.status));
+        return errorMessageHandler(error.status);
       },
       providesTags: (result, error, arg) => providesList(result?.ids, "Post"),
     }),
@@ -44,7 +44,7 @@ export const postApiSlice = apiSlice.injectEndpoints({
         return postAdapter.setAll(postAdapter.getInitialState(), response.data);
       },
       transformErrorResponse: (error: IResponse<number, { error: string }>) => {
-        return (error.data.error = errorMessageHandler(error.status));
+        return errorMessageHandler(error.status);
       },
       providesTags: (result, error, arg) => providesList(result?.ids, "Post"),
     }),
@@ -69,7 +69,7 @@ export const postApiSlice = apiSlice.injectEndpoints({
         return response.data;
       },
       transformErrorResponse: (error: IResponse<number, { error: string }>) => {
-        return (error.data.error = errorMessageHandler(error.status));
+        return errorMessageHandler(error.status);
       },
       invalidatesTags: invalidatesList("Post"),
     }),
@@ -86,7 +86,7 @@ export const postApiSlice = apiSlice.injectEndpoints({
         },
       }),
       transformErrorResponse: (error: IResponse<number, { error: string }>) => {
-        return (error.data.error = errorMessageHandler(error.status));
+        return errorMessageHandler(error.status);
       },
       invalidatesTags: (result, error, req) => [{ type: "Post", id: req._id }],
     }),
@@ -113,7 +113,7 @@ export const postApiSlice = apiSlice.injectEndpoints({
         return response.data;
       },
       transformErrorResponse: (error: IResponse<number, { error: string }>) => {
-        return (error.data.error = errorMessageHandler(error.status));
+        return errorMessageHandler(error.status);
       },
       invalidatesTags: (result, error, req) => [{ type: "Post", id: req._id }],
     }),
@@ -153,7 +153,7 @@ export const postApiSlice = apiSlice.injectEndpoints({
         return response.data;
       },
       transformErrorResponse: (error: IResponse<number, { error: string }>) => {
-        return (error.data.error = errorMessageHandler(error.status));
+        return errorMessageHandler(error.status);
       },
     }),
   }),

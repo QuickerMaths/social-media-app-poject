@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useParams } from "react-router";
+import { skipToken } from "@reduxjs/toolkit/dist/query";
 
 // Internal dependencies
 
@@ -38,7 +39,7 @@ const UserProfile = () => {
     isSuccess,
     isFetching,
     isError,
-  } = useGetUserByIdQuery(userId as string);
+  } = useGetUserByIdQuery(userId ?? skipToken);
 
   let content;
 

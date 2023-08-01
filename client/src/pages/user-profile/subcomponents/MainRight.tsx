@@ -2,6 +2,7 @@
 
 import { EntityId } from "@reduxjs/toolkit";
 import { useParams } from "react-router";
+import { skipToken } from "@reduxjs/toolkit/dist/query";
 
 // Internal dependencies
 
@@ -18,7 +19,7 @@ const MainRight = () => {
     isFetching,
     isError,
     isSuccess,
-  } = useGetPostsByUserQuery(userId as string);
+  } = useGetPostsByUserQuery(userId ?? skipToken);
 
   let content;
 

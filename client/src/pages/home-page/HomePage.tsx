@@ -15,6 +15,7 @@ const HomePage = () => {
     isFetching,
     isError,
     isSuccess,
+    error,
   } = useGetPostsQuery("");
 
   let content;
@@ -23,7 +24,7 @@ const HomePage = () => {
     //TODO: switch for loading spinner
     content = <div>Loading...</div>;
   } else if (isError) {
-    content = <div>Error</div>;
+    content = <div>{error as string}</div>;
   } else if (isSuccess) {
     content = (
       <ul className="home-page__posts-list">

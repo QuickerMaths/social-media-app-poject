@@ -2,6 +2,7 @@
 
 import React from "react";
 import { EntityId } from "@reduxjs/toolkit";
+import { skipToken } from "@reduxjs/toolkit/dist/query";
 
 // Internal dependencies
 
@@ -22,7 +23,7 @@ interface Props {
 const FriendsRequest: React.FC<Props> = ({ requestId }) => {
   const { userId } = useAppSelector((state: RootState) => state.auth);
 
-  const { request } = useGetFriendsRequestsQuery(userId as string, {
+  const { request } = useGetFriendsRequestsQuery(userId ?? skipToken, {
     selectFromResult: ({ data }) => ({
       request: data?.entities[requestId],
     }),
