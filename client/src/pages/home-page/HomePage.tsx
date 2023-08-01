@@ -29,7 +29,7 @@ const HomePage = () => {
       //TODO: get rid or the setReRender and reRender state
       <ul className="home-page__posts-list">
         {posts?.ids.map((postId: EntityId) => (
-          <PostWrapper key={postId} postId={postId} />
+          <PostWrapper key={postId} postId={postId} userId={undefined} />
         ))}
       </ul>
     );

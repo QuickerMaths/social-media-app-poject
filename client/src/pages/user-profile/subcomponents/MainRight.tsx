@@ -1,19 +1,16 @@
 // External dependencies
 
-import React, { useState } from "react";
 import { EntityId } from "@reduxjs/toolkit";
+import { useParams } from "react-router";
 
 // Internal dependencies
 
 import TextArea from "../../../components/textArea/TextArea";
 import PostWrapper from "../../../components/post/post-wrapper/PostWrapper";
 import { useGetPostsByUserQuery } from "../../../features/apiSlice/postApiSlice/postApiSlice";
-interface Props {
-  userId: string | undefined;
-}
 
-const MainRight: React.FC<Props> = ({ userId }) => {
-  const [reRender, setReRender] = useState<boolean>(false);
+const MainRight = () => {
+  const { userId } = useParams();
 
   const {
     data: posts,
@@ -35,12 +32,7 @@ const MainRight: React.FC<Props> = ({ userId }) => {
       <ul className="user-profile__posts-list">
         {posts?.ids.length > 0 ? (
           posts?.ids.map((postId: EntityId) => (
-            <PostWrapper
-              key={postId}
-              postId={postId}
-              setReRender={setReRender}
-              reRender={reRender}
-            />
+            <PostWrapper key={postId} postId={postId} userId={userId} />
           ))
         ) : (
           <p className="user-profile__no-posts-msg">No posts yet...</p>
@@ -53,7 +45,7 @@ const MainRight: React.FC<Props> = ({ userId }) => {
 
   return (
     <div className="user-profile__main-right">
-      <TextArea reRender={reRender} setReRender={setReRender} />
+      <TextArea />
       {content}
     </div>
   );

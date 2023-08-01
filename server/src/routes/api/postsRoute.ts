@@ -13,7 +13,7 @@ import { verifyJWT } from "../../middlewares/verifyJWT";
 router
   .route("/")
   .get(getPosts)
-  .post(verifyJWT, createPost)
+  .post(createPost)
   .put(likePost)
   .delete(deletePost);
 

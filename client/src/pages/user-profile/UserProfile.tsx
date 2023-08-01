@@ -97,14 +97,14 @@ const UserProfile = () => {
           />
         )}
         {isMobile && activePage === "posts" ? (
-          <MainRight userId={userId} />
+          <MainRight />
         ) : isMobile && activePage === "details" ? (
           <MainLeft user={user} />
         ) : (
           isDesktop && (
             <div className="user-profile__main">
               <MainLeft user={user} />
-              <MainRight userId={userId} />
+              <MainRight />
             </div>
           )
         )}
