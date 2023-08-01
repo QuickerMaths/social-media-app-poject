@@ -7,7 +7,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IAuthSliceState } from "./types";
 import { authApiSlice } from "../apiSlice/authApiSlice/authApiSlice";
 import { friendsApiSlice } from "../apiSlice/friendsApiSlice/friendsApiSlice";
-import { Zoom } from "react-toastify";
 
 const initialState: IAuthSliceState = {
   username: null,

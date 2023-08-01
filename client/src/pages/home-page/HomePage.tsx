@@ -26,7 +26,6 @@ const HomePage = () => {
     content = <div>Error</div>;
   } else if (isSuccess) {
     content = (
-      //TODO: get rid or the setReRender and reRender state
       <ul className="home-page__posts-list">
         {posts?.ids.map((postId: EntityId) => (
           <PostWrapper key={postId} postId={postId} userId={undefined} />

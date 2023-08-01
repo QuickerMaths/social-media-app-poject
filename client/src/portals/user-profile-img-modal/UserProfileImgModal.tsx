@@ -30,7 +30,7 @@ const UserProfileImgModal = () => {
       try {
         await uploadUserImage({
           userId: userId as string,
-          path: await useConvertToBase64(values.profilePicture),
+          path: (await useConvertToBase64(values.profilePicture)) as string,
         });
 
         dispatch(

@@ -1,11 +1,19 @@
+// External dependencies
+
 import { useFormik } from "formik";
 import { Link, useNavigate } from "react-router-dom";
+
+// Internal dependencies
+
 import InputField from "../../components/inputField/InputField";
 import registerSchema from "../../validation/registerValidation";
+import { useRegisterUserMutation } from "../../features/apiSlice/authApiSlice/authApiSlice";
+import useToastCreator from "../../hooks/useToastCreator";
 
 const Register = () => {
   const navigate = useNavigate();
-  // TODO: refactor fetch to rtkQuery and formik hooks to formik components
+  const [registerUser, { isLoading: isUpdating, isError, error }] =
+    useRegisterUserMutation();
 
   const { handleChange, handleBlur, errors, touched, values, handleSubmit } =
     useFormik({
@@ -19,26 +27,10 @@ const Register = () => {
       },
       validationSchema: registerSchema,
       onSubmit: async (values) => {
-        try {
-           await fetch(`http://localhost:5000/register`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              username: values.username,
-              email: values.email,
-              firstName: values.firstName,
-              lastName: values.lastName,
-              password: values.password,
-            }),
-          });
-
-          navigate("/register-success");
-        } catch (err: any) {
-          //TODO: refactor error handling to make it work
-          console.log(err);
-          if (err.status === 400) console.log(err.response.data);
+        await registerUser(values);
+        if (!isUpdating && !isError) {
+          navigate("/");
+          useToastCreator("Registered successful, you can login", "success");
         }
       },
     });
@@ -50,6 +42,7 @@ const Register = () => {
           Back to home page
         </Link>
         <h2 className="register__title">SignIn</h2>
+        {isError && <p>{JSON.stringify(error)}</p>}
         <form className="register__form" onSubmit={handleSubmit}>
           <InputField
             type="firstName"
@@ -117,8 +110,12 @@ const Register = () => {
             onBlur={handleBlur}
             value={values.confirmPassword}
           />
-          <button type="submit" className="register__button">
-            SignIn
+          <button
+            type="submit"
+            className="register__button"
+            disabled={isUpdating}
+          >
+            {isUpdating ? "Registering..." : "SignIn"}
           </button>
         </form>
       </div>

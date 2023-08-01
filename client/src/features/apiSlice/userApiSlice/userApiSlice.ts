@@ -25,6 +25,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         }));
       },
     }),
+
     getUserById: builder.query<IUser, string>({
       query: (userId: string) => ({
         method: "GET",
@@ -39,6 +40,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
       },
       providesTags: (result, error, id) => [{ type: "User", id }],
     }),
+
     updateUserAddress: builder.mutation<
       IResponse<string, IUser>,
       { userId: string; addressToUpdate: IUserAddress }
@@ -54,9 +56,10 @@ export const userApiSlice = apiSlice.injectEndpoints({
         { type: "User", id: req.userId },
       ],
     }),
+
     uploadUserImage: builder.mutation<
       IResponse<string, IUser>,
-      { userId: string; path: string }
+      { userId: string; path: string | null }
     >({
       query: ({ userId, path }) => {
         return {

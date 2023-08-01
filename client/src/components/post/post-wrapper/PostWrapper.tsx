@@ -31,8 +31,6 @@ const PostWrapper: React.FC<Props> = ({ postId, userId }) => {
   );
   const { modals } = useAppSelector((state: RootState) => state.modal);
 
-  //Fix this, issue is that there is no way to get result from useGetPostsByUserIdQuery and after refreshing user page (deleting cache data from useGetPostsQuery) app crashes because on user page posts data comes from useGetPostsByUserIdQuery
-
   const post = useSelectPostFromResult({
     userId,
     postId,

@@ -36,6 +36,14 @@ export type IAuthProps = {
   password: string;
 };
 
+export type IRegisterProps = {
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+};
+
 export type IRequest = IUserBasicData;
 
 export type IFriendsRequestResponse = {
