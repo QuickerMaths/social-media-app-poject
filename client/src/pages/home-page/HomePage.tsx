@@ -5,10 +5,10 @@ import { EntityId } from "@reduxjs/toolkit";
 // Internal dependencies
 
 import TextArea from "../../components/textArea/TextArea";
+import Spinner from "../../utilities/spinner/Spinner";
 import PostWrapper from "../../components/post/post-wrapper/PostWrapper";
 import QueryError from "../../utilities/error/QueryError";
 import { useGetPostsQuery } from "../../features/apiSlice/postApiSlice/postApiSlice";
-import Spinner from "../../utilities/spinner/Spinner";
 
 const HomePage = () => {
   const {

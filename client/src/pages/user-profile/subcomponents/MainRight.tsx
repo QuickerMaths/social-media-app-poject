@@ -7,6 +7,7 @@ import { skipToken } from "@reduxjs/toolkit/dist/query";
 // Internal dependencies
 
 import TextArea from "../../../components/textArea/TextArea";
+import Spinner from "../../../utilities/spinner/Spinner";
 import PostWrapper from "../../../components/post/post-wrapper/PostWrapper";
 import QueryError from "../../../utilities/error/QueryError";
 import { useGetPostsByUserQuery } from "../../../features/apiSlice/postApiSlice/postApiSlice";
@@ -27,8 +28,7 @@ const MainRight = () => {
   let content;
 
   if (isLoading || isFetching) {
-    //TODO: switch for loading spinner
-    content = <div>Loading...</div>;
+    content = <Spinner size={155} />;
   } else if (isError) {
     content = <QueryError error={error as string} refetch={refetch} />;
   } else if (isSuccess) {
