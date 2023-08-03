@@ -9,6 +9,7 @@ import { useConvertToBase64 } from "../../hooks/useConvertToBase64";
 import { useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import { useCreatePostMutation } from "../../features/apiSlice/postApiSlice/postApiSlice";
+import useToastCreator from "../../hooks/useToastCreator";
 
 const TextArea = () => {
   const { userId } = useAppSelector((state: RootState) => state.auth);
@@ -24,22 +25,19 @@ const TextArea = () => {
       await createPost({
         postBody: values.postBody,
         _id: userId as string,
-        postImage:
-          values.image && ((await useConvertToBase64(values.image)) as string),
+        postImage: values.image
+          ? ((await useConvertToBase64(values.image)) as string)
+          : null,
+        isRePost: false,
       });
-      if (!isUpdating) setFieldValue("postBody", "");
+      if (!isUpdating && !isError) setFieldValue("postBody", "");
+      if (isError) useToastCreator(error as string, "error");
     },
   });
 
   return (
     <>
       <form className="feed__form" onSubmit={handleSubmit}>
-        {isError && (
-          //TODO: upgrade loading and error states
-          <div className="feed__error-alert-wrapper">
-            <p className="feed__error-alert">{error as string}</p>
-          </div>
-        )}
         <div className="feed__main">
           <textarea
             name="postBody"

@@ -21,7 +21,7 @@ export type ICreatePostParams = {
   _id: string;
   isRePost: boolean;
   originalPost?: string;
-  postImage?: string;
+  postImage?: string | null;
 };
 
 export type IAuthResponse = {
