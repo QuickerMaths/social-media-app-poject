@@ -23,8 +23,6 @@ const PostEditModal: React.FC<Props> = ({ post }) => {
   const dispatch = useAppDispatch();
   const { modals } = useAppSelector((state: RootState) => state.modal);
 
-  //TODO: refactor to rktQuery and change rerender state
-
   if (!modals[`${postId}edit`]) return null;
   return ReactDOM.createPortal(
     <div className="post-edit-modal">
