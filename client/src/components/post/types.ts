@@ -27,7 +27,7 @@ export type IRePost = {
     username: string;
   };
   postBody: string;
-  originalPost: IPost | string;
+  originalPost: IPost;
   likedBy: string[];
   commentTotal: number;
   comments: IComment[] | EntityState<IComment>;

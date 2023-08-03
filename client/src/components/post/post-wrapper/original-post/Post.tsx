@@ -5,8 +5,8 @@ import { EntityState } from "@reduxjs/toolkit";
 
 // Internal dependencies
 
-import PostAction from "../../sumcomponents/PostAction";
-import PostComments from "../../sumcomponents/PostComments";
+import PostAction from "../../subcomponents/PostAction";
+import PostComments from "../../subcomponents/PostComments";
 import CreateRePostModal from "../../../../portals/create-repost-modal/CreateRePostModal";
 import PostDetailsModal from "../../../../portals/post-details-modal/PostDetailsModal";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/reduxHooks";

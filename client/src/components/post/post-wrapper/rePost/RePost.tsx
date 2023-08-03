@@ -6,9 +6,9 @@ import { EntityState } from "@reduxjs/toolkit";
 
 // Internal dependencies
 
-import PostOwner from "../../sumcomponents/PostOwner";
-import PostAction from "../../sumcomponents/PostAction";
-import PostComments from "../../sumcomponents/PostComments";
+import PostOwner from "../../subcomponents/PostOwner";
+import PostAction from "../../subcomponents/PostAction";
+import PostComments from "../../subcomponents/PostComments";
 import PostDetailsModal from "../../../../portals/post-details-modal/PostDetailsModal";
 import { IPost, IRePost } from "../../types";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/reduxHooks";

@@ -1,26 +1,20 @@
 // External dependencies
 
 import React from "react";
-import moment from "moment";
-import { Link, useParams } from "react-router-dom";
-import { AiOutlineDelete, AiOutlineLike } from "react-icons/ai";
+import { useParams } from "react-router-dom";
+import { AiOutlineLike } from "react-icons/ai";
 import { EntityId } from "@reduxjs/toolkit";
 
 // Internal dependencies
 
+import CommentOwner from "./subcomponents/CommentOwner";
+import CommentEdit from "./subcomponents/CommentEdit";
 import useToastCreator from "../../hooks/useToastCreator";
 import { useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import { IComment } from "./types";
-import {
-  useDeleteCommentMutation,
-  useLikeCommentMutation,
-} from "../../features/apiSlice/commentApiSlice/commentApiSlice";
+import { useLikeCommentMutation } from "../../features/apiSlice/commentApiSlice/commentApiSlice";
 import { useSelectCommentsFromResult } from "../../hooks/useSelectCommentsFromResult";
-
-// Assets
-
-import defaultImg from "../../assets/images/default_img.png";
 
 interface Props {
   commentId: EntityId;
@@ -43,57 +37,24 @@ const Comment: React.FC<Props> = ({
 
   const {
     owner,
-    createdAt,
     postId,
     _id: commentId,
     commentBody,
     likedBy,
   } = comment as IComment;
 
-  const [deleteComment, { isLoading: isDeleting, error, isError }] =
-    useDeleteCommentMutation();
-
   const [likeComment] = useLikeCommentMutation();
-
-  //TODO: split comment into EditComment and ActionComment components to make it more readable
-  //TODO: make some if(activeUserId) checks to make sure that user is logged in and prevent using as string on null
 
   return (
     <li className="comment">
       <div className="comment__top-container">
-        <Link to={`/user/${owner._id}`} className="comment__owner">
-          <img
-            width={30}
-            height={30}
-            className="comment__user-profile-img"
-            src={owner.profilePicture ? owner.profilePicture : defaultImg}
-            alt="users profile img"
-          />
-          <h2 className="comment__username">{owner.username}</h2>
-        </Link>
-        {owner._id === activeUserId ? (
-          <div className="comment__wrapper">
-            <button
-              className="comment__edit-button"
-              onClick={() => deleteComment({ _id: commentId, postId })}
-            >
-              <AiOutlineDelete className="comment__edit-icon" />
-            </button>
-            {/* 
-              TODO: make it better
-            */}
-            {isDeleting && <p>Deleting...</p>}
-            {isError && <p>{JSON.stringify(error)}</p>}
-            <p className="comment__createdAt">{moment(createdAt).fromNow()}</p>
-          </div>
-        ) : (
-          <p className="comment__createdAt">{moment(createdAt).fromNow()}</p>
-        )}
+        <CommentOwner owner={owner} />
+        <CommentEdit comment={comment as IComment} />
       </div>
       <p className="comment__body">{commentBody}</p>
       <button
         className={`comment__action-button ${
-          likedBy.includes(activeUserId as string) && "post__liked"
+          activeUserId && likedBy.includes(activeUserId) && "post__liked"
         }`}
         onClick={() => {
           activeUserId === null
@@ -110,7 +71,7 @@ const Comment: React.FC<Props> = ({
       >
         <AiOutlineLike
           className={`comment__action-icon ${
-            likedBy.includes(activeUserId as string) && "post__liked"
+            activeUserId && likedBy.includes(activeUserId) && "post__liked"
           }`}
         />
         {likedBy.length}

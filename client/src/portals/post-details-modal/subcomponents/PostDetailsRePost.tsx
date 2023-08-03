@@ -1,6 +1,11 @@
-import moment from "moment";
+// External dependencies
+
 import React from "react";
-import PostOwner from "../../../components/post/sumcomponents/PostOwner";
+import moment from "moment";
+
+// Internal dependencies
+
+import PostOwner from "../../../components/post/subcomponents/PostOwner";
 import { IRePost } from "../../../components/post/types";
 
 interface Props {
@@ -8,6 +13,7 @@ interface Props {
 }
 const PostDetailsRePost: React.FC<Props> = ({ post }) => {
   const { originalPost } = post;
+
   return (
     <>
       {originalPost === null ? (

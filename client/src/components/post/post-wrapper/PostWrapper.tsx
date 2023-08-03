@@ -7,8 +7,8 @@ import { EntityId } from "@reduxjs/toolkit";
 // Internal dependencies
 
 import PostEditModal from "../../../portals/post-edit-modal/PostEditModal";
-import PostEdit from "../sumcomponents/PostEdit";
-import PostOwner from "../sumcomponents/PostOwner";
+import PostEdit from "../subcomponents/PostEdit";
+import PostOwner from "../subcomponents/PostOwner";
 import Post from "./original-post/Post";
 import RePost from "./rePost/RePost";
 import { useAppSelector } from "../../../hooks/reduxHooks";

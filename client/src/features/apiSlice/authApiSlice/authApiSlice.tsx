@@ -4,6 +4,8 @@ import { IUser } from "../../../pages/user-profile/types";
 import { apiSlice } from "../apiSlice";
 import { IAuthProps, IAuthResponse, IRegisterProps, IResponse } from "../types";
 
+//TODO: remember to add error handling for all api calls
+
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     userAuthorization: builder.query<IResponse<string, IAuthResponse>, string>({

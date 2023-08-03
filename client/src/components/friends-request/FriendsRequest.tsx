@@ -6,7 +6,7 @@ import { skipToken } from "@reduxjs/toolkit/dist/query";
 
 // Internal dependencies
 
-import PostOwner from "../post/sumcomponents/PostOwner";
+import PostOwner from "../post/subcomponents/PostOwner";
 import { useAppSelector } from "../../hooks/reduxHooks";
 import { IUserBasicData } from "../../pages/user-profile/types";
 import { RootState } from "../../redux/store";
