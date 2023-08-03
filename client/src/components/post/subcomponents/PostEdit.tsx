@@ -36,7 +36,7 @@ const PostEdit: React.FC<Props> = ({ post }) => {
           <AiOutlineEdit className="post__edit-icon" />
         </button>
 
-        {isDeleting && !isError ? (
+        {isDeleting ? (
           <Spinner size={25} />
         ) : (
           <button

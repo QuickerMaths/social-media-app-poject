@@ -6,9 +6,9 @@ import { BiRepost } from "react-icons/bi";
 
 // Internal dependencies
 
+import useToastCreator from "../../../hooks/useToastCreator";
 import { openModal } from "../../../features/modalSlice/modalSlice";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
-import useToastCreator from "../../../hooks/useToastCreator";
 import { RootState } from "../../../redux/store";
 import { IPost, IRePost } from "../types";
 import { useLikePostMutation } from "../../../features/apiSlice/postApiSlice/postApiSlice";
@@ -18,10 +18,12 @@ interface Props {
 }
 
 const PostAction: React.FC<Props> = ({ post }) => {
-  const [likePost] = useLikePostMutation();
+  const [likePost, { isError, error }] = useLikePostMutation();
 
-  const { likedBy, _id, commentTotal, isRePost } = post;
+  if (isError) useToastCreator(error as string, "error");
+
   const dispatch = useAppDispatch();
+  const { likedBy, _id, commentTotal, isRePost } = post;
   const { userId } = useAppSelector((state: RootState) => state.auth);
 
   return (
