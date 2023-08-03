@@ -21,6 +21,7 @@ import { openModal } from "../../features/modalSlice/modalSlice";
 // Assets
 
 import defaultImg from "../../assets/images/default_img.png";
+import QueryError from "../../utilities/error/QueryError";
 
 const UserProfile = () => {
   const isMobile = useMediaQuery("(max-width: 1024px)");
@@ -39,16 +40,17 @@ const UserProfile = () => {
     isSuccess,
     isFetching,
     isError,
+    error,
+    refetch,
   } = useGetUserByIdQuery(userId ?? skipToken);
 
   let content;
 
   if (isFetching || isLoading) {
     //TODO: create loading component
-    content = <div>Loading...</div>;
+    content = <p>Loading. ..</p>;
   } else if (isError) {
-    //TODO: handle error properly
-    content = <div>Error</div>;
+    content = <QueryError error={error as string} refetch={refetch} />;
   } else if (isSuccess) {
     content = (
       <>

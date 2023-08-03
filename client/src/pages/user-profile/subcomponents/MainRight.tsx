@@ -8,6 +8,7 @@ import { skipToken } from "@reduxjs/toolkit/dist/query";
 
 import TextArea from "../../../components/textArea/TextArea";
 import PostWrapper from "../../../components/post/post-wrapper/PostWrapper";
+import QueryError from "../../../utilities/error/QueryError";
 import { useGetPostsByUserQuery } from "../../../features/apiSlice/postApiSlice/postApiSlice";
 
 const MainRight = () => {
@@ -19,6 +20,8 @@ const MainRight = () => {
     isFetching,
     isError,
     isSuccess,
+    error,
+    refetch,
   } = useGetPostsByUserQuery(userId ?? skipToken);
 
   let content;
@@ -27,7 +30,7 @@ const MainRight = () => {
     //TODO: switch for loading spinner
     content = <div>Loading...</div>;
   } else if (isError) {
-    content = <div>Error</div>;
+    content = <QueryError error={error as string} refetch={refetch} />;
   } else if (isSuccess) {
     content = (
       <ul className="user-profile__posts-list">

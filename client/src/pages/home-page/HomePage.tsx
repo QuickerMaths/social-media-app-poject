@@ -6,6 +6,7 @@ import { EntityId } from "@reduxjs/toolkit";
 
 import TextArea from "../../components/textArea/TextArea";
 import PostWrapper from "../../components/post/post-wrapper/PostWrapper";
+import QueryError from "../../utilities/error/QueryError";
 import { useGetPostsQuery } from "../../features/apiSlice/postApiSlice/postApiSlice";
 
 const HomePage = () => {
@@ -16,6 +17,7 @@ const HomePage = () => {
     isError,
     isSuccess,
     error,
+    refetch,
   } = useGetPostsQuery("");
 
   let content;
@@ -24,7 +26,7 @@ const HomePage = () => {
     //TODO: switch for loading spinner
     content = <div>Loading...</div>;
   } else if (isError) {
-    content = <div>{error as string}</div>;
+    content = <QueryError error={error as string} refetch={refetch} />;
   } else if (isSuccess) {
     content = (
       <ul className="home-page__posts-list">

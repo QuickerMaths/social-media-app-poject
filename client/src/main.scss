@@ -3,7 +3,6 @@
 @import "scss/global";
 @import "scss/vars";
 @import "scss/mixins";
-@import "scss/errors";
 
 //Components
 @import "components/header/header";
@@ -38,3 +37,6 @@
 @import "portals/post-edit-modal/post-edit-modal";
 @import "portals/post-details-modal/post-details-modal";
 @import "portals/create-repost-modal/create-repost-modal";
+
+//Utils
+@import "utilities/error/error";

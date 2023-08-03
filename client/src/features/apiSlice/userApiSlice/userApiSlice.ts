@@ -1,13 +1,15 @@
 // External dependencies
 
-import { createEntityAdapter } from "@reduxjs/toolkit";
+import { createEntityAdapter, SerializedError } from "@reduxjs/toolkit";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
 
 // Internal dependencies
 
 import { IUserAddress } from "../../../components/user-details/types";
+import { errorTransformer } from "../../../hooks/reduxHooks";
 import { IUser, IUserBasicData } from "../../../pages/user-profile/types";
 import { apiSlice } from "../apiSlice";
-import { IResponse } from "../types";
+import { IErrorResponse, IResponse } from "../types";
 
 const friendsAdapter = createEntityAdapter<IUserBasicData>({
   selectId: (friend) => friend._id,
@@ -24,6 +26,9 @@ export const userApiSlice = apiSlice.injectEndpoints({
           profilePicture: user.profilePicture,
         }));
       },
+      transformErrorResponse: (
+        error: FetchBaseQueryError | IErrorResponse | SerializedError
+      ) => errorTransformer(error),
     }),
 
     getUserById: builder.query<IUser, string>({
@@ -38,6 +43,9 @@ export const userApiSlice = apiSlice.injectEndpoints({
         );
         return response.data;
       },
+      transformErrorResponse: (
+        error: FetchBaseQueryError | IErrorResponse | SerializedError
+      ) => errorTransformer(error),
       providesTags: (result, error, id) => [{ type: "User", id }],
     }),
 
@@ -52,6 +60,9 @@ export const userApiSlice = apiSlice.injectEndpoints({
           body: { userId, addressToUpdate },
         };
       },
+      transformErrorResponse: (
+        error: FetchBaseQueryError | IErrorResponse | SerializedError
+      ) => errorTransformer(error),
       invalidatesTags: (result, error, req) => [
         { type: "User", id: req.userId },
       ],
@@ -68,6 +79,9 @@ export const userApiSlice = apiSlice.injectEndpoints({
           body: { userId, path },
         };
       },
+      transformErrorResponse: (
+        error: FetchBaseQueryError | IErrorResponse | SerializedError
+      ) => errorTransformer(error),
       invalidatesTags: (result, error, req) => [
         { type: "User", id: req.userId },
       ],

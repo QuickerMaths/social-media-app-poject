@@ -1,0 +1,25 @@
+.error {
+  @include container-box-shadow;
+  @include container-padding-sm;
+  @include container-queries;
+  @include flex-column;
+  gap: 20px;
+  margin: 20px;
+
+  .error__title {
+    font-size: 1.5rem;
+  }
+
+  .error__message {
+    color: red;
+  }
+
+  .error__message,
+  .error__title {
+    text-align: center;
+  }
+
+  .error__reset-button {
+    @include button-primary;
+  }
+}

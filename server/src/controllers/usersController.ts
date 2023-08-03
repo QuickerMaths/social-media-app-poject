@@ -12,7 +12,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
 
   if (!users)
     return res
-      .status(204)
+      .status(404)
       .json({ status: "FAILED", data: { error: "No users found" } });
 
   res.status(200).json({ status: "OK", data: users });
@@ -49,7 +49,7 @@ export const getUserById = async (req: Request, res: Response) => {
 
   if (!user)
     return res
-      .status(204)
+      .status(404)
       .json({ status: "FAILED", data: { error: "No user with matching id" } });
 
   res.status(200).json({ status: "OK", data: user });

@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import { closeModal } from "../../features/modalSlice/modalSlice";
 import { useGetFriendsRequestsQuery } from "../../features/apiSlice/friendsApiSlice/friendsApiSlice";
+import QueryError from "../../utilities/error/QueryError";
 
 const FriendsRequestList = () => {
   const dispatch = useAppDispatch();
@@ -25,6 +26,7 @@ const FriendsRequestList = () => {
     isSuccess,
     isError,
     error,
+    refetch,
   } = useGetFriendsRequestsQuery(userId ?? skipToken);
 
   let content;
@@ -33,7 +35,7 @@ const FriendsRequestList = () => {
   if (isLoading || isFetching) {
     content = <div>Loading...</div>;
   } else if (isError) {
-    content = <div>{JSON.stringify(error)}</div>;
+    content = <QueryError error={error as string} refetch={refetch} />;
   } else if (isSuccess) {
     content = (
       <ul className="friends-request-list__list">

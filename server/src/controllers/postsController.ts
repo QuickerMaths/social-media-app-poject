@@ -56,15 +56,11 @@ export const getPosts = async (req: Request, res: Response) => {
     },
   ]);
 
-  // return res
-  //   .status(404)
-  //   .json({ status: "FAILED", data: { error: "No posts found" } });
-
   const allPosts = [...posts, ...rePosts];
 
   if (!allPosts)
     return res
-      .status(204)
+      .status(404)
       .json({ status: "FAILED", data: { error: "No posts found" } });
 
   res.status(200).json({ status: "OK", data: allPosts });
@@ -212,7 +208,6 @@ export const getPostsByUser = async (req: Request, res: Response) => {
     },
   ]);
 
-  //TODO: sort posts
   const allPosts = [...posts, ...rePosts];
 
   if (!allPosts)

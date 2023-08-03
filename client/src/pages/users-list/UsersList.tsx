@@ -3,14 +3,16 @@
 import User from "../../components/user/User";
 import { useGetAllUsersQuery } from "../../features/apiSlice/userApiSlice/userApiSlice";
 import { IUserBasicData } from "../../pages/user-profile/types";
+import QueryError from "../../utilities/error/QueryError";
 
 const UsersList = () => {
   const {
     data: users,
     isLoading,
+    isSuccess,
     isError,
     error,
-    isSuccess,
+    refetch,
   } = useGetAllUsersQuery();
 
   let content;
@@ -19,7 +21,7 @@ const UsersList = () => {
     //TODO: loading handler
     content = <div>Loading...</div>;
   } else if (isError) {
-    content = <div>{JSON.stringify(error)}</div>;
+    content = <QueryError error={error as string} refetch={refetch} />;
   } else if (isSuccess) {
     content = (
       <>

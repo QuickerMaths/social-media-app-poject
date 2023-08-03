@@ -103,6 +103,14 @@
   }
 }
 
+@mixin container-padding-sm {
+  padding: 5px 10px;
+
+  @media (min-width: 768px) {
+    padding: 10px 40px;
+  }
+}
+
 @mixin container-queries {
   max-width: 350px;
   width: 90%;
