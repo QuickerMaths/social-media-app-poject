@@ -11,6 +11,7 @@ import {
 
 import { apiSlice } from "../apiSlice";
 import {
+  applyOptimisticPostUpdate,
   errorTransformer,
   invalidatesList,
   providesList,
@@ -151,24 +152,25 @@ export const postApiSlice = apiSlice.injectEndpoints({
           userId,
         },
       }),
-      async onQueryStarted({ _id, userId }, { dispatch, queryFulfilled }) {
-        const result = dispatch(
+      onQueryStarted({ _id, userId }, { dispatch, queryFulfilled }) {
+        const resultGetPosts = dispatch(
           postApiSlice.util.updateQueryData("getPosts", "", (draft) => {
-            const post = draft.entities[_id];
-            if (post) {
-              if (post.likedBy.includes(userId)) {
-                post.likedBy = post.likedBy.filter((id) => id !== userId);
-              } else {
-                post.likedBy.push(userId);
-              }
-            }
+            applyOptimisticPostUpdate({ draft, postId: _id, userId });
           })
         );
-        try {
-          await queryFulfilled;
-        } catch {
-          result.undo();
-        }
+        const resultGetPostsByUser = dispatch(
+          postApiSlice.util.updateQueryData(
+            "getPostsByUser",
+            userId,
+            (draft) => {
+              applyOptimisticPostUpdate({ draft, postId: _id, userId });
+            }
+          )
+        );
+        Promise.all([
+          queryFulfilled.catch(resultGetPosts.undo),
+          queryFulfilled.catch(resultGetPostsByUser.undo),
+        ]);
       },
       transformResponse: (response: IResponse<string, IPost | IRePost>) => {
         return response.data;

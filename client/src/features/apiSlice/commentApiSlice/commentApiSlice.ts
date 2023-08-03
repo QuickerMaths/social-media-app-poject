@@ -5,6 +5,7 @@ import { IComment } from "../../../components/comment/types";
 import { IRePostOrPost } from "../types";
 import { postApiSlice } from "../postApiSlice/postApiSlice";
 import { EntityState } from "@reduxjs/toolkit";
+import { applyOptimisticCommentUpdate } from "../../../hooks/reduxHooks";
 
 export const commentApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -42,29 +43,35 @@ export const commentApiSlice = apiSlice.injectEndpoints({
         method: "PUT",
         body: { commentId: _id, userId },
       }),
-      async onQueryStarted(
-        { _id, postId, userId },
-        { dispatch, queryFulfilled }
-      ) {
-        const result = dispatch(
+      onQueryStarted({ _id, postId, userId }, { dispatch, queryFulfilled }) {
+        const resultGetPosts = dispatch(
           postApiSlice.util.updateQueryData("getPosts", "", (draft) => {
-            const comment = (
-              draft.entities[postId]?.comments as EntityState<IComment>
-            ).entities[_id];
-            if (comment) {
-              if (comment.likedBy.includes(userId)) {
-                comment.likedBy = comment.likedBy.filter((id) => id !== userId);
-              } else {
-                comment.likedBy.push(userId);
-              }
-            }
+            applyOptimisticCommentUpdate({
+              draft,
+              postId,
+              commentId: _id,
+              userId,
+            });
           })
         );
-        try {
-          await queryFulfilled;
-        } catch {
-          result.undo();
-        }
+        const resultGetPostsByUser = dispatch(
+          postApiSlice.util.updateQueryData(
+            "getPostsByUser",
+            userId,
+            (draft) => {
+              applyOptimisticCommentUpdate({
+                draft,
+                postId,
+                commentId: _id,
+                userId,
+              });
+            }
+          )
+        );
+        Promise.all([
+          queryFulfilled.catch(resultGetPosts.undo),
+          queryFulfilled.catch(resultGetPostsByUser.undo),
+        ]);
       },
     }),
   }),
