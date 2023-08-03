@@ -1,13 +1,23 @@
-import { createEntityAdapter, EntityState } from "@reduxjs/toolkit";
-import { invalidatesList, providesList } from "../../../hooks/reduxHooks";
+// External dependencies
+
+import {
+  createEntityAdapter,
+  EntityState,
+  SerializedError,
+} from "@reduxjs/toolkit";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
+
+// Internal dependencies
+
+import { errorTransformer, providesList } from "../../../hooks/reduxHooks";
 import { IUser, IUserBasicData } from "../../../pages/user-profile/types";
-import { errorMessageHandler } from "../../../utilities/errorMessageHandler";
 import { apiSlice } from "../apiSlice";
 import {
   IFriendsRequestResponse,
   IResponse,
   IRequest,
   IResolveFriendRequestProps,
+  IErrorResponse,
 } from "../types";
 
 const requestAdapter = createEntityAdapter<IRequest>({
@@ -32,7 +42,11 @@ export const friendsApiSlice = apiSlice.injectEndpoints({
           response.data.friends as IUserBasicData[]
         );
       },
+      transformErrorResponse: (
+        error: FetchBaseQueryError | IErrorResponse | SerializedError
+      ) => errorTransformer(error),
     }),
+
     getFriendsRequests: builder.query<EntityState<IRequest>, string>({
       query: (userId: string) => ({
         url: `/api/friends/requests/${userId}`,
@@ -46,12 +60,13 @@ export const friendsApiSlice = apiSlice.injectEndpoints({
           response.data.friendsRequests
         );
       },
-      //   transformErrorResponse: (error: IResponse<number, { error: string }>) => {
-      //     return (error.data.error = errorMessageHandler(error.status));
-      //   },
+      transformErrorResponse: (
+        error: FetchBaseQueryError | IErrorResponse | SerializedError
+      ) => errorTransformer(error),
       providesTags: (result, error, arg) =>
         providesList(result?.ids, "Request"),
     }),
+
     resolveFriendRequest: builder.mutation<IUser, IResolveFriendRequestProps>({
       query: ({ action, userId, userToAddId }) => ({
         url: `/api/friends/${action}`,
@@ -65,12 +80,16 @@ export const friendsApiSlice = apiSlice.injectEndpoints({
       transformResponse: (response: IResponse<string, IUser>) => {
         return response.data;
       },
+      transformErrorResponse: (
+        error: FetchBaseQueryError | IErrorResponse | SerializedError
+      ) => errorTransformer(error),
       invalidatesTags: (result, error, req) => [
         { type: "User", id: req.userId },
         { type: "User", id: req.userToAddId },
         { type: "Request", id: req.requestId },
       ],
     }),
+
     deleteFriend: builder.mutation<
       string,
       { userId: string; friendToDeleteId: string }
@@ -80,11 +99,15 @@ export const friendsApiSlice = apiSlice.injectEndpoints({
         method: "DELETE",
         body: { userId, friendToDeleteId },
       }),
+      transformErrorResponse: (
+        error: FetchBaseQueryError | IErrorResponse | SerializedError
+      ) => errorTransformer(error),
       invalidatesTags: (result, error, req) => [
         { type: "User", id: req.userId },
         { type: "User", id: req.friendToDeleteId },
       ],
     }),
+
     sendFriendRequest: builder.mutation<
       IUser,
       { userId: string; userToAddId: string }
@@ -97,6 +120,9 @@ export const friendsApiSlice = apiSlice.injectEndpoints({
       transformResponse: (response: IResponse<string, IUser>) => {
         return response.data;
       },
+      transformErrorResponse: (
+        error: FetchBaseQueryError | IErrorResponse | SerializedError
+      ) => errorTransformer(error),
       invalidatesTags: (result, error, req) => [
         { type: "User", id: req.userToAddId },
       ],
