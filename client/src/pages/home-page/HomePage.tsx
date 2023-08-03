@@ -8,6 +8,7 @@ import TextArea from "../../components/textArea/TextArea";
 import PostWrapper from "../../components/post/post-wrapper/PostWrapper";
 import QueryError from "../../utilities/error/QueryError";
 import { useGetPostsQuery } from "../../features/apiSlice/postApiSlice/postApiSlice";
+import Spinner from "../../utilities/spinner/Spinner";
 
 const HomePage = () => {
   const {
@@ -23,8 +24,7 @@ const HomePage = () => {
   let content;
 
   if (isLoading || isFetching) {
-    //TODO: switch for loading spinner
-    content = <div>Loading...</div>;
+    content = <Spinner size={155} />;
   } else if (isError) {
     content = <QueryError error={error as string} refetch={refetch} />;
   } else if (isSuccess) {
