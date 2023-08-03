@@ -10,6 +10,8 @@ import { openModal } from "../../../features/modalSlice/modalSlice";
 import { useAppDispatch } from "../../../hooks/reduxHooks";
 import { IPost, IRePost } from "../types";
 import { useDeletePostMutation } from "../../../features/apiSlice/postApiSlice/postApiSlice";
+import useToastCreator from "../../../hooks/useToastCreator";
+import Spinner from "../../../utilities/spinner/Spinner";
 
 interface Props {
   post: IPost | IRePost;
@@ -18,6 +20,8 @@ interface Props {
 const PostEdit: React.FC<Props> = ({ post }) => {
   const [deletePost, { isLoading: isDeleting, isError, error }] =
     useDeletePostMutation();
+
+  if (isError) useToastCreator(error as string, "error");
 
   const dispatch = useAppDispatch();
   const { createdAt, _id: postId } = post;
@@ -31,24 +35,26 @@ const PostEdit: React.FC<Props> = ({ post }) => {
         >
           <AiOutlineEdit className="post__edit-icon" />
         </button>
-        <button
-          className="post__edit-button"
-          onClick={() =>
-            deletePost({
-              _id: postId,
-              isRePost: post.isRePost,
-            })
-          }
-          disabled={isDeleting}
-        >
-          <AiOutlineDelete className="post__edit-icon" />
-        </button>
+
+        {isDeleting && !isError ? (
+          <Spinner size={25} />
+        ) : (
+          <button
+            className="post__edit-button"
+            onClick={() => {
+              deletePost({
+                _id: postId,
+                isRePost: post.isRePost,
+              });
+            }}
+            disabled={isDeleting}
+          >
+            <AiOutlineDelete className="post__edit-icon" />
+          </button>
+        )}
         <p className="post__createdAt">{moment(createdAt).fromNow()}</p>
-        {isDeleting && <p>Deleting...</p>}
-        {isError && <div>{JSON.stringify(error)}</div>}
       </div>
     </>
-    //TODO: add spinner for deleting
   );
 };
 

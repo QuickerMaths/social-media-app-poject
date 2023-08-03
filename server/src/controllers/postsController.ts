@@ -152,7 +152,9 @@ export const deletePost = async (req: Request, res: Response) => {
 
   await Comment.deleteMany({ _id: { $in: post.comments } });
 
-  res.status(204).json({ status: "OK", data: deletedPost });
+  setTimeout(() => {
+    res.status(204).json({ status: "OK", data: deletedPost });
+  }, 1000);
 };
 
 export const getPostsByUser = async (req: Request, res: Response) => {
