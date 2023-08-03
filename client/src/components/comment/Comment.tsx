@@ -1,27 +1,26 @@
 // External dependencies
 
 import React from "react";
-import axios from "axios";
 import moment from "moment";
+import { Link, useParams } from "react-router-dom";
 import { AiOutlineDelete, AiOutlineLike } from "react-icons/ai";
+import { EntityId } from "@reduxjs/toolkit";
 
 // Internal dependencies
 
 import useToastCreator from "../../hooks/useToastCreator";
-import { Link } from "react-router-dom";
 import { useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
-
-// Assets
-
-import defaultImg from "../../assets/images/default_img.png";
+import { IComment } from "./types";
 import {
   useDeleteCommentMutation,
   useLikeCommentMutation,
 } from "../../features/apiSlice/commentApiSlice/commentApiSlice";
-import { EntityId, EntityState } from "@reduxjs/toolkit";
-import { useGetPostsQuery } from "../../features/apiSlice/postApiSlice/postApiSlice";
-import { IComment } from "./types";
+import { useSelectCommentsFromResult } from "../../hooks/useSelectCommentsFromResult";
+
+// Assets
+
+import defaultImg from "../../assets/images/default_img.png";
 
 interface Props {
   commentId: EntityId;
@@ -31,11 +30,15 @@ const Comment: React.FC<Props> = ({
   commentId: commentEntityId,
   postId: postEntityId,
 }) => {
-  const { comment } = useGetPostsQuery("", {
-    selectFromResult: ({ data }) => ({
-      comment: (data?.entities[postEntityId]?.comments as EntityState<IComment>)
-        ?.entities[commentEntityId],
-    }),
+  const { userId: activeUserId } = useAppSelector(
+    (state: RootState) => state.auth
+  );
+  const { userId } = useParams();
+
+  const comment = useSelectCommentsFromResult({
+    userId,
+    postEntityId,
+    commentEntityId,
   });
 
   const {
@@ -51,7 +54,9 @@ const Comment: React.FC<Props> = ({
     useDeleteCommentMutation();
 
   const [likeComment] = useLikeCommentMutation();
-  const { userId } = useAppSelector((state: RootState) => state.auth);
+
+  //TODO: split comment into EditComment and ActionComment components to make it more readable
+  //TODO: make some if(activeUserId) checks to make sure that user is logged in and prevent using as string on null
 
   return (
     <li className="comment">
@@ -66,7 +71,7 @@ const Comment: React.FC<Props> = ({
           />
           <h2 className="comment__username">{owner.username}</h2>
         </Link>
-        {owner._id === userId ? (
+        {owner._id === activeUserId ? (
           <div className="comment__wrapper">
             <button
               className="comment__edit-button"
@@ -88,10 +93,10 @@ const Comment: React.FC<Props> = ({
       <p className="comment__body">{commentBody}</p>
       <button
         className={`comment__action-button ${
-          likedBy.includes(userId as string) && "post__liked"
+          likedBy.includes(activeUserId as string) && "post__liked"
         }`}
         onClick={() => {
-          userId === null
+          activeUserId === null
             ? useToastCreator(
                 "You have to be logged in to like this post",
                 "error"
@@ -99,13 +104,13 @@ const Comment: React.FC<Props> = ({
             : likeComment({
                 _id: commentId,
                 postId,
-                userId: userId as string,
+                userId: activeUserId,
               });
         }}
       >
         <AiOutlineLike
           className={`comment__action-icon ${
-            likedBy.includes(userId as string) && "post__liked"
+            likedBy.includes(activeUserId as string) && "post__liked"
           }`}
         />
         {likedBy.length}

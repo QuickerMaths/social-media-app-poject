@@ -24,9 +24,8 @@ const TextArea = () => {
       await createPost({
         postBody: values.postBody,
         _id: userId as string,
-        postImage: values.image
-          ? ((await useConvertToBase64(values.image)) as string)
-          : null,
+        postImage:
+          values.image && ((await useConvertToBase64(values.image)) as string),
       });
       if (!isUpdating) setFieldValue("postBody", "");
     },
@@ -38,7 +37,7 @@ const TextArea = () => {
         {isError && (
           //TODO: upgrade loading and error states
           <div className="feed__error-alert-wrapper">
-            <p className="feed__error-alert">{JSON.stringify(error)}</p>
+            <p className="feed__error-alert">{error as string}</p>
           </div>
         )}
         <div className="feed__main">

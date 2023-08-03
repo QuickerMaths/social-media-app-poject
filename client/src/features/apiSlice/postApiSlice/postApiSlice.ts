@@ -1,11 +1,27 @@
+// External dependencies
+
+import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
+import {
+  createEntityAdapter,
+  EntityState,
+  SerializedError,
+} from "@reduxjs/toolkit";
+
 // Internal dependencies
 
 import { apiSlice } from "../apiSlice";
-import { invalidatesList, providesList } from "../../../hooks/reduxHooks";
+import {
+  errorTransformer,
+  invalidatesList,
+  providesList,
+} from "../../../hooks/reduxHooks";
 import { IPost, IRePost } from "../../../components/post/types";
-import { createEntityAdapter, EntityState } from "@reduxjs/toolkit";
-import { IPostPick, ICreatePostParams, IResponse } from "../types";
-import { errorMessageHandler } from "../../../utilities/errorMessageHandler";
+import {
+  IPostPick,
+  ICreatePostParams,
+  IResponse,
+  IErrorResponse,
+} from "../types";
 import { IComment } from "../../../components/comment/types";
 
 const postAdapter = createEntityAdapter<IPost | IRePost>({
@@ -23,29 +39,34 @@ export const postApiSlice = apiSlice.injectEndpoints({
     getPosts: builder.query<EntityState<IPost | IRePost>, string>({
       query: () => "/api/posts",
       transformResponse: (response: IResponse<string, (IPost | IRePost)[]>) => {
-        const posts: (IPost | IRePost)[] = response.data;
-        posts.forEach((post) => {
+        response.data.forEach((post) => {
           post.comments = commentAdapter.setAll(
             commentAdapter.getInitialState(),
             post.comments as IComment[]
           );
         });
-        return postAdapter.setAll(postAdapter.getInitialState(), posts);
+        return postAdapter.setAll(postAdapter.getInitialState(), response.data);
       },
-      transformErrorResponse: (error: IResponse<number, { error: string }>) => {
-        return errorMessageHandler(error.status);
-      },
+      transformErrorResponse: (
+        error: FetchBaseQueryError | IErrorResponse | SerializedError
+      ) => errorTransformer(error),
       providesTags: (result, error, arg) => providesList(result?.ids, "Post"),
     }),
 
     getPostsByUser: builder.query<EntityState<IPost | IRePost>, string>({
       query: (userId) => `/api/posts/user/${userId}`,
       transformResponse: (response: IResponse<string, (IPost | IRePost)[]>) => {
+        response.data.forEach((post) => {
+          post.comments = commentAdapter.setAll(
+            commentAdapter.getInitialState(),
+            post.comments as IComment[]
+          );
+        });
         return postAdapter.setAll(postAdapter.getInitialState(), response.data);
       },
-      transformErrorResponse: (error: IResponse<number, { error: string }>) => {
-        return errorMessageHandler(error.status);
-      },
+      transformErrorResponse: (
+        error: FetchBaseQueryError | IErrorResponse | SerializedError
+      ) => errorTransformer(error),
       providesTags: (result, error, arg) => providesList(result?.ids, "Post"),
     }),
 
@@ -68,9 +89,9 @@ export const postApiSlice = apiSlice.injectEndpoints({
       transformResponse: (response: IResponse<string, IPost | IRePost>) => {
         return response.data;
       },
-      transformErrorResponse: (error: IResponse<number, { error: string }>) => {
-        return errorMessageHandler(error.status);
-      },
+      transformErrorResponse: (
+        error: FetchBaseQueryError | IErrorResponse | SerializedError
+      ) => errorTransformer(error),
       invalidatesTags: invalidatesList("Post"),
     }),
 
@@ -85,9 +106,9 @@ export const postApiSlice = apiSlice.injectEndpoints({
           _id,
         },
       }),
-      transformErrorResponse: (error: IResponse<number, { error: string }>) => {
-        return errorMessageHandler(error.status);
-      },
+      transformErrorResponse: (
+        error: FetchBaseQueryError | IErrorResponse | SerializedError
+      ) => errorTransformer(error),
       invalidatesTags: (result, error, req) => [{ type: "Post", id: req._id }],
     }),
 
@@ -112,9 +133,9 @@ export const postApiSlice = apiSlice.injectEndpoints({
       transformResponse: (response: IResponse<string, IPost>) => {
         return response.data;
       },
-      transformErrorResponse: (error: IResponse<number, { error: string }>) => {
-        return errorMessageHandler(error.status);
-      },
+      transformErrorResponse: (
+        error: FetchBaseQueryError | IErrorResponse | SerializedError
+      ) => errorTransformer(error),
       invalidatesTags: (result, error, req) => [{ type: "Post", id: req._id }],
     }),
 
@@ -152,9 +173,9 @@ export const postApiSlice = apiSlice.injectEndpoints({
       transformResponse: (response: IResponse<string, IPost | IRePost>) => {
         return response.data;
       },
-      transformErrorResponse: (error: IResponse<number, { error: string }>) => {
-        return errorMessageHandler(error.status);
-      },
+      transformErrorResponse: (
+        error: FetchBaseQueryError | IErrorResponse | SerializedError
+      ) => errorTransformer(error),
     }),
   }),
 });

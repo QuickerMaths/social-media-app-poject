@@ -57,3 +57,17 @@ export type IResolveFriendRequestProps = {
   action: "accept" | "reject";
   requestId: string;
 };
+
+export type IErrorResponse = {
+  status: string;
+  data: {
+    data: {
+      error: string;
+      status: string;
+    };
+  };
+};
+
+export function isIErrorResponse(obj: any): obj is IErrorResponse {
+  return "status" in obj && "data" in obj;
+}

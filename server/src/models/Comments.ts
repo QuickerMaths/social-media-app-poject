@@ -22,7 +22,7 @@ const commentSchema = new Schema(
     },
     belongsToRePost: {
       type: Boolean,
-      required: [true, "BelongsToRePost body is required"],
+      required: [true, "BelongsToRePost is required"],
     },
   },
   { timestamps: true }

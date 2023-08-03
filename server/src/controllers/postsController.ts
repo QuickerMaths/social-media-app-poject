@@ -56,6 +56,10 @@ export const getPosts = async (req: Request, res: Response) => {
     },
   ]);
 
+  // return res
+  //   .status(404)
+  //   .json({ status: "FAILED", data: { error: "No posts found" } });
+
   const allPosts = [...posts, ...rePosts];
 
   if (!allPosts)

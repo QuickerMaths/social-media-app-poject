@@ -1,4 +1,9 @@
+// External dependencies
+
 import { EntityId } from "@reduxjs/toolkit";
+
+// Internal dependencies
+
 import { IPost, IRePost } from "../components/post/types";
 import {
   useGetPostsByUserQuery,
