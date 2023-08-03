@@ -1,11 +1,18 @@
+// External dependencies
+
+import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
+import { SerializedError } from "@reduxjs/toolkit";
+
 // Internal dependencies
 
 import { apiSlice } from "../apiSlice";
 import { IComment } from "../../../components/comment/types";
-import { IRePostOrPost } from "../types";
+import { IErrorResponse, IRePostOrPost } from "../types";
 import { postApiSlice } from "../postApiSlice/postApiSlice";
-import { EntityState } from "@reduxjs/toolkit";
-import { applyOptimisticCommentUpdate } from "../../../hooks/reduxHooks";
+import {
+  applyOptimisticCommentUpdate,
+  errorTransformer,
+} from "../../../hooks/reduxHooks";
 
 export const commentApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -18,6 +25,9 @@ export const commentApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: { commentBody, userId, postId: _id, isRePost },
       }),
+      transformErrorResponse: (
+        error: FetchBaseQueryError | IErrorResponse | SerializedError
+      ) => errorTransformer(error),
       invalidatesTags: (result, error, arg) => [{ type: "Post", id: arg._id }],
     }),
 
@@ -28,6 +38,9 @@ export const commentApiSlice = apiSlice.injectEndpoints({
           method: "DELETE",
           body: { commentId: _id, postId },
         }),
+        transformErrorResponse: (
+          error: FetchBaseQueryError | IErrorResponse | SerializedError
+        ) => errorTransformer(error),
         invalidatesTags: (result, error, arg) => [
           { type: "Post", id: arg.postId },
         ],
@@ -73,6 +86,9 @@ export const commentApiSlice = apiSlice.injectEndpoints({
           queryFulfilled.catch(resultGetPostsByUser.undo),
         ]);
       },
+      transformErrorResponse: (
+        error: FetchBaseQueryError | IErrorResponse | SerializedError
+      ) => errorTransformer(error),
     }),
   }),
 });
