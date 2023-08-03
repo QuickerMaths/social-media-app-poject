@@ -30,7 +30,6 @@ const friendsAdapter = createEntityAdapter<IUserBasicData>({
 
 export const friendsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    // TODO: use this to display all users friends in special portal or component
     getFriendsByUserId: builder.query<EntityState<IUserBasicData>, string>({
       query: (userId: string) => ({
         url: `/api/friends/${userId}`,

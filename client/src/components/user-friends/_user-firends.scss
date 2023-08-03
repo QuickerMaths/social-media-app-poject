@@ -15,4 +15,8 @@
     flex-wrap: nowrap;
     gap: 10px;
   }
+
+  &__see-more {
+    @include button-reset;
+  }
 }

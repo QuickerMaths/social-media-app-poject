@@ -1,6 +1,6 @@
 // External dependencies
 
-import React, { useState } from "react";
+import React from "react";
 import moment from "moment";
 
 // Internal dependencies
@@ -19,6 +19,7 @@ const UserDetails: React.FC<Props> = ({ user }) => {
   const dispatch = useAppDispatch();
   const { createdAt, address, _id: userId } = user;
 
+  const { modals } = useAppSelector((state: RootState) => state.modal);
   const { userId: activeUserId } = useAppSelector(
     (state: RootState) => state.auth
   );
@@ -53,7 +54,7 @@ const UserDetails: React.FC<Props> = ({ user }) => {
           </button>
         )}
       </section>
-      <UserDetailsModal />
+      {modals["userDetailsModal"] && <UserDetailsModal />}
     </>
   );
 };

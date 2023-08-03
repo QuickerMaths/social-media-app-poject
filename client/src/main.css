@@ -635,6 +635,13 @@ input {
   flex-wrap: nowrap;
   gap: 10px;
 }
+.user-friends__see-more {
+  font-family: "Oswald", sans-serif;
+  font-size: 1.2rem;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
 
 .user-profile-mobile-navigation {
   padding: 10px 20px;
@@ -1950,6 +1957,68 @@ input {
     filter: brightness(120%);
     color: black;
   }
+}
+
+.user-friends-modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+}
+.user-friends-modal__overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(66, 68, 90, 0.3);
+}
+.user-friends-modal__content {
+  padding: 10px 20px;
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: 0px 8px 22px -14px rgb(66, 68, 90);
+  z-index: 101;
+  position: relative;
+  min-width: 50%;
+}
+@media (min-width: 768px) {
+  .user-friends-modal__content {
+    padding: 20px 40px;
+  }
+}
+.user-friends-modal__close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+  font-family: "Oswald", sans-serif;
+  font-size: 1.2rem;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+.user-friends-modal__close-icon {
+  width: 30px;
+  height: 30px;
+}
+.user-friends-modal__title {
+  margin-bottom: 10px;
+  letter-spacing: 2px;
+  text-decoration: underline;
+  font-size: 2.5rem;
+  text-align: center;
+}
+.user-friends-modal__list-modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 20px;
+  flex-wrap: nowrap;
+  gap: 10px;
 }
 
 .error {

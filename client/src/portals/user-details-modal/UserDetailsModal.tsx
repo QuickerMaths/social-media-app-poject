@@ -1,8 +1,11 @@
-import React from "react";
+// External dependencies
+
 import ReactDOM from "react-dom";
-import axios from "axios";
 import { useFormik } from "formik";
 import { AiOutlineClose } from "react-icons/ai";
+
+// Internal dependencies
+
 import InputField from "../../components/inputField/InputField";
 import addressValidation from "../../validation/addressValidation";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
@@ -18,7 +21,6 @@ const UserDetailsModal = () => {
   const [updateUserAddress, { isLoading: isUpdating }] =
     useUpdateUserAddressMutation();
 
-  //TODO: refactor to formik components
   const { handleChange, handleBlur, errors, touched, values, handleSubmit } =
     useFormik({
       initialValues: {
@@ -34,6 +36,7 @@ const UserDetailsModal = () => {
             userId: userId as string,
             addressToUpdate: values,
           });
+          // TODO: error handling
 
           dispatch(closeModal("userDetailsModal"));
         } catch (err: any) {
