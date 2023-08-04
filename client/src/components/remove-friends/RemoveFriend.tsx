@@ -18,12 +18,12 @@ const RemoveFriend = () => {
   const [deleteFriend, { isLoading: isDeleting, isError, error }] =
     useDeleteFriendMutation();
 
-  if (isError) useToastCreator("error", error as string);
+  if (isError) useToastCreator(error as string, "error");
 
   let content;
 
   if (isDeleting) {
-    content = <Spinner size={25} />;
+    content = <Spinner size={50} />;
   } else {
     content = (
       <button
@@ -34,6 +34,7 @@ const RemoveFriend = () => {
           })
         }
         className="send-friend-request__button"
+        disabled={isDeleting}
       >
         <AiOutlineUserDelete className="send-friend-request__icon" />
       </button>

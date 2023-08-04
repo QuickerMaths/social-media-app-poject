@@ -18,7 +18,7 @@ const SendFriendRequest = () => {
   const [sendFriendRequest, { isLoading: isSending, isError, error }] =
     useSendFriendRequestMutation();
 
-  if (isError) useToastCreator("error", error as string);
+  if (isError) useToastCreator(error as string, "error");
 
   let content;
 
@@ -34,6 +34,7 @@ const SendFriendRequest = () => {
           })
         }
         className="send-friend-request__button"
+        disabled={isSending}
       >
         <AiOutlineUserAdd className="send-friend-request__icon" />
       </button>

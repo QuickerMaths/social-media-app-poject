@@ -783,6 +783,10 @@ input {
 }
 
 .request {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   padding: 10px;
   min-width: 100%;
   background-color: white;

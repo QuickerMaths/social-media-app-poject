@@ -1,4 +1,5 @@
 .request {
+  @include flex-column;
   padding: 10px;
   min-width: 100%;
   background-color: white;
