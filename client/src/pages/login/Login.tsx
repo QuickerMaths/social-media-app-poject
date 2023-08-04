@@ -9,11 +9,15 @@ import InputField from "../../components/inputField/InputField";
 import useToastCreator from "../../hooks/useToastCreator";
 import loginSchema from "../../validation/loginValidation";
 import { useLoginUserMutation } from "../../features/apiSlice/authApiSlice/authApiSlice";
+import Spinner from "../../utilities/spinner/Spinner";
 
 const Login = () => {
   const navigate = useNavigate();
 
-  const [loginUser, { isLoading: isLoginIn }] = useLoginUserMutation();
+  const [loginUser, { isLoading: isLoginIn, isError, error }] =
+    useLoginUserMutation();
+
+  if (isError) useToastCreator(error as string, "error");
 
   const { handleChange, handleBlur, errors, touched, values, handleSubmit } =
     useFormik({
@@ -27,15 +31,19 @@ const Login = () => {
           username: values.username,
           password: values.password,
         });
-        if (!isLoginIn) {
+        if (!isLoginIn && !isError) {
           useToastCreator("You have been logged in successfully", "success");
           navigate("/");
         }
       },
     });
 
-  return (
-    <section className="login">
+  let content;
+
+  if (isLoginIn) {
+    content = <Spinner size={125} />;
+  } else {
+    content = (
       <div className="login__container">
         <Link to="/" className="login__home-page-button">
           Back to home page
@@ -64,7 +72,7 @@ const Login = () => {
             onBlur={handleBlur}
             value={values.password}
           />
-          <button type="submit" className="login__button">
+          <button type="submit" className="login__button" disabled={isLoginIn}>
             Login
           </button>
         </form>
@@ -76,8 +84,10 @@ const Login = () => {
           Sign in
         </Link>
       </div>
-    </section>
-  );
+    );
+  }
+
+  return <section className="login">{content}</section>;
 };
 
 export default Login;

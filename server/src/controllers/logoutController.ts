@@ -12,7 +12,7 @@ export const handleLogout = async (req: any, res: any) => {
     res.clearCookie(`${process.env.FRONTEND_DOMAIN}`, {
       httpOnly: true,
     });
-    return res.status(204).json({ status: "OK", data: { user } });
+    return res.status(204).json({ status: "OK", data: user });
   }
 
   await user.updateOne({ refreshToken: "" }).exec();
@@ -20,5 +20,5 @@ export const handleLogout = async (req: any, res: any) => {
   res.clearCookie(`${process.env.FRONTEND_DOMAIN}`, {
     httpOnly: true,
   });
-  return res.status(204).json({ status: "OK", data: { user } });
+  return res.status(204).json({ status: "OK", data: user });
 };

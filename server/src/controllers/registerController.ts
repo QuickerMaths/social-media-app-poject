@@ -9,20 +9,19 @@ export const handleRegister = async (req: Request, res: Response) => {
   if (!username || !email || !firstName || !lastName || !password)
     return res.status(400).json({
       status: "FAILED",
-      data: "Missing information. Username, email, first name, last name and password required",
+      data: {
+        error:
+          "Missing information. Username, email, first name, last name and password required",
+      },
     });
 
-  try {
-    const hashedPwd = await bcrypt.hash(password, 10);
-    const newUser = await User.create({
-      username,
-      email,
-      firstName,
-      lastName,
-      password: hashedPwd,
-    });
-    res.status(201).json({ status: "OK", data: newUser });
-  } catch (error) {
-    return errorHandler(error, res);
-  }
+  const hashedPwd = await bcrypt.hash(password, 10);
+  const newUser = await User.create({
+    username,
+    email,
+    firstName,
+    lastName,
+    password: hashedPwd,
+  });
+  res.status(201).json({ status: "OK", data: newUser });
 };

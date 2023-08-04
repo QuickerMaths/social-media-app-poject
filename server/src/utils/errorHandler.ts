@@ -1,6 +1,8 @@
 import { MongoError } from "mongodb";
 import { Error } from "mongoose";
 
+//TODO: what is this? why is it here?
+
 const errorHandler = (error: any, res: any) => {
   if (error instanceof Error.ValidationError) {
     const messages = Object.values(error.errors).map((err) => err.message);

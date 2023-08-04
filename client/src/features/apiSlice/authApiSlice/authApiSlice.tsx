@@ -1,10 +1,17 @@
 // Internal dependencies
 
+import { SerializedError } from "@reduxjs/toolkit";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
+import { errorTransformer } from "../../../hooks/reduxHooks";
 import { IUser } from "../../../pages/user-profile/types";
 import { apiSlice } from "../apiSlice";
-import { IAuthProps, IAuthResponse, IRegisterProps, IResponse } from "../types";
-
-//TODO: remember to add error handling for all api calls
+import {
+  IAuthProps,
+  IAuthResponse,
+  IErrorResponse,
+  IRegisterProps,
+  IResponse,
+} from "../types";
 
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -21,6 +28,9 @@ export const authApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         credentials: "include",
       }),
+      transformErrorResponse: (
+        error: FetchBaseQueryError | IErrorResponse | SerializedError
+      ) => errorTransformer(error),
     }),
 
     loginUser: builder.mutation<IResponse<string, IAuthResponse>, IAuthProps>({
@@ -33,6 +43,9 @@ export const authApiSlice = apiSlice.injectEndpoints({
           password,
         },
       }),
+      transformErrorResponse: (
+        error: FetchBaseQueryError | IErrorResponse | SerializedError
+      ) => errorTransformer(error),
     }),
 
     registerUser: builder.mutation<IResponse<string, IUser>, IRegisterProps>({
@@ -47,6 +60,9 @@ export const authApiSlice = apiSlice.injectEndpoints({
           password,
         },
       }),
+      transformErrorResponse: (
+        error: FetchBaseQueryError | IErrorResponse | SerializedError
+      ) => errorTransformer(error),
     }),
   }),
 });
