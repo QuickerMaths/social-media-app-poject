@@ -3,12 +3,33 @@ import { useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import defaultImg from "../../assets/images/default_img.png";
 import { useLogoutUserMutation } from "../../features/apiSlice/authApiSlice/authApiSlice";
+import useToastCreator from "../../hooks/useToastCreator";
+import Spinner from "../../utilities/spinner/Spinner";
 
 const Header = () => {
   const { username, userId, userImg } = useAppSelector(
     (state: RootState) => state.auth
   );
-  const [logoutUser] = useLogoutUserMutation();
+  const [logoutUser, { isLoading: isLoggingOut, isError, error }] =
+    useLogoutUserMutation();
+
+  if (isError) useToastCreator(error as string, "error");
+
+  let content;
+
+  if (isLoggingOut) {
+    content = <Spinner size={50} />;
+  } else {
+    content = (
+      <button
+        className="header__login-button"
+        onClick={() => logoutUser("")}
+        disabled={isLoggingOut}
+      >
+        LogOut
+      </button>
+    );
+  }
 
   return (
     <header className="header">
@@ -33,13 +54,8 @@ const Header = () => {
               <button className="header__user-profile">
                 Welcome, {username}
               </button>
+              {content}
             </Link>
-            <button
-              className="header__login-button"
-              onClick={() => logoutUser("")}
-            >
-              LogOut
-            </button>
           </div>
         )}
       </div>
