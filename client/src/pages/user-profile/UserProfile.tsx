@@ -13,6 +13,7 @@ import MainRight from "./subcomponents/MainRight";
 import ProfileImage from "./subcomponents/ProfileImage";
 import UserProfileImgModal from "../../portals/user-profile-img-modal/UserProfileImgModal";
 import FriendAction from "./subcomponents/FriendAction";
+import QueryError from "../../utilities/error/QueryError";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import { useGetUserByIdQuery } from "../../features/apiSlice/userApiSlice/userApiSlice";
@@ -21,7 +22,7 @@ import { openModal } from "../../features/modalSlice/modalSlice";
 // Assets
 
 import defaultImg from "../../assets/images/default_img.png";
-import QueryError from "../../utilities/error/QueryError";
+import Spinner from "../../utilities/spinner/Spinner";
 
 const UserProfile = () => {
   const isMobile = useMediaQuery("(max-width: 1024px)");
@@ -47,8 +48,7 @@ const UserProfile = () => {
   let content;
 
   if (isFetching || isLoading) {
-    //TODO: create loading component
-    content = <p>Loading. ..</p>;
+    content = <Spinner size={125} />;
   } else if (isError) {
     content = <QueryError error={error as string} refetch={refetch} />;
   } else if (isSuccess) {
