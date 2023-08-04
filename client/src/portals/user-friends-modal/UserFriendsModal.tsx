@@ -9,11 +9,12 @@ import { useParams } from "react-router";
 // Internal dependencies
 
 import Friend from "../../components/friend/Friend";
+import QueryError from "../../utilities/error/QueryError";
+import Spinner from "../../utilities/spinner/Spinner";
 import { useGetFriendsByUserIdQuery } from "../../features/apiSlice/friendsApiSlice/friendsApiSlice";
 import { closeModal } from "../../features/modalSlice/modalSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
-import QueryError from "../../utilities/error/QueryError";
 import { IUserBasicData } from "../../pages/user-profile/types";
 
 //TODO: created modal wrapper to avoid code duplication
@@ -37,10 +38,8 @@ const UserFriendsModal = () => {
 
   let content;
 
-  //TODO: loading
-
   if (isLoading || isFetching) {
-    content = <p>Loading...</p>;
+    content = <Spinner size={125} />;
   } else if (isError) {
     content = <QueryError error={error as string} refetch={refetch} />;
   } else if (isSuccess) {
