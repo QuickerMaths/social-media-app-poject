@@ -20,8 +20,10 @@ const ProfileImage = () => {
   const dispatch = useAppDispatch();
   const { userImg, userId } = useAppSelector((state: RootState) => state.auth);
 
-  const [uploadUserImage, { isLoading: isUploading, isError, error }] =
-    useUploadUserImageMutation();
+  const [
+    uploadUserImage,
+    { isLoading: isUploading, isError, error, isSuccess },
+  ] = useUploadUserImageMutation();
 
   if (isError) useToastCreator(error as string, "error");
 
@@ -35,12 +37,13 @@ const ProfileImage = () => {
         userId: userId as string,
         path: await useConvertToBase64(values.profilePicture),
       });
-
-      dispatch(
-        setProfileImage(
-          (await useConvertToBase64(values.profilePicture)) as string
-        )
-      );
+      if (isSuccess) {
+        dispatch(
+          setProfileImage(
+            (await useConvertToBase64(values.profilePicture)) as string
+          )
+        );
+      }
     },
   });
 

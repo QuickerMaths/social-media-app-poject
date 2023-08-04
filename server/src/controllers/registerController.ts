@@ -14,14 +14,19 @@ export const handleRegister = async (req: Request, res: Response) => {
           "Missing information. Username, email, first name, last name and password required",
       },
     });
+  let newUser;
+  try {
+    const hashedPwd = await bcrypt.hash(password, 10);
+    newUser = await User.create({
+      username,
+      email,
+      firstName,
+      lastName,
+      password: hashedPwd,
+    });
+  } catch (error) {
+    return errorHandler(error, res);
+  }
 
-  const hashedPwd = await bcrypt.hash(password, 10);
-  const newUser = await User.create({
-    username,
-    email,
-    firstName,
-    lastName,
-    password: hashedPwd,
-  });
   res.status(201).json({ status: "OK", data: newUser });
 };

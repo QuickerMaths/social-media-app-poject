@@ -5,18 +5,20 @@ import { Error } from "mongoose";
 
 const errorHandler = (error: any, res: any) => {
   if (error instanceof Error.ValidationError) {
-    const messages = Object.values(error.errors).map((err) => err.message);
+    // const messages = Object.values(error.errors).map((err) => err.message);
     return res.status(400).json({
-      message: "Could not create user due to some invalid fields!",
-      error: messages,
+      status: "FAILED",
+      data: { error: "Could not create user due to some invalid fields!" },
     });
   } else if ((error as MongoError).code === 11000) {
     return res.status(400).json({
-      message: `A user with this unique key already exists!`,
-      error,
+      status: "FAILED",
+      data: { error: "A user with this unique key already exists!" },
     });
   }
-  return res.status(500).json({ message: "Internal server error", error });
+  return res
+    .status(500)
+    .json({ status: "FAILED", data: { error: "Internal server error" } });
 };
 
 export default errorHandler;

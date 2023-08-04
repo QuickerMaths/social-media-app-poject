@@ -20,8 +20,10 @@ const UserDetailsModal = () => {
   const { userId } = useAppSelector((state: RootState) => state.auth);
   const { modals } = useAppSelector((state: RootState) => state.modal);
 
-  const [updateUserAddress, { isLoading: isUpdating, isError, error }] =
-    useUpdateUserAddressMutation();
+  const [
+    updateUserAddress,
+    { isLoading: isUpdating, isError, error, isSuccess },
+  ] = useUpdateUserAddressMutation();
 
   if (isError) useToastCreator(error as string, "error");
 
@@ -40,7 +42,7 @@ const UserDetailsModal = () => {
           addressToUpdate: values,
         });
 
-        if (!isUpdating && !isError) dispatch(closeModal("userDetailsModal"));
+        if (isSuccess) dispatch(closeModal("userDetailsModal"));
       },
     });
 

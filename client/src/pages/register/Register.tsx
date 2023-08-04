@@ -13,10 +13,8 @@ import Spinner from "../../utilities/spinner/Spinner";
 
 const Register = () => {
   const navigate = useNavigate();
-  const [registerUser, { isLoading: isUpdating, isError, error }] =
+  const [registerUser, { isLoading: isUpdating, isError, error, isSuccess }] =
     useRegisterUserMutation();
-
-  if (isError) useToastCreator(error as string, "error");
 
   const { handleChange, handleBlur, errors, touched, values, handleSubmit } =
     useFormik({
@@ -31,10 +29,11 @@ const Register = () => {
       validationSchema: registerSchema,
       onSubmit: async (values) => {
         await registerUser(values);
-        if (!isUpdating && !isError) {
+        if (isSuccess) {
           navigate("/");
           useToastCreator("Registered successful, you can login", "success");
         }
+        if (isError) useToastCreator(error as string, "error");
       },
     });
 
@@ -48,6 +47,7 @@ const Register = () => {
         <Link to="/" className="register__home-page-button">
           Back to home page
         </Link>
+
         <h2 className="register__title">SignIn</h2>
         <form className="register__form" onSubmit={handleSubmit}>
           <InputField

@@ -14,7 +14,7 @@ import Spinner from "../../utilities/spinner/Spinner";
 const Login = () => {
   const navigate = useNavigate();
 
-  const [loginUser, { isLoading: isLoginIn, isError, error }] =
+  const [loginUser, { isLoading: isLoginIn, isError, error, isSuccess }] =
     useLoginUserMutation();
 
   if (isError) useToastCreator(error as string, "error");
@@ -31,7 +31,7 @@ const Login = () => {
           username: values.username,
           password: values.password,
         });
-        if (!isLoginIn && !isError) {
+        if (isSuccess) {
           useToastCreator("You have been logged in successfully", "success");
           navigate("/");
         }

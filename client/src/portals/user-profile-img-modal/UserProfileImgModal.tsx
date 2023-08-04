@@ -19,8 +19,10 @@ const UserProfileImgModal = () => {
   const { modals } = useAppSelector((state: RootState) => state.modal);
   const { userId } = useAppSelector((state: RootState) => state.auth);
 
-  const [uploadUserImage, { isLoading: isUploading, isError, error }] =
-    useUploadUserImageMutation();
+  const [
+    uploadUserImage,
+    { isLoading: isUploading, isError, error, isSuccess },
+  ] = useUploadUserImageMutation();
 
   if (isError) useToastCreator(error as string, "error");
 
@@ -36,7 +38,7 @@ const UserProfileImgModal = () => {
         path: (await useConvertToBase64(values.profilePicture)) as string,
       });
 
-      if (!isUploading && !isError) {
+      if (isSuccess) {
         dispatch(
           setProfileImage(
             (await useConvertToBase64(values.profilePicture)) as string
@@ -53,7 +55,7 @@ const UserProfileImgModal = () => {
       path: null,
     });
 
-    if (!isUploading && !isError) {
+    if (isSuccess) {
       dispatch(setProfileImage(null));
       dispatch(closeModal("profileImgModal"));
     }
