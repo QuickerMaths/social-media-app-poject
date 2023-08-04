@@ -89,11 +89,6 @@ export const createPost = async (req: Request, res: Response) => {
 export const likePost = async (req: Request, res: Response) => {
   const { postId, userId } = req.body;
 
-  return res.status(400).json({
-    status: "FAILED",
-    data: { error: "Post id and user id are required" },
-  });
-
   if (!postId || !userId)
     return res.status(400).json({
       status: "FAILED",
@@ -102,18 +97,18 @@ export const likePost = async (req: Request, res: Response) => {
 
   const post = await Post.findOne({ _id: postId });
 
-  // if (!post)
-  //   return res
-  //     .status(404)
-  //     .json({ status: "FAILED", data: { error: "No post with matching id" } });
+  if (!post)
+    return res
+      .status(404)
+      .json({ status: "FAILED", data: { error: "No post with matching id" } });
 
-  // if (post.likedBy.includes(userId)) {
-  //   await post.updateOne({ $pull: { likedBy: userId } }).exec();
-  // } else {
-  //   await post.updateOne({ $push: { likedBy: userId } }).exec();
-  // }
+  if (post.likedBy.includes(userId)) {
+    await post.updateOne({ $pull: { likedBy: userId } }).exec();
+  } else {
+    await post.updateOne({ $push: { likedBy: userId } }).exec();
+  }
 
-  // return res.status(201).json({ status: "OK", data: post });
+  return res.status(201).json({ status: "OK", data: post });
 };
 
 export const updatePost = async (req: Request, res: Response) => {

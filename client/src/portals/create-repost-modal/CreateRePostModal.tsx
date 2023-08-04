@@ -2,7 +2,6 @@
 
 import React from "react";
 import ReactDOM from "react-dom";
-import axios from "axios";
 import { useFormik } from "formik";
 import { AiOutlineClose } from "react-icons/ai";
 
@@ -13,6 +12,8 @@ import { closeModal } from "../../features/modalSlice/modalSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import { useCreatePostMutation } from "../../features/apiSlice/postApiSlice/postApiSlice";
+import Spinner from "../../utilities/spinner/Spinner";
+import useToastCreator from "../../hooks/useToastCreator";
 
 interface Props {
   post: IPost;
@@ -21,6 +22,8 @@ interface Props {
 const CreateRePostModal: React.FC<Props> = ({ post }) => {
   const [createPost, { isLoading: isUpdating, error, isError }] =
     useCreatePostMutation();
+
+  if (isError) useToastCreator(error as string, "error");
 
   const dispatch = useAppDispatch();
   const { _id: postId } = post;
@@ -42,13 +45,12 @@ const CreateRePostModal: React.FC<Props> = ({ post }) => {
     },
   });
 
-  if (!modals[`${postId}repost`]) return null;
-  return ReactDOM.createPortal(
-    <div className="create-repost-modal">
-      <div
-        className="create-repost-modal__overlay"
-        onClick={() => dispatch(closeModal(`${postId}repost`))}
-      ></div>
+  let content;
+
+  if (isUpdating) {
+    content = <Spinner size={125} />;
+  } else {
+    content = (
       <div className="create-repost-modal__content">
         <button
           className="create-repost-modal__close"
@@ -57,11 +59,6 @@ const CreateRePostModal: React.FC<Props> = ({ post }) => {
           <AiOutlineClose className="create-repost-modal__close-icon" />
         </button>
         <h2 className="create-repost-modal__title">RePost</h2>
-        {/* 
-          TODO: make it prettier
-        */}
-        {isError && <p>{JSON.stringify(error)}</p>}
-        {isUpdating && <p>Updating...</p>}
         <form onSubmit={handleSubmit} className="create-repost-modal__form">
           <textarea
             rows={5}
@@ -77,6 +74,17 @@ const CreateRePostModal: React.FC<Props> = ({ post }) => {
           </button>
         </form>
       </div>
+    );
+  }
+
+  if (!modals[`${postId}repost`]) return null;
+  return ReactDOM.createPortal(
+    <div className="create-repost-modal">
+      <div
+        className="create-repost-modal__overlay"
+        onClick={() => dispatch(closeModal(`${postId}repost`))}
+      ></div>
+      {content}
     </div>,
     document.body
   );
