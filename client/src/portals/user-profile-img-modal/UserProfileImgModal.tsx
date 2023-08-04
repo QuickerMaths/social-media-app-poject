@@ -5,6 +5,8 @@ import { useFormik } from "formik";
 // Internal dependencies
 
 import profileImageValidation from "../../validation/profileImageValidation";
+import useToastCreator from "../../hooks/useToastCreator";
+import Spinner from "../../utilities/spinner/Spinner";
 import { useConvertToBase64 } from "../../hooks/useConvertToBase64";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
@@ -17,8 +19,10 @@ const UserProfileImgModal = () => {
   const { modals } = useAppSelector((state: RootState) => state.modal);
   const { userId } = useAppSelector((state: RootState) => state.auth);
 
-  const [uploadUserImage, { isLoading: isUploading }] =
+  const [uploadUserImage, { isLoading: isUploading, isError, error }] =
     useUploadUserImageMutation();
+
+  if (isError) useToastCreator(error as string, "error");
 
   const { handleSubmit, setFieldValue, errors, touched } = useFormik({
     initialValues: {
@@ -27,45 +31,40 @@ const UserProfileImgModal = () => {
     //TODO: add validation
     // validationSchema: profileImageValidation,
     onSubmit: async (values) => {
-      try {
-        await uploadUserImage({
-          userId: userId as string,
-          path: (await useConvertToBase64(values.profilePicture)) as string,
-        });
+      await uploadUserImage({
+        userId: userId as string,
+        path: (await useConvertToBase64(values.profilePicture)) as string,
+      });
 
+      if (!isUploading && !isError) {
         dispatch(
           setProfileImage(
             (await useConvertToBase64(values.profilePicture)) as string
           )
         );
         dispatch(closeModal("profileImgModal"));
-      } catch (err: any) {
-        // TODO: add error handling for this (display 413 err message 'payload too large')
-        console.log(err);
       }
     },
   });
 
   const handleImgDelete = async () => {
-    try {
-      await uploadUserImage({
-        userId: userId as string,
-        path: null,
-      });
+    await uploadUserImage({
+      userId: userId as string,
+      path: null,
+    });
+
+    if (!isUploading && !isError) {
       dispatch(setProfileImage(null));
       dispatch(closeModal("profileImgModal"));
-    } catch (err: any) {
-      console.log(err);
     }
   };
 
-  if (!modals["profileImgModal"]) return null;
-  return ReactDOM.createPortal(
-    <div className="user-profile-img-modal">
-      <div
-        className="user-profile-img-modal__overlay"
-        onClick={() => dispatch(closeModal("profileImgModal"))}
-      ></div>
+  let content;
+
+  if (isUploading) {
+    content = <Spinner size={125} />;
+  } else {
+    content = (
       <div className="user-profile-img-modal__content">
         <ul className="user-profile-img-modal__list">
           <li className="user-profile-img-modal__item">
@@ -110,6 +109,17 @@ const UserProfileImgModal = () => {
           </li>
         </ul>
       </div>
+    );
+  }
+
+  if (!modals["profileImgModal"]) return null;
+  return ReactDOM.createPortal(
+    <div className="user-profile-img-modal">
+      <div
+        className="user-profile-img-modal__overlay"
+        onClick={() => dispatch(closeModal("profileImgModal"))}
+      ></div>
+      {content}
     </div>,
     document.body
   );
