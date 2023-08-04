@@ -139,7 +139,8 @@ export const postApiSlice = apiSlice.injectEndpoints({
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
-      invalidatesTags: (result, error, req) => [{ type: "Post", id: req._id }],
+      invalidatesTags: (result, error, req) =>
+        error ? [] : [{ type: "Post", id: req._id }],
     }),
 
     likePost: builder.mutation<

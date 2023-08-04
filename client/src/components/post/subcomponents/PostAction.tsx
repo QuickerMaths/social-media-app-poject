@@ -20,54 +20,55 @@ interface Props {
 const PostAction: React.FC<Props> = ({ post }) => {
   const [likePost, { isError, error }] = useLikePostMutation();
 
-  if (isError) useToastCreator(error as string, "error");
-
   const dispatch = useAppDispatch();
   const { likedBy, _id, commentTotal, isRePost } = post;
   const { userId } = useAppSelector((state: RootState) => state.auth);
 
   return (
-    <div className="post__bottom-container">
-      <button
-        className={`post__action-button ${
-          likedBy.includes(userId as string) && "post__liked"
-        }`}
-        onClick={() => {
-          userId === null
-            ? useToastCreator(
-                "You have to be logged in to like this post",
-                "error"
-              )
-            : likePost({ _id, userId, isRePost });
-        }}
-      >
-        <AiOutlineLike
-          className={`post__action-icon ${
+    <>
+      <div className="post__bottom-container">
+        <button
+          className={`post__action-button ${
             likedBy.includes(userId as string) && "post__liked"
           }`}
-        />
-        {likedBy.length}
-      </button>
-      <button
-        className="post__action-button"
-        onClick={() => dispatch(openModal(`${_id}details`))}
-      >
-        <AiOutlineComment className="post__action-icon" /> {commentTotal}
-      </button>
-      {!isRePost && (
-        <button
-          className="post__action-button"
           onClick={() => {
             userId === null
-              ? useToastCreator("You have to be logged in to repost", "error")
-              : dispatch(openModal(`${_id}repost`));
+              ? useToastCreator(
+                  "You have to be logged in to like this post",
+                  "error"
+                )
+              : likePost({ _id, userId, isRePost });
+            if (isError) useToastCreator(error as string, "error");
           }}
         >
-          <BiRepost className="post__action-icon" />
-          {(post as IPost).rePostsCount}
+          <AiOutlineLike
+            className={`post__action-icon ${
+              likedBy.includes(userId as string) && "post__liked"
+            }`}
+          />
+          {likedBy.length}
         </button>
-      )}
-    </div>
+        <button
+          className="post__action-button"
+          onClick={() => dispatch(openModal(`${_id}details`))}
+        >
+          <AiOutlineComment className="post__action-icon" /> {commentTotal}
+        </button>
+        {!isRePost && (
+          <button
+            className="post__action-button"
+            onClick={() => {
+              userId === null
+                ? useToastCreator("You have to be logged in to repost", "error")
+                : dispatch(openModal(`${_id}repost`));
+            }}
+          >
+            <BiRepost className="post__action-icon" />
+            {(post as IPost).rePostsCount}
+          </button>
+        )}
+      </div>
+    </>
   );
 };
 
