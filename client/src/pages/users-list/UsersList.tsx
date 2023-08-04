@@ -1,14 +1,16 @@
 // External dependencies
 
 import User from "../../components/user/User";
+import QueryError from "../../utilities/error/QueryError";
+import Spinner from "../../utilities/spinner/Spinner";
 import { useGetAllUsersQuery } from "../../features/apiSlice/userApiSlice/userApiSlice";
 import { IUserBasicData } from "../../pages/user-profile/types";
-import QueryError from "../../utilities/error/QueryError";
 
 const UsersList = () => {
   const {
     data: users,
     isLoading,
+    isFetching,
     isSuccess,
     isError,
     error,
@@ -17,9 +19,8 @@ const UsersList = () => {
 
   let content;
 
-  if (isLoading) {
-    //TODO: loading handler
-    content = <div>Loading...</div>;
+  if (isLoading || isFetching) {
+    content = <Spinner size={125} />;
   } else if (isError) {
     content = <QueryError error={error as string} refetch={refetch} />;
   } else if (isSuccess) {
