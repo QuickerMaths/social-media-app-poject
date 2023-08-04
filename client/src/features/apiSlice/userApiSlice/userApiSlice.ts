@@ -63,9 +63,8 @@ export const userApiSlice = apiSlice.injectEndpoints({
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
-      invalidatesTags: (result, error, req) => [
-        { type: "User", id: req.userId },
-      ],
+      invalidatesTags: (result, error, req) =>
+        error ? [] : [{ type: "User", id: req.userId }],
     }),
 
     uploadUserImage: builder.mutation<
@@ -82,9 +81,8 @@ export const userApiSlice = apiSlice.injectEndpoints({
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
-      invalidatesTags: (result, error, req) => [
-        { type: "User", id: req.userId },
-      ],
+      invalidatesTags: (result, error, req) =>
+        error ? [] : [{ type: "User", id: req.userId }],
     }),
   }),
 });
