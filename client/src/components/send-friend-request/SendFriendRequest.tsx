@@ -5,6 +5,8 @@ import { AiOutlineUserAdd } from "react-icons/ai";
 
 // Internal dependencies
 
+import useToastCreator from "../../hooks/useToastCreator";
+import Spinner from "../../utilities/spinner/Spinner";
 import { useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import { useSendFriendRequestMutation } from "../../features/apiSlice/friendsApiSlice/friendsApiSlice";
@@ -13,10 +15,17 @@ const SendFriendRequest = () => {
   const { userId } = useAppSelector((state: RootState) => state.auth);
   const { userId: userToAddId } = useParams();
 
-  const [sendFriendRequest] = useSendFriendRequestMutation();
+  const [sendFriendRequest, { isLoading: isSending, isError, error }] =
+    useSendFriendRequestMutation();
 
-  return (
-    <section className="send-friend-request">
+  if (isError) useToastCreator("error", error as string);
+
+  let content;
+
+  if (isSending) {
+    content = <Spinner size={50} />;
+  } else {
+    content = (
       <button
         onClick={() =>
           sendFriendRequest({
@@ -28,8 +37,10 @@ const SendFriendRequest = () => {
       >
         <AiOutlineUserAdd className="send-friend-request__icon" />
       </button>
-    </section>
-  );
+    );
+  }
+
+  return <section className="send-friend-request">{content}</section>;
 };
 
 export default SendFriendRequest;

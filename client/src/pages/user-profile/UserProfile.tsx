@@ -14,6 +14,7 @@ import ProfileImage from "./subcomponents/ProfileImage";
 import UserProfileImgModal from "../../portals/user-profile-img-modal/UserProfileImgModal";
 import FriendAction from "./subcomponents/FriendAction";
 import QueryError from "../../utilities/error/QueryError";
+import Spinner from "../../utilities/spinner/Spinner";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import { useGetUserByIdQuery } from "../../features/apiSlice/userApiSlice/userApiSlice";
@@ -22,7 +23,6 @@ import { openModal } from "../../features/modalSlice/modalSlice";
 // Assets
 
 import defaultImg from "../../assets/images/default_img.png";
-import Spinner from "../../utilities/spinner/Spinner";
 
 const UserProfile = () => {
   const isMobile = useMediaQuery("(max-width: 1024px)");
