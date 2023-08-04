@@ -7,13 +7,16 @@ import { Link, useNavigate } from "react-router-dom";
 
 import InputField from "../../components/inputField/InputField";
 import registerSchema from "../../validation/registerValidation";
-import { useRegisterUserMutation } from "../../features/apiSlice/authApiSlice/authApiSlice";
 import useToastCreator from "../../hooks/useToastCreator";
+import { useRegisterUserMutation } from "../../features/apiSlice/authApiSlice/authApiSlice";
+import Spinner from "../../utilities/spinner/Spinner";
 
 const Register = () => {
   const navigate = useNavigate();
   const [registerUser, { isLoading: isUpdating, isError, error }] =
     useRegisterUserMutation();
+
+  if (isError) useToastCreator(error as string, "error");
 
   const { handleChange, handleBlur, errors, touched, values, handleSubmit } =
     useFormik({
@@ -35,14 +38,17 @@ const Register = () => {
       },
     });
 
-  return (
-    <section className="register">
+  let content;
+
+  if (isUpdating) {
+    content = <Spinner size={125} />;
+  } else {
+    content = (
       <div className="register__container">
         <Link to="/" className="register__home-page-button">
           Back to home page
         </Link>
         <h2 className="register__title">SignIn</h2>
-        {isError && <p>{JSON.stringify(error)}</p>}
         <form className="register__form" onSubmit={handleSubmit}>
           <InputField
             type="firstName"
@@ -115,12 +121,14 @@ const Register = () => {
             className="register__button"
             disabled={isUpdating}
           >
-            {isUpdating ? "Registering..." : "SignIn"}
+            SignIn
           </button>
         </form>
       </div>
-    </section>
-  );
+    );
+  }
+
+  return <section className="register">{content}</section>;
 };
 
 export default Register;
