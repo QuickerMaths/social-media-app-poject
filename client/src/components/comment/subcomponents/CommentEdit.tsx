@@ -6,6 +6,8 @@ import { AiOutlineDelete } from "react-icons/ai";
 
 // Internal dependencies
 
+import Spinner from "../../../utilities/spinner/Spinner";
+import useToastCreator from "../../../hooks/useToastCreator";
 import { useDeleteCommentMutation } from "../../../features/apiSlice/commentApiSlice/commentApiSlice";
 import { IComment } from "../types";
 import { useAppSelector } from "../../../hooks/reduxHooks";
@@ -25,21 +27,22 @@ const CommentEdit: React.FC<Props> = ({
   const [deleteComment, { isLoading: isDeleting, error, isError }] =
     useDeleteCommentMutation();
 
+  if (isError) useToastCreator(error as string, "error");
+
   return (
     <>
       {owner._id === activeUserId ? (
         <div className="comment__wrapper">
-          <button
-            className="comment__edit-button"
-            onClick={() => deleteComment({ _id: commentId, postId })}
-          >
-            <AiOutlineDelete className="comment__edit-icon" />
-          </button>
-          {/* 
-            TODO: make it better
-          */}
-          {isDeleting && <p>Deleting...</p>}
-          {isError && <p>{JSON.stringify(error)}</p>}
+          {isDeleting ? (
+            <Spinner size={20} />
+          ) : (
+            <button
+              className="comment__edit-button"
+              onClick={() => deleteComment({ _id: commentId, postId })}
+            >
+              <AiOutlineDelete className="comment__edit-icon" />
+            </button>
+          )}
           <p className="comment__createdAt">{moment(createdAt).fromNow()}</p>
         </div>
       ) : (
