@@ -14,14 +14,14 @@ import PostComments from "../../components/post/subcomponents/PostComments";
 import PostOwner from "../../components/post/subcomponents/PostOwner";
 import PostDetailsPost from "./subcomponents/PostDetailsPost";
 import PostDetailsRePost from "./subcomponents/PostDetailsRePost";
+import Spinner from "../../utilities/spinner/Spinner";
+import useToastCreator from "../../hooks/useToastCreator";
 import { IPost, IRePost } from "../../components/post/types";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import { closeModal } from "../../features/modalSlice/modalSlice";
 import { useCreateCommentMutation } from "../../features/apiSlice/commentApiSlice/commentApiSlice";
 import { IComment } from "../../components/comment/types";
-import useToastCreator from "../../hooks/useToastCreator";
-import Spinner from "../../utilities/spinner/Spinner";
 
 interface Props {
   post: IPost | IRePost;

@@ -43,7 +43,7 @@ const Comment: React.FC<Props> = ({
     likedBy,
   } = comment as IComment;
 
-  const [likeComment] = useLikeCommentMutation();
+  const [likeComment, { isError, error }] = useLikeCommentMutation();
 
   return (
     <li className="comment">
@@ -67,6 +67,7 @@ const Comment: React.FC<Props> = ({
                 postId,
                 userId: activeUserId,
               });
+          if (isError) useToastCreator(error as string, "error");
         }}
       >
         <AiOutlineLike
