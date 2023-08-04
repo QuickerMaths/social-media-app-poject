@@ -12,14 +12,18 @@ import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import { closeModal } from "../../features/modalSlice/modalSlice";
 import { useUpdateUserAddressMutation } from "../../features/apiSlice/userApiSlice/userApiSlice";
+import useToastCreator from "../../hooks/useToastCreator";
+import Spinner from "../../utilities/spinner/Spinner";
 
 const UserDetailsModal = () => {
   const dispatch = useAppDispatch();
   const { userId } = useAppSelector((state: RootState) => state.auth);
   const { modals } = useAppSelector((state: RootState) => state.modal);
 
-  const [updateUserAddress, { isLoading: isUpdating }] =
+  const [updateUserAddress, { isLoading: isUpdating, isError, error }] =
     useUpdateUserAddressMutation();
+
+  if (isError) useToastCreator(error as string, "error");
 
   const { handleChange, handleBlur, errors, touched, values, handleSubmit } =
     useFormik({
@@ -31,27 +35,21 @@ const UserDetailsModal = () => {
       },
       validationSchema: addressValidation,
       onSubmit: async (values) => {
-        try {
-          await updateUserAddress({
-            userId: userId as string,
-            addressToUpdate: values,
-          });
-          // TODO: error handling
+        await updateUserAddress({
+          userId: userId as string,
+          addressToUpdate: values,
+        });
 
-          dispatch(closeModal("userDetailsModal"));
-        } catch (err: any) {
-          console.log(err);
-        }
+        if (!isUpdating && !isError) dispatch(closeModal("userDetailsModal"));
       },
     });
 
-  if (!modals["userDetailsModal"]) return null;
-  return ReactDOM.createPortal(
-    <div className="user-details-modal">
-      <div
-        className="user-details-modal__overlay"
-        onClick={() => dispatch(closeModal("userDetailsModal"))}
-      ></div>
+  let content;
+
+  if (isUpdating) {
+    content = <Spinner size={125} />;
+  } else {
+    content = (
       <div className="user-details-modal__content">
         <button
           className="user-details-modal__close"
@@ -105,11 +103,26 @@ const UserDetailsModal = () => {
             onBlur={handleBlur}
             value={values.zip}
           />
-          <button type="submit" className="user-details-modal__button">
-            {isUpdating ? "Updating..." : "Update"}
+          <button
+            type="submit"
+            className="user-details-modal__button"
+            disabled={isUpdating}
+          >
+            Update
           </button>
         </form>
       </div>
+    );
+  }
+
+  if (!modals["userDetailsModal"]) return null;
+  return ReactDOM.createPortal(
+    <div className="user-details-modal">
+      <div
+        className="user-details-modal__overlay"
+        onClick={() => dispatch(closeModal("userDetailsModal"))}
+      ></div>
+      {content}
     </div>,
     document.body
   );
