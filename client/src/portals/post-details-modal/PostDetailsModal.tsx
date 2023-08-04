@@ -20,6 +20,8 @@ import { RootState } from "../../redux/store";
 import { closeModal } from "../../features/modalSlice/modalSlice";
 import { useCreateCommentMutation } from "../../features/apiSlice/commentApiSlice/commentApiSlice";
 import { IComment } from "../../components/comment/types";
+import useToastCreator from "../../hooks/useToastCreator";
+import Spinner from "../../utilities/spinner/Spinner";
 
 interface Props {
   post: IPost | IRePost;
@@ -28,6 +30,7 @@ interface Props {
 const PostDetailsModal: React.FC<Props> = ({ post }) => {
   const [createComment, { isLoading: isUpdating, error, isError }] =
     useCreateCommentMutation();
+
   const {
     _id: postId,
     isRePost,
@@ -51,13 +54,36 @@ const PostDetailsModal: React.FC<Props> = ({ post }) => {
         userId: userId as string,
         isRePost,
       });
-
-      values.commentBody = "";
+      if (isError) useToastCreator(error as string, "error");
+      if (!isUpdating && !isError) {
+        values.commentBody = "";
+      }
     },
   });
 
-  if (!modals[`${postId}details`]) return null;
+  let content;
 
+  if (isUpdating) {
+    content = <Spinner size={50} />;
+  } else {
+    content = (
+      <form onSubmit={handleSubmit} className="post-details-modal__form">
+        <input
+          name="commentBody"
+          id="commentBody"
+          value={values.commentBody}
+          onChange={handleChange}
+          className="post-details-modal__text-area"
+          placeholder="Write a comment..."
+        />
+        <button className="post-details-modal__submit-button" type="submit">
+          Comment
+        </button>
+      </form>
+    );
+  }
+
+  if (!modals[`${postId}details`]) return null;
   return ReactDOM.createPortal(
     <div className="post-details-modal">
       <div
@@ -65,60 +91,35 @@ const PostDetailsModal: React.FC<Props> = ({ post }) => {
         onClick={() => dispatch(closeModal(`${postId}details`))}
       ></div>
       <div className="post-details-modal__content">
-        {!post ? (
-          <p>Loading...</p>
-        ) : (
-          <>
-            <button
-              className="post-details-modal__close"
-              onClick={() => dispatch(closeModal(`${postId}details`))}
-            >
-              <AiOutlineClose className="post-details-modal__close-icon" />
-            </button>
-            <div className="post-details-modal__top-container">
-              <PostOwner owner={owner} />
+        {" "}
+        <button
+          className="post-details-modal__close"
+          onClick={() => dispatch(closeModal(`${postId}details`))}
+        >
+          <AiOutlineClose className="post-details-modal__close-icon" />
+        </button>
+        <div className="post-details-modal__top-container">
+          <PostOwner owner={owner} />
 
-              <p className="post-details-modal__createdAt">
-                {moment(createdAt).fromNow()}
-              </p>
-            </div>
-            <div className="post-details-modal__overflow">
-              {isRePost ? (
-                <PostDetailsRePost post={post as IRePost} />
-              ) : (
-                <PostDetailsPost post={post as IPost} />
-              )}
-              <PostAction post={post} />
-              {commentTotal > 0 && (
-                <PostComments
-                  postId={postId}
-                  comments={comments as EntityState<IComment>}
-                />
-              )}
-            </div>
-            <form onSubmit={handleSubmit} className="post-details-modal__form">
-              {/* 
-                TODO: make it better
-              */}
-              {isUpdating && <p>Updating...</p>}
-              {isError && <p>{JSON.stringify(error)}</p>}
-              <input
-                name="commentBody"
-                id="commentBody"
-                value={values.commentBody}
-                onChange={handleChange}
-                className="post-details-modal__text-area"
-                placeholder="Write a comment..."
-              />
-              <button
-                className="post-details-modal__submit-button"
-                type="submit"
-              >
-                Comment
-              </button>
-            </form>
-          </>
-        )}
+          <p className="post-details-modal__createdAt">
+            {moment(createdAt).fromNow()}
+          </p>
+        </div>
+        <div className="post-details-modal__overflow">
+          {isRePost ? (
+            <PostDetailsRePost post={post as IRePost} />
+          ) : (
+            <PostDetailsPost post={post as IPost} />
+          )}
+          <PostAction post={post} />
+          {commentTotal > 0 && (
+            <PostComments
+              postId={postId}
+              comments={comments as EntityState<IComment>}
+            />
+          )}
+        </div>
+        {content}
       </div>
     </div>,
     document.body

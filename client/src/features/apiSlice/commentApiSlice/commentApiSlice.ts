@@ -28,7 +28,8 @@ export const commentApiSlice = apiSlice.injectEndpoints({
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
-      invalidatesTags: (result, error, arg) => [{ type: "Post", id: arg._id }],
+      invalidatesTags: (result, error, arg) =>
+        error ? [] : [{ type: "Post", id: arg._id }],
     }),
 
     deleteComment: builder.mutation<IComment, Pick<IComment, "_id" | "postId">>(
@@ -41,9 +42,8 @@ export const commentApiSlice = apiSlice.injectEndpoints({
         transformErrorResponse: (
           error: FetchBaseQueryError | IErrorResponse | SerializedError
         ) => errorTransformer(error),
-        invalidatesTags: (result, error, arg) => [
-          { type: "Post", id: arg.postId },
-        ],
+        invalidatesTags: (result, error, arg) =>
+          error ? [] : [{ type: "Post", id: arg.postId }],
       }
     ),
 

@@ -8,7 +8,10 @@ export const createComment = async (req: Request, res: Response) => {
 
   if (!commentBody || !userId || !postId || isRePost === null)
     return res.status(400).json({
-      message: "Comment body, postId, userId and isRePost are required",
+      status: "FAILED",
+      data: {
+        error: "Comment body, postId, userId and isRePost are required",
+      },
     });
 
   const comment = await Comment.create({
@@ -36,19 +39,29 @@ export const createComment = async (req: Request, res: Response) => {
     ).exec();
   }
 
-  res.status(201).json({ comment, post });
+  res.status(201).json({ status: "OK", data: { comment, post } });
 };
 
 export const deletedComment = async (req: Request, res: Response) => {
   const { commentId, postId } = req.body;
 
   if (!commentId || !postId)
-    return res.status(400).json({ message: "Comment and post Id required" });
+    return res.status(400).json({
+      status: "FAILED",
+      data: {
+        error: "Comment and post Id required",
+      },
+    });
 
   const comment = await Comment.findByIdAndDelete({ _id: commentId }).exec();
 
   if (!comment)
-    return res.status(204).json({ message: "No comment with matching id" });
+    return res.status(404).json({
+      status: "FAILED",
+      data: {
+        error: "No comment with matching id",
+      },
+    });
 
   let post;
 
@@ -69,23 +82,38 @@ export const deletedComment = async (req: Request, res: Response) => {
   }
 
   if (!post)
-    return res.status(204).json({ message: "No post with matching id" });
+    return res.status(404).json({
+      status: "FAILED",
+      data: {
+        error: "No post with matching id",
+      },
+    });
 
   const deletedComment = await comment.deleteOne();
 
-  res.status(204).json({ deletedComment });
+  res.status(204).json({ status: "OK", data: deletedComment });
 };
 
 export const likeComment = async (req: Request, res: Response) => {
   const { commentId, userId } = req.body;
 
   if (!commentId || !userId)
-    return res.status(400).json({ message: "Comment and user Id required" });
+    return res.status(400).json({
+      status: "FAILED",
+      data: {
+        error: "Comment and user Id required",
+      },
+    });
 
   const comment = await Comment.findOne({ _id: commentId });
 
   if (!comment)
-    return res.status(204).json({ message: "No comment with matching id" });
+    return res.status(404).json({
+      status: "FAILED",
+      data: {
+        error: "No comment with matching id",
+      },
+    });
 
   if (comment.likedBy.includes(userId)) {
     await comment.updateOne({ $pull: { likedBy: userId } }).exec();
@@ -93,5 +121,5 @@ export const likeComment = async (req: Request, res: Response) => {
     await comment.updateOne({ $push: { likedBy: userId } }).exec();
   }
 
-  res.status(200).json({ comment });
+  res.status(200).json({ status: "OK", data: comment });
 };
