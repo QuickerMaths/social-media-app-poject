@@ -82,11 +82,14 @@ export const friendsApiSlice = apiSlice.injectEndpoints({
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
-      invalidatesTags: (result, error, req) => [
-        { type: "User", id: req.userId },
-        { type: "User", id: req.userToAddId },
-        { type: "Request", id: req.requestId },
-      ],
+      invalidatesTags: (result, error, req) =>
+        error
+          ? []
+          : [
+              { type: "User", id: req.userId },
+              { type: "User", id: req.userToAddId },
+              { type: "Request", id: req.requestId },
+            ],
     }),
 
     deleteFriend: builder.mutation<
@@ -101,10 +104,13 @@ export const friendsApiSlice = apiSlice.injectEndpoints({
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
-      invalidatesTags: (result, error, req) => [
-        { type: "User", id: req.userId },
-        { type: "User", id: req.friendToDeleteId },
-      ],
+      invalidatesTags: (result, error, req) =>
+        error
+          ? []
+          : [
+              { type: "User", id: req.userId },
+              { type: "User", id: req.friendToDeleteId },
+            ],
     }),
 
     sendFriendRequest: builder.mutation<
@@ -122,9 +128,8 @@ export const friendsApiSlice = apiSlice.injectEndpoints({
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
-      invalidatesTags: (result, error, req) => [
-        { type: "User", id: req.userToAddId },
-      ],
+      invalidatesTags: (result, error, req) =>
+        error ? [] : [{ type: "User", id: req.userToAddId }],
     }),
   }),
 });
