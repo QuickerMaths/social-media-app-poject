@@ -80,7 +80,6 @@ const FriendsRequest: React.FC<Props> = ({ requestId }) => {
     );
   }
 
-  //TODO: close modal after clicking on post owner
   return <li className="request">{content}</li>;
 };
 

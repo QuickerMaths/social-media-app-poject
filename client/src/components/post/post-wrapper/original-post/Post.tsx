@@ -51,8 +51,6 @@ const Post: React.FC<Props> = ({ post }) => {
       {modals[`${postId}repost`] && <CreateRePostModal post={post as IPost} />}
       {modals[`${postId}details`] && <PostDetailsModal post={post} />}
     </>
-
-    //TODO: make sure that caching data works here in postdetailsmodal
   );
 };
 

@@ -62,7 +62,6 @@ const PostEditImageForm: React.FC<Props> = ({ post }) => {
           className="post-edit-modal__text-area"
         />
         {values.postImage ? (
-          //TODO: upgrade loading and error states
           <>
             <label htmlFor="postImage" className="post-edit-modal__label">
               <GrAttachment className="post-edit-modal__icon" />
