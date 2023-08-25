@@ -30,8 +30,7 @@ const UserProfileImgModal = () => {
     initialValues: {
       profilePicture: "",
     },
-    //TODO: add validation
-    // validationSchema: profileImageValidation,
+    validationSchema: profileImageValidation,
     onSubmit: async (values) => {
       await uploadUserImage({
         userId: userId as string,

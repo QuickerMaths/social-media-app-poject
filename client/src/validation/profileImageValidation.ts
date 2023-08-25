@@ -8,7 +8,6 @@ const profileImageValidation = yup.object({
   profileImage: yup
     .mixed()
     .nullable()
-    .required("Please select a file")
     .test("FILE_SIZE", "File too large", (value: any) => {
       !value || (value && value.size <= MAX_FILE_SIZE);
     })
