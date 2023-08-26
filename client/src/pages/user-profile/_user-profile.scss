@@ -41,6 +41,7 @@
     padding: 0px 25px;
     max-height: 90%;
     //TODO: figure out better way to handle overflow
+    // https://www.npmjs.com/package/scrollable-component
     overflow-y: scroll;
   }
 

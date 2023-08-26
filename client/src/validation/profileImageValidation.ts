@@ -4,6 +4,8 @@ const MAX_FILE_SIZE = 1024 * 1024;
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
 
+//TODO: type value
+
 const profileImageValidation = yup.object({
   profileImage: yup
     .mixed()
