@@ -1,7 +1,11 @@
-console.log("Hello World!");
+import express from "express";
 
-export const foo = "bar";
+const app = express();
 
-console.log(foo);
+app.get("/", (req, res) => {
+  res.send("Hello World");
+});
 
-const bar = "baz";
+app.listen(3000, () => {
+  console.log("Listening on port 3000");
+});
