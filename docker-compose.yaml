@@ -1,11 +1,11 @@
 version: "3.0.0"
 services:
-  db:
+  socialy-db-vol:
     image: mysql:8
     restart: always
     environment:
       MYSQL_DATABASE: "socialy-db"
-      MYSQL_USER: "user"
+      MYSQL_USER: "root"
       MYSQL_PASSWORD: "password"
       MYSQL_ROOT_PASSWORD: "password"
     ports:
@@ -14,6 +14,25 @@ services:
       - "3306"
     volumes:
       - socialy-db-vol:/var/lib/mysql
+      
+  cache:
+    image: redis:7.2
+    restart: always
+    environment:
+      REDIS_HOST: "cache"
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: "redisPassword"
+    ports:
+      - "6379:6379"
+    expose:
+      - "6379"
+    command: redis-server --save 20 1 --loglevel warning --requirepass redisPassword
+    volumes: 
+      - cache:/var/lib/redis
 
 volumes:
   socialy-db-vol:
+    driver: local
+  cache: 
+    driver: local
+
