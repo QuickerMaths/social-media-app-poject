@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `user_profile`(
     `state` TEXT NULL,
     `city` VARCHAR(255) NULL,
     `street` TEXT NULL,
-    `postal_code` INT NULL,
+    `postal_code` VARCHAR(255) NULL,
     `created_at` DATETIME NOT NULL
 );
 
