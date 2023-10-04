@@ -7,5 +7,8 @@ export default {
     user: process.env.USER_DB || "user",
     password: process.env.PASSWORD_DB || "password",
     database: process.env.DATABASE_DB || "socialyDB"
+  },
+  server: {
+    port: process.env.PORT || 3000
   }
 };

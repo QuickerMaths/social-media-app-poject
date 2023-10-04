@@ -1,11 +1,34 @@
-import express from "express";
+import config from "./config/config.ts";
+import createServer from "./server.ts";
+import connection from "../db/db.ts";
+import { Request, Response, NextFunction } from "express";
 
-const app = express();
+const app = createServer();
 
-app.get("/", (req, res) => {
-  res.send("Hello World");
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+  return res.status(500).send({
+    statusCode: 500,
+    body: {
+      error: err.message
+    }
+  });
 });
 
-app.listen(3000, () => {
-  console.log("Listening on port 3000");
+// Uncaught exception handling
+
+process.on("uncaughtException", (error) => {
+  console.log(error);
 });
+
+await connection
+  .ping()
+  .then(() => {
+    console.log("Database connected");
+    app.listen(config.server.port, () => {
+      console.log(`Server is listening on port ${config.server.port}`);
+    });
+  })
+  .catch((err) => {
+    console.log("Database connection failed");
+    console.log(err);
+  });
