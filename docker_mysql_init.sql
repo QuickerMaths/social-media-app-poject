@@ -38,14 +38,16 @@ CREATE TABLE IF NOT EXISTS `post_like`(
 
 
 CREATE TABLE IF NOT EXISTS `friendship_status`(
-    `id` BIGINT NOT NULL,
+    `id` BIGINT NOT NULL PRIMARY KEY,
     `status` VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS `friendship`(
-    `profile_request` BIGINT NOT NULL,
-    `profile_accept` BIGINT NOT NULL,
-    `status` BIGINT NOT NULL
+    `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `profile_request_id` BIGINT NOT NULL,
+    `profile_accept_id` BIGINT NOT NULL,
+    `status_id` BIGINT NOT NULL,
+    `created_at` DATETIME NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS `comment_like`(
@@ -56,17 +58,16 @@ CREATE TABLE IF NOT EXISTS `comment_like`(
 );
 
 
-CREATE TABLE `user_post`(
+CREATE TABLE IF NOT EXISTS `user_post`(
     `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `profile_id` BIGINT NOT NULL,
-    `shared_post_id` BIGINT NULL,
+    `shared_post_id` BIGINT NULL DEFAULT NULL,
     `post_text` LONGTEXT NULL,
-    `media_loaction` VARCHAR(255) NOT NULL,
+    `media_location` VARCHAR(255) NULL DEFAULT NULL,
     `share_count` BIGINT NOT NULL,
     `comment_count` BIGINT NOT NULL,
     `is_shared` TINYINT(1) NOT NULL DEFAULT '0',
-    `created_at` DATETIME NOT NULL,
-    `updated_at` DATETIME NOT NULL
+    `created_at` DATETIME NOT NULL
 );
 
 ALTER TABLE
@@ -83,14 +84,11 @@ ALTER TABLE
     `post_like` ADD CONSTRAINT `post_like_profile_id_foreign` FOREIGN KEY(`profile_id`) REFERENCES `user_profile`(`id`);
 
 ALTER TABLE
-    `friendship_status` ADD PRIMARY KEY(`id`);
-
+    `friendship` ADD CONSTRAINT `friendship_profile_request_id_foreign` FOREIGN KEY(`profile_request_id`) REFERENCES `user_profile`(`id`);
 ALTER TABLE
-    `friendship` ADD CONSTRAINT `friendship_profile_request_foreign` FOREIGN KEY(`profile_request`) REFERENCES `user_profile`(`id`);
+    `friendship` ADD CONSTRAINT `friendship_status_id_foreign` FOREIGN KEY(`status_id`) REFERENCES `friendship_status`(`id`);
 ALTER TABLE
-    `friendship` ADD CONSTRAINT `friendship_status_foreign` FOREIGN KEY(`status`) REFERENCES `friendship_status`(`id`);
-ALTER TABLE
-    `friendship` ADD CONSTRAINT `friendship_profile_accept_foreign` FOREIGN KEY(`profile_accept`) REFERENCES `user_profile`(`id`);
+    `friendship` ADD CONSTRAINT `friendship_profile_accept_id_foreign` FOREIGN KEY(`profile_accept_id`) REFERENCES `user_profile`(`id`);
 
 ALTER TABLE
     `comment_like` ADD CONSTRAINT `comment_like_profile_id_foreign` FOREIGN KEY(`profile_id`) REFERENCES `user_profile`(`id`);
@@ -98,9 +96,11 @@ ALTER TABLE
     `comment_like` ADD CONSTRAINT `comment_like_comment_id_foreign` FOREIGN KEY(`comment_id`) REFERENCES `post_comment`(`id`);
 
 ALTER TABLE
-    `user_post` ADD CONSTRAINT `user_post_shared_post_id_foreign` FOREIGN KEY(`shared_post_id`) REFERENCES `user_post`(`id`);
-ALTER TABLE
     `user_post` ADD CONSTRAINT `user_post_profile_id_foreign` FOREIGN KEY(`profile_id`) REFERENCES `user_profile`(`id`);
 ALTER TABLE
     `user_post` ADD CONSTRAINT `user_post_shared_post_id_foreign` FOREIGN KEY(`shared_post_id`) REFERENCES `user_post`(`id`);
 
+INSERT INTO `friendship_status` (`id`, `status`) VALUES (1, 'pending');
+INSERT INTO `friendship_status` (`id`, `status`) VALUES (2, 'accepted');
+INSERT INTO `friendship_status` (`id`, `status`) VALUES (3, 'declined');
+INSERT INTO `friendship_status` (`id`, `status`) VALUES (4, 'blocked');

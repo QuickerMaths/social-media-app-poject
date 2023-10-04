@@ -1,42 +1,185 @@
 import { faker } from "@faker-js/faker";
+import { UniqueEnforcer } from "enforce-unique";
 import connection from "./db.js";
 
-// Function to seed user_profile table
-function seedUserProfileTable() {
-  const profiles = [];
-  for (let i = 1; i <= 100; i++) {
-    const profile = {
-      username: faker.internet.userName(),
-      email: faker.internet.email(),
-      is_email_confirmation: faker.datatype.boolean(),
-      password: faker.internet.password(),
-      avatar_url: faker.internet.avatar(),
-      first_name: faker.person.firstName(),
-      last_name: faker.person.lastName(),
-      country: faker.location.country(),
-      state: faker.location.state(),
-      city: faker.location.city(),
-      street: faker.location.streetAddress(true),
-      postal_code: faker.location.zipCode(),
-      created_at: faker.date.past({ years: 1 })
-    };
-    profiles.push(profile);
-  }
+const uniqueEnforcerEmail = new UniqueEnforcer();
 
-  const sql = "INSERT INTO user_profile SET ?";
-  profiles.forEach((profile) => {
-    connection.query(sql, profile);
-  });
-
-  console.log("Seeded user_profile table with 100 profiles");
+async function generateRandomUser() {
+  return {
+    username: faker.internet.userName(),
+    email: uniqueEnforcerEmail.enforce(() => {
+      return faker.internet.email();
+    }),
+    is_email_confirmation: faker.datatype.boolean(),
+    password: faker.internet.password(),
+    avatar_url: faker.internet.avatar(),
+    first_name: faker.person.firstName(),
+    last_name: faker.person.lastName(),
+    country: faker.location.country(),
+    state: faker.location.state(),
+    city: faker.location.city(),
+    street: faker.location.streetAddress(true),
+    postal_code: faker.location.zipCode(),
+    created_at: faker.date.past({ years: 1 })
+  };
 }
 
-// Add functions to seed other tables (post_like, friendship, etc.) similarly
+async function generateRandomPost() {
+  const [profile_id] = await connection.query(
+    "SELECT id FROM user_profile ORDER BY RAND() LIMIT 1"
+  );
 
-// Call the seed functions here
-seedUserProfileTable();
+  //@ts-ignore
+  const randomId = profile_id[0].id;
 
-// Close the database connection when done
+  return {
+    profile_id: randomId,
+    post_text: faker.lorem.paragraphs({ min: 1, max: 3 }),
+    media_location: faker.image.url(),
+    share_count: faker.number.int({ min: 1, max: 100 }),
+    comment_count: faker.number.int({ min: 1, max: 100 }),
+    created_at: faker.date.past({ years: 1 })
+  };
+}
+
+async function generateRandomSharedPosts() {
+  const [profile_id] = await connection.query(
+    "SELECT id FROM user_profile ORDER BY RAND() LIMIT 1"
+  );
+  const [post_id] = await connection.query(
+    "SELECT id FROM user_post ORDER BY RAND() LIMIT 1"
+  );
+
+  //@ts-ignore
+  const randomProfileId = profile_id[0].id;
+  //@ts-ignore
+  const randomPostId = post_id[0].id;
+
+  return {
+    profile_id: randomProfileId,
+    shared_post_id: randomPostId,
+    post_text: faker.lorem.paragraphs({ min: 1, max: 3 }),
+    media_location: faker.image.url(),
+    share_count: faker.number.int({ min: 1, max: 100 }),
+    comment_count: faker.number.int({ min: 1, max: 100 }),
+    is_shared: true,
+    created_at: faker.date.past({ years: 1 })
+  };
+}
+
+async function generatePostLike() {
+  const [profile_id] = await connection.query(
+    "SELECT id FROM user_profile ORDER BY RAND() LIMIT 1"
+  );
+  const [post_id] = await connection.query(
+    "SELECT id FROM user_post ORDER BY RAND() LIMIT 1"
+  );
+
+  //@ts-ignore
+  const randomProfileId = profile_id[0].id;
+  //@ts-ignore
+  const randomPostId = post_id[0].id;
+
+  return {
+    post_id: randomPostId,
+    profile_id: randomProfileId,
+    created_at: faker.date.past({ years: 1 })
+  };
+}
+
+async function generateRandomComment() {
+  const [profile_id] = await connection.query(
+    "SELECT id FROM user_profile ORDER BY RAND() LIMIT 1"
+  );
+  const [post_id] = await connection.query(
+    "SELECT id FROM user_post ORDER BY RAND() LIMIT 1"
+  );
+
+  //@ts-ignore
+  const randomProfileId = profile_id[0].id;
+  //@ts-ignore
+  const randomPostId = post_id[0].id;
+
+  return {
+    post_id: randomPostId,
+    profile_id: randomProfileId,
+    comment_text: faker.lorem.paragraphs({ min: 1, max: 3 }),
+    created_at: faker.date.past({ years: 1 })
+  };
+}
+
+async function generateCommentLike() {
+  const [profile_id] = await connection.query(
+    "SELECT id FROM user_profile ORDER BY RAND() LIMIT 1"
+  );
+  const [comment_id] = await connection.query(
+    "SELECT id FROM post_comment ORDER BY RAND() LIMIT 1"
+  );
+
+  //@ts-ignore
+  const randomProfileId = profile_id[0].id;
+  //@ts-ignore
+  const randomPostId = comment_id[0].id;
+
+  return {
+    comment_id: randomPostId,
+    profile_id: randomProfileId,
+    created_at: faker.date.past({ years: 1 })
+  };
+}
+
+async function generateRandomFriendship() {
+  const [profile_id] = await connection.query(
+    "SELECT id FROM user_profile ORDER BY RAND() LIMIT 1"
+  );
+  const [friend_id] = await connection.query(
+    "SELECT id FROM user_profile ORDER BY RAND() LIMIT 1"
+  );
+  const [friendship_status_id] = await connection.query(
+    "SELECT id FROM friendship_status ORDER BY RAND() LIMIT 1"
+  );
+
+  //@ts-ignore
+  const randomProfileId = profile_id[0].id;
+  //@ts-ignore
+  const randomFriendId = friend_id[0].id;
+  //@ts-ignore
+  const randomStatusId = friendship_status_id[0].id;
+
+  return {
+    profile_request_id: randomProfileId,
+    profile_accept_id: randomFriendId,
+    status_id: randomStatusId,
+    created_at: faker.date.past({ years: 1 })
+  };
+}
+
+async function seed(table: string, rows: number, schema: Function) {
+  const data = [];
+
+  for (let i = 0; i < rows; i++) {
+    data.push(await schema());
+  }
+
+  const sql = `INSERT INTO ${table} SET ?`;
+
+  data.forEach((item) => {
+    connection.query(sql, item);
+  });
+
+  console.log(`Seeded ${data.length} rows into ${table} table`);
+}
+
+await seed("user_profile", 100, generateRandomUser);
+// seed normal posts
+await seed("user_post", 100, generateRandomPost);
+// seed shared posts
+await seed("user_post", 50, generateRandomSharedPosts);
+await seed("post_like", 100, generatePostLike);
+await seed("post_comment", 100, generateRandomComment);
+await seed("comment_like", 100, generateCommentLike);
+await seed("friendship", 100, generateRandomFriendship);
+
 connection.end((err: Error | null) => {
   if (err) throw err;
   console.log("Disconnected from MySQL database");
