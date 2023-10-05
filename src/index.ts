@@ -1,6 +1,7 @@
 import config from "./config/config.ts";
 import createServer from "./server.ts";
 import connection from "../db/db.ts";
+import logger from "./helpers/logger.ts";
 import { Request, Response, NextFunction } from "express";
 
 const app = createServer();
@@ -23,12 +24,12 @@ process.on("uncaughtException", (error) => {
 await connection
   .ping()
   .then(() => {
-    console.log("Database connected");
+    logger().info("Database connected");
     app.listen(config.server.port, () => {
-      console.log(`Server is listening on port ${config.server.port}`);
+      logger().info(`Server started on port ${config.server.port}`);
     });
   })
   .catch((err) => {
-    console.log("Database connection failed");
-    console.log(err);
+    logger().error("Database connection failed");
+    logger().error(err);
   });

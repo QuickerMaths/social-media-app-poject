@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import logger from "./helpers/logger.ts";
 
 function createServer() {
   const app = express();
@@ -14,6 +15,7 @@ function createServer() {
   );
 
   app.get("/", async (_req, res) => {
+    logger().info("Hello World");
     res.send("Hello World");
   });
 
