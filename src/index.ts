@@ -7,6 +7,8 @@ import { Request, Response, NextFunction } from "express";
 const app = createServer();
 
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+  logger().error(err.message);
+
   return res.status(500).send({
     statusCode: 500,
     body: {
@@ -18,8 +20,11 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
 // Uncaught exception handling
 
 process.on("uncaughtException", (error) => {
-  console.log(error);
+  logger().error(error);
+  process.exit(1);
 });
+
+//connect to database and start server
 
 await connection
   .ping()
