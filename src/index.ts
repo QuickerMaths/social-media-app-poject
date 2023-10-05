@@ -1,6 +1,6 @@
 import config from "./config/config.ts";
 import createServer from "./server.ts";
-import connection from "../db/db.ts";
+import db from "../db/db.ts";
 import logger from "./helpers/logger.ts";
 import { Request, Response, NextFunction } from "express";
 import { BaseError } from "./utils/errors/BaseError.ts";
@@ -40,7 +40,7 @@ process.on("uncaughtException", (error) => {
 
 // Connect to database and start server
 
-await connection
+await db
   .ping()
   .then(() => {
     logger().info("Database connected");
