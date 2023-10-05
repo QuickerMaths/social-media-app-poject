@@ -3,19 +3,33 @@ import createServer from "./server.ts";
 import connection from "../db/db.ts";
 import logger from "./helpers/logger.ts";
 import { Request, Response, NextFunction } from "express";
+import { BaseError } from "./utils/errors/BaseError.ts";
 
 const app = createServer();
 
-app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
-  logger().error(err.message);
+// Error handling
 
-  return res.status(500).send({
-    statusCode: 500,
-    body: {
-      error: err.message
+app.use(
+  (
+    err: BaseError | Error,
+    _req: Request,
+    res: Response,
+    _next: NextFunction
+  ) => {
+    logger().error(err.message);
+
+    if (err instanceof BaseError) {
+      return res.status(err.code).send({
+        statusCode: err.code,
+        body: {
+          error: err.message
+        }
+      });
     }
-  });
-});
+
+    process.exit(1);
+  }
+);
 
 // Uncaught exception handling
 
@@ -24,7 +38,7 @@ process.on("uncaughtException", (error) => {
   process.exit(1);
 });
 
-//connect to database and start server
+// Connect to database and start server
 
 await connection
   .ping()
