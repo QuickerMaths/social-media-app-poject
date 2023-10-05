@@ -1,7 +1,9 @@
+import IUserProfile from "./user_profile.interface.ts";
+
 export default interface IUserPost {
   id: number;
-  profile_id: number;
-  shared_post_id: number | null;
+  profile_id: Pick<IUserProfile, "id">;
+  shared_post_id: Pick<IUserPost, "id"> | null;
   post_text?: string;
   media_location?: string;
   share_count: number;
