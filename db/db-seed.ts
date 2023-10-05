@@ -148,7 +148,7 @@ async function generateRandomFriendship() {
 
   return {
     profile_request_id: randomProfileId,
-    profile_accept_id: randomFriendId,
+    profile_responder_id: randomFriendId,
     status_id: randomStatusId,
     created_at: faker.date.past({ years: 1 })
   };

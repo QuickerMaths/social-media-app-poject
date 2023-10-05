@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `friendship_status`(
 CREATE TABLE IF NOT EXISTS `friendship`(
     `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `profile_request_id` BIGINT NOT NULL,
-    `profile_accept_id` BIGINT NOT NULL,
+    `profile_responder_id` BIGINT NOT NULL,
     `status_id` BIGINT NOT NULL,
     `created_at` DATETIME NOT NULL
 );
@@ -88,7 +88,7 @@ ALTER TABLE
 ALTER TABLE
     `friendship` ADD CONSTRAINT `friendship_status_id_foreign` FOREIGN KEY(`status_id`) REFERENCES `friendship_status`(`id`);
 ALTER TABLE
-    `friendship` ADD CONSTRAINT `friendship_profile_accept_id_foreign` FOREIGN KEY(`profile_accept_id`) REFERENCES `user_profile`(`id`);
+    `friendship` ADD CONSTRAINT `friendship_profile_responder_id_foreign` FOREIGN KEY(`profile_responder_id`) REFERENCES `user_profile`(`id`);
 
 ALTER TABLE
     `comment_like` ADD CONSTRAINT `comment_like_profile_id_foreign` FOREIGN KEY(`profile_id`) REFERENCES `user_profile`(`id`);
