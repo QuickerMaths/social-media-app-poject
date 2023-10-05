@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `user_profile`(
     `email` VARCHAR(255) NOT NULL,
     `is_email_confirmation` TINYINT(1) NOT NULL DEFAULT '0',
     `password` VARCHAR(255) NOT NULL,
-    `avatar_url` TEXT NOT NULL,
+    `avatar_url` TEXT NULL,
     `first_name` VARCHAR(255) NULL,
     `last_name` VARCHAR(255) NULL,
     `country` VARCHAR(255) NULL,
