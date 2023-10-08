@@ -64,8 +64,8 @@ CREATE TABLE IF NOT EXISTS `user_post`(
     `shared_post_id` BIGINT NULL DEFAULT NULL,
     `post_text` LONGTEXT NULL,
     `media_location` VARCHAR(255) NULL DEFAULT NULL,
-    `share_count` BIGINT NOT NULL,
-    `comment_count` BIGINT NOT NULL,
+    `share_count` BIGINT NOT NULL DEFAULT '0',
+    `comment_count` BIGINT NOT NULL DEFAULT '0',
     `is_shared` TINYINT(1) NOT NULL DEFAULT '0',
     `created_at` DATETIME NOT NULL
 );
