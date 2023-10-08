@@ -2,7 +2,7 @@ import { ResultSetHeader } from "mysql2/promise";
 import connection from "../../../db/db.ts";
 import IUserProfile from "../../interfaces/tables/user_profile.interface.ts";
 import IUserDB from "../../interfaces/functions/IUserDB.interface.ts";
-import { UserRegisterType, UserUpdateType } from "./types.ts";
+import { UserCreateDataType, UserUpdateDataType } from "./types.ts";
 
 export default function makeUserDB({
   db
@@ -75,16 +75,16 @@ export default function makeUserDB({
   }
 
   async function createUser({
-    userInfo
+    userCreateData
   }: {
-    userInfo: UserRegisterType;
+    userCreateData: UserCreateDataType;
   }): Promise<IUserProfile> {
     const sql = `
     INSERT INTO user_profile (username, email, password, created_at)
       VALUES (?, ? , ?, NOW());
     `;
 
-    const { username, email, password } = userInfo;
+    const { username, email, password } = userCreateData;
     const [result] = await db.query(sql, [username, email, password]);
 
     const [userRecord] = await db.query(
@@ -97,10 +97,10 @@ export default function makeUserDB({
 
   async function updateUserById({
     userId,
-    updateData
+    userUpdateData
   }: {
     userId: number;
-    updateData: UserUpdateType;
+    userUpdateData: UserUpdateDataType;
   }): Promise<IUserProfile> {
     const sql = `
     UPDATE user_profile
@@ -108,7 +108,7 @@ export default function makeUserDB({
       WHERE id = ?
     `;
 
-    await db.query(sql, [{ ...updateData }, userId]);
+    await db.query(sql, [{ ...userUpdateData }, userId]);
 
     const [userRecord] = await db.query(
       "SELECT * FROM user_profile WHERE id = ?",

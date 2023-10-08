@@ -1,7 +1,7 @@
 import IUserProfile from "../tables/user_profile.interface.ts";
 import {
-  UserRegisterType,
-  UserUpdateType
+  UserCreateDataType,
+  UserUpdateDataType
 } from "../../data-access/user/types.ts";
 
 export default interface IUserDB {
@@ -26,17 +26,17 @@ export default interface IUserDB {
   }) => Promise<IUserProfile[]>;
 
   createUser: ({
-    userInfo
+    userCreateData
   }: {
-    userInfo: UserRegisterType;
+    userCreateData: UserCreateDataType;
   }) => Promise<IUserProfile>;
 
   updateUserById: ({
     userId,
-    updateData
+    userUpdateData
   }: {
     userId: number;
-    updateData: UserUpdateType;
+    userUpdateData: UserUpdateDataType;
   }) => Promise<IUserProfile>;
 
   deleteUserById: ({ userId }: { userId: number }) => Promise<{}>;
