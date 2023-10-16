@@ -184,14 +184,3 @@ export default function makePostDb({ db }: { db: typeof connection }) {
     likePost
   });
 }
-
-/**
- * select all posts [x]
- * select posts by user id [x]
- * create post [x]
- * update post [x]
- * delete post [x]
- * like post [x]
- * share post [x] (create post)
- * comment post [] in comment db
- */
