@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `post_like`(
     `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `post_id` BIGINT NOT NULL,
     `profile_id` BIGINT NOT NULL,
-    `created_at` DATETIME NOT NULL
+    `created_at` DATETIME NULL
 );
 
 
@@ -47,14 +47,14 @@ CREATE TABLE IF NOT EXISTS `friendship`(
     `profile_request_id` BIGINT NOT NULL,
     `profile_responder_id` BIGINT NOT NULL,
     `status_id` BIGINT NOT NULL,
-    `created_at` DATETIME NOT NULL
+    `created_at` DATETIME NULL
 );
 
 CREATE TABLE IF NOT EXISTS `comment_like`(
     `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `comment_id` BIGINT NOT NULL,
     `profile_id` BIGINT NOT NULL,
-    `created_at` DATETIME NOT NULL
+    `created_at` DATETIME NULL
 );
 
 
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `user_post`(
     `like_count` BIGINT NOT NULL DEFAULT '0',
     `share_count` BIGINT NOT NULL DEFAULT '0',
     `comment_count` BIGINT NOT NULL DEFAULT '0',
-    `is_shared` TINYINT(1) NOT NULL DEFAULT '0',
+    `is_shared` BOOLEAN NOT NULL DEFAULT '0',
     `created_at` DATETIME NOT NULL
 );
 
@@ -83,6 +83,7 @@ ALTER TABLE
     `post_like` ADD CONSTRAINT `post_like_post_id_foreign` FOREIGN KEY(`post_id`) REFERENCES `user_post`(`id`);
 ALTER TABLE
     `post_like` ADD CONSTRAINT `post_like_profile_id_foreign` FOREIGN KEY(`profile_id`) REFERENCES `user_profile`(`id`);
+ALTER TABLE `post_like` ADD CONSTRAINT `unique_post_profile` UNIQUE (`post_id`, `profile_id`);
 
 ALTER TABLE
     `friendship` ADD CONSTRAINT `friendship_profile_request_id_foreign` FOREIGN KEY(`profile_request_id`) REFERENCES `user_profile`(`id`);
