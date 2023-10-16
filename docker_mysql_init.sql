@@ -31,8 +31,8 @@ CREATE TABLE IF NOT EXISTS `user_profile`(
 
 CREATE TABLE IF NOT EXISTS `post_like`(
     `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `post_id` BIGINT NOT NULL,
     `profile_id` BIGINT NOT NULL,
+    `post_id` BIGINT NOT NULL,
     `created_at` DATETIME NULL
 );
 
@@ -106,3 +106,41 @@ INSERT INTO `friendship_status` (`id`, `status`) VALUES (1, 'pending');
 INSERT INTO `friendship_status` (`id`, `status`) VALUES (2, 'accepted');
 INSERT INTO `friendship_status` (`id`, `status`) VALUES (3, 'declined');
 INSERT INTO `friendship_status` (`id`, `status`) VALUES (4, 'blocked');
+
+CREATE TABLE IF NOT EXISTS `debug_log`(
+    `id` BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `like_count` BIGINT NOT NULL,
+    `new_post_id` BIGINT NOT NULL    
+);
+
+
+DELIMITER $$
+
+CREATE TRIGGER increment_like_count_after_update
+AFTER UPDATE ON post_like 
+FOR EACH ROW
+BEGIN
+    UPDATE user_post 
+    SET like_count = CASE  
+        WHEN NEW.created_at IS NOT NULL 
+        THEN like_count + 1 
+        ELSE like_count - 1 
+        END 
+    WHERE id = NEW.post_id;
+END;
+$$
+
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE TRIGGER increment_like_count_after_insert
+AFTER INSERT ON post_like 
+FOR EACH ROW
+BEGIN
+    UPDATE user_post 
+    SET like_count = like_count + 1 
+    WHERE id = NEW.post_id;
+END;
+$$
+DELIMITER ;
