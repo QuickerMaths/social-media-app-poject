@@ -165,7 +165,7 @@ export default function makePostDb({ db }: { db: typeof connection }) {
       ON DUPLICATE KEY UPDATE created_at = IF(created_at IS NULL, NOW(), NULL);
     `;
 
-    await db.query(sql, [userId, postId]);
+    await db.query(sql, [postId, userId]);
 
     const [postRecord] = await db.query(
       "SELECT * FROM user_post WHERE id = ?",
@@ -184,3 +184,14 @@ export default function makePostDb({ db }: { db: typeof connection }) {
     likePost
   });
 }
+
+/**
+ * select all posts [x]
+ * select posts by user id [x]
+ * create post [x]
+ * update post [x]
+ * delete post [x]
+ * like post [x]
+ * share post [x] (create post)
+ * comment post [] in comment db
+ */
