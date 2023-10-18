@@ -12,6 +12,5 @@ export default interface IUserPost {
   comment_count: number;
   is_shared: boolean;
   createdAt: Date;
+  updatedAt: Date;
 }
-
-//TODO: write some code that will be responsible for handling share_count and comment_count

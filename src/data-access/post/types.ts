@@ -1,3 +1,6 @@
+import IPostComment from "../../interfaces/tables/post_comment.interface.ts";
+import IUserPost from "../../interfaces/tables/user_post.interface.ts";
+
 type PostCreateDataType = {
   profile_id: number;
   shared_post_id?: number;
@@ -11,4 +14,9 @@ type PostUpdateDataType = {
   media_location?: string;
 };
 
-export { PostCreateDataType, PostUpdateDataType };
+type PostWithCommentsType = {
+  post: IUserPost;
+  comments: IPostComment[] | [];
+};
+
+export { PostCreateDataType, PostUpdateDataType, PostWithCommentsType };

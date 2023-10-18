@@ -7,7 +7,9 @@ CREATE TABLE IF NOT EXISTS `post_comment`(
     `post_id` BIGINT NOT NULL,
     `profile_id` BIGINT NOT NULL,
     `comment_text` LONGTEXT NOT NULL,
-    `created_at` DATETIME NOT NULL
+    `like_count` BIGINT NOT NULL DEFAULT '0',
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 
@@ -25,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `user_profile`(
     `city` VARCHAR(255) NULL,
     `street` TEXT NULL,
     `postal_code` VARCHAR(255) NULL,
-    `created_at` DATETIME NOT NULL
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -47,7 +49,8 @@ CREATE TABLE IF NOT EXISTS `friendship`(
     `profile_request_id` BIGINT NOT NULL,
     `profile_responder_id` BIGINT NOT NULL,
     `status_id` BIGINT NOT NULL,
-    `created_at` DATETIME NULL
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS `comment_like`(
@@ -68,19 +71,20 @@ CREATE TABLE IF NOT EXISTS `user_post`(
     `share_count` BIGINT NOT NULL DEFAULT '0',
     `comment_count` BIGINT NOT NULL DEFAULT '0',
     `is_shared` BOOLEAN NOT NULL DEFAULT '0',
-    `created_at` DATETIME NOT NULL
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 ALTER TABLE
     `post_comment` ADD CONSTRAINT `post_comment_profile_id_foreign` FOREIGN KEY(`profile_id`) REFERENCES `user_profile`(`id`);
 ALTER TABLE
-    `post_comment` ADD CONSTRAINT `post_comment_post_id_foreign` FOREIGN KEY(`post_id`) REFERENCES `user_post`(`id`);
+    `post_comment` ADD CONSTRAINT `post_comment_post_id_foreign` FOREIGN KEY(`post_id`) REFERENCES `user_post`(`id`) ON DELETE CASCADE;
 
 ALTER TABLE
     `user_profile` ADD UNIQUE `user_profile_email_unique`(`email`);
 
 ALTER TABLE
-    `post_like` ADD CONSTRAINT `post_like_post_id_foreign` FOREIGN KEY(`post_id`) REFERENCES `user_post`(`id`);
+    `post_like` ADD CONSTRAINT `post_like_post_id_foreign` FOREIGN KEY(`post_id`) REFERENCES `user_post`(`id`) ON DELETE CASCADE;
 ALTER TABLE
     `post_like` ADD CONSTRAINT `post_like_profile_id_foreign` FOREIGN KEY(`profile_id`) REFERENCES `user_profile`(`id`);
 ALTER TABLE `post_like` ADD CONSTRAINT `unique_post_profile` UNIQUE (`post_id`, `profile_id`);
@@ -95,7 +99,8 @@ ALTER TABLE
 ALTER TABLE
     `comment_like` ADD CONSTRAINT `comment_like_profile_id_foreign` FOREIGN KEY(`profile_id`) REFERENCES `user_profile`(`id`);
 ALTER TABLE
-    `comment_like` ADD CONSTRAINT `comment_like_comment_id_foreign` FOREIGN KEY(`comment_id`) REFERENCES `post_comment`(`id`);
+    `comment_like` ADD CONSTRAINT `comment_like_comment_id_foreign` FOREIGN KEY(`comment_id`) REFERENCES `post_comment`(`id`) ON DELETE CASCADE;
+ALTER TABLE `comment_like` ADD CONSTRAINT `unique_comment_profile` UNIQUE (`comment_id`, `profile_id`);
 
 ALTER TABLE
     `user_post` ADD CONSTRAINT `user_post_profile_id_foreign` FOREIGN KEY(`profile_id`) REFERENCES `user_profile`(`id`);
@@ -107,16 +112,10 @@ INSERT INTO `friendship_status` (`id`, `status`) VALUES (2, 'accepted');
 INSERT INTO `friendship_status` (`id`, `status`) VALUES (3, 'declined');
 INSERT INTO `friendship_status` (`id`, `status`) VALUES (4, 'blocked');
 
-CREATE TABLE IF NOT EXISTS `debug_log`(
-    `id` BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `like_count` BIGINT NOT NULL,
-    `new_post_id` BIGINT NOT NULL    
-);
-
 
 DELIMITER $$
 
-CREATE TRIGGER increment_like_count_after_update
+CREATE TRIGGER increment_like_count_user_post_after_update
 AFTER UPDATE ON post_like 
 FOR EACH ROW
 BEGIN
@@ -132,9 +131,9 @@ $$
 
 DELIMITER ;
 
-
 DELIMITER $$
-CREATE TRIGGER increment_like_count_after_insert
+
+CREATE TRIGGER increment_like_count_user_post_after_insert
 AFTER INSERT ON post_like 
 FOR EACH ROW
 BEGIN
@@ -143,4 +142,65 @@ BEGIN
     WHERE id = NEW.post_id;
 END;
 $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE TRIGGER increment_comment_count
+AFTER INSERT ON post_comment 
+FOR EACH ROW
+BEGIN
+    UPDATE user_post
+    SET comment_count = comment_count + 1
+    WHERE id = NEW.post_id;
+END;
+$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE TRIGGER decrement_comment_count
+AFTER DELETE ON post_comment 
+FOR EACH ROW
+BEGIN
+    UPDATE user_post
+    SET comment_count = comment_count - 1
+    WHERE id = OLD.post_id;
+END;
+$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE TRIGGER increment_like_count_post_comment_after_insert
+AFTER INSERT ON comment_like 
+FOR EACH ROW
+BEGIN
+    UPDATE post_comment 
+    SET like_count = like_count + 1 
+    WHERE id = NEW.comment_id;
+END;
+$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE TRIGGER increment_like_count_post_comment_after_update
+AFTER UPDATE ON comment_like 
+FOR EACH ROW
+BEGIN
+    UPDATE post_comment 
+    SET like_count = CASE  
+        WHEN NEW.created_at IS NOT NULL 
+        THEN like_count + 1 
+        ELSE like_count - 1 
+        END 
+    WHERE id = NEW.comment_id;
+END;
+$$
+
 DELIMITER ;

@@ -6,4 +6,5 @@ export default interface IPostComment {
   profile_id: Pick<IUserProfile, "id">;
   comment_text: string;
   createdAt: Date;
+  updatedAt: Date;
 }

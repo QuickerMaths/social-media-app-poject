@@ -36,9 +36,8 @@ async function generateRandomPost() {
     profile_id: randomId,
     post_text: faker.lorem.paragraphs({ min: 1, max: 3 }),
     media_location: faker.image.url(),
-    share_count: faker.number.int({ min: 1, max: 100 }),
-    comment_count: faker.number.int({ min: 1, max: 100 }),
-    created_at: faker.date.past({ years: 1 })
+    created_at: faker.date.past({ years: 1 }),
+    updated_at: faker.date.past({ years: 1 })
   };
 }
 
@@ -60,13 +59,12 @@ async function generateRandomSharedPosts() {
     shared_post_id: randomPostId,
     post_text: faker.lorem.paragraphs({ min: 1, max: 3 }),
     media_location: faker.image.url(),
-    share_count: faker.number.int({ min: 1, max: 100 }),
-    comment_count: faker.number.int({ min: 1, max: 100 }),
     is_shared: true,
-    created_at: faker.date.past({ years: 1 })
+    created_at: faker.date.past({ years: 1 }),
+    updated_at: faker.date.past({ years: 1 })
   };
 }
-
+//TODO: ensure that post_id and profile_id are unique pair
 async function generatePostLike() {
   const [profile_id] = await connection.query(
     "SELECT id FROM user_profile ORDER BY RAND() LIMIT 1"
@@ -104,7 +102,8 @@ async function generateRandomComment() {
     post_id: randomPostId,
     profile_id: randomProfileId,
     comment_text: faker.lorem.paragraphs({ min: 1, max: 3 }),
-    created_at: faker.date.past({ years: 1 })
+    created_at: faker.date.past({ years: 1 }),
+    updated_at: faker.date.past({ years: 1 })
   };
 }
 

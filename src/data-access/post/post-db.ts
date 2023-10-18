@@ -2,7 +2,12 @@ import { ResultSetHeader } from "mysql2/promise";
 import connection from "../../../db/db.ts";
 import IPostDB from "../../interfaces/functions/IPostDB.interface.ts";
 import IUserPost from "../../interfaces/tables/user_post.interface.ts";
-import { PostCreateDataType, PostUpdateDataType } from "./types.ts";
+import IPostComment from "../../interfaces/tables/post_comment.interface.ts";
+import {
+  PostCreateDataType,
+  PostUpdateDataType,
+  PostWithCommentsType
+} from "./types.ts";
 
 export default function makePostDb({
   db
@@ -17,7 +22,7 @@ export default function makePostDb({
     page: number;
     pageSize: number;
     userId?: number;
-  }): Promise<IUserPost[]> {
+  }): Promise<PostWithCommentsType[]> {
     const offset = (page - 1) * pageSize;
     const limit = pageSize;
 
@@ -27,34 +32,98 @@ export default function makePostDb({
     // the is_liked filed is set to true when created_at is not null, otherwise it is set to null
 
     const sql = `  
-    WITH CTE AS (
-      SELECT DISTINCT
-        up.*,
-        CASE WHEN up.is_shared = 1 THEN sp.post_text END AS shared_post_text,
-        CASE WHEN up.is_shared = 1 THEN sp.media_location END AS shared_media_location,
-        ${
-          userId
-            ? "CASE WHEN pl.profile_id = ? AND pl.created_at IS NOT NULL THEN 1 END AS is_liked"
-            : ""
-        }
-      FROM user_post up
-      LEFT JOIN user_post sp ON up.shared_post_id = sp.id
-      ${userId ? "LEFT JOIN post_like pl ON up.id = pl.post_id" : ""}
+      WITH CTE AS (
+        SELECT DISTINCT
+          up.*,
+          CASE WHEN up.is_shared = 1 THEN sp.post_text END AS shared_post_text,
+          CASE WHEN up.is_shared = 1 THEN sp.media_location END AS shared_media_location
+          ${
+            userId
+              ? ",CASE WHEN pl.profile_id = ? AND pl.created_at IS NOT NULL THEN 1 END AS is_liked"
+              : ""
+          }
+        FROM user_post up
+        LEFT JOIN user_post sp ON up.shared_post_id = sp.id
+        ${userId ? "LEFT JOIN post_like pl ON up.id = pl.post_id" : ""}
       )
-    SELECT *
-      FROM (
-    SELECT *,
-      ROW_NUMBER() OVER (PARTITION BY id ORDER BY is_liked DESC) AS rn
-      FROM CTE
-      ) AS Ranked
-    WHERE rn = 1
-    LIMIT ?
-    OFFSET ?;
+      ${
+        userId
+          ? `
+      SELECT *
+        FROM (
+          SELECT *,
+          ROW_NUMBER() OVER (PARTITION BY id ORDER BY is_liked DESC) AS rn
+          FROM CTE
+        ) AS Ranked
+        WHERE rn = 1`
+          : `SELECT * FROM CTE`
+      }
+      LIMIT ?
+      OFFSET ?;
     `;
 
-    const [result] = await db.query(sql, [userId && userId, limit, offset]);
+    const [result] = await db.query(
+      sql,
+      userId ? [userId, limit, offset] : [limit, offset]
+    );
 
-    return result as IUserPost[];
+    async function getCommentsByPostId({
+      postId,
+      userId
+    }: {
+      postId: number;
+      userId?: number;
+    }): Promise<IPostComment[]> {
+      const [comments] = await db.query(
+        `
+        WITH CTE AS (
+          SELECT DISTINCT
+            pc.*
+            ${
+              userId
+                ? ",CASE WHEN cl.profile_id = ? AND cl.created_at IS NOT NULL THEN 1 END AS is_liked"
+                : ""
+            } 
+            FROM post_comment pc
+            ${
+              userId ? "LEFT JOIN comment_like cl ON pc.id = cl.comment_id" : ""
+            }
+            WHERE pc.post_id = ?
+        )
+        ${
+          userId
+            ? `
+        SELECT *
+          FROM (
+            SELECT *,
+            ROW_NUMBER() OVER (PARTITION BY id ORDER BY is_liked DESC) AS rn
+            FROM CTE
+          ) AS Ranked
+          WHERE rn = 1`
+            : `SELECT * FROM CTE`
+        }
+        `,
+        userId ? [userId, postId] : [postId]
+      );
+
+      return comments as IPostComment[];
+    }
+
+    const postsWithComments: PostWithCommentsType[] = [];
+
+    for (const post of result as IUserPost[]) {
+      const comments =
+        post.comment_count > 0
+          ? await getCommentsByPostId({
+              postId: post.id,
+              userId
+            })
+          : [];
+
+      postsWithComments.push({ post, comments });
+    }
+
+    return postsWithComments;
   }
 
   async function selectPostsByUserId({
@@ -112,6 +181,16 @@ export default function makePostDb({
       shared_post_id
     ]);
 
+    //TODO: refactor this in the future?
+    if (is_shared && shared_post_id) {
+      await db.query(
+        `UPDATE user_post 
+          SET share_count = share_count + 1 
+          WHERE id = ?`,
+        [shared_post_id]
+      );
+    }
+
     const [postRecord] = await db.query(
       "SELECT * FROM user_post WHERE id = ?",
       [(result as ResultSetHeader).insertId]
@@ -143,6 +222,7 @@ export default function makePostDb({
     return (postRecord as IUserPost[])[0];
   }
 
+  //TODO: what happens when post that is shared in other posts is deleted?
   async function deletePost({ postId }: { postId: number }): Promise<{}> {
     const sql = `
     DELETE FROM user_post

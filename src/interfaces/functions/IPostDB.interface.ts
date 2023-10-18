@@ -1,6 +1,7 @@
 import {
   PostCreateDataType,
-  PostUpdateDataType
+  PostUpdateDataType,
+  PostWithCommentsType
 } from "../../data-access/post/types.ts";
 import IUserPost from "../tables/user_post.interface.ts";
 
@@ -13,7 +14,7 @@ export default interface IPostDB {
     page: number;
     pageSize: number;
     userId?: number | undefined;
-  }) => Promise<IUserPost[]>;
+  }) => Promise<PostWithCommentsType[]>;
   selectPostsByUserId: ({
     userId,
     page,
