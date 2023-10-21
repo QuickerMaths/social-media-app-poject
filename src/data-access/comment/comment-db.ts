@@ -2,8 +2,62 @@ import { ResultSetHeader } from "mysql2/promise";
 import connection from "../../../db/db.ts";
 import { CommentCreateDataType, CommentUpdateDataType } from "./types.ts";
 import IPostComment from "../../interfaces/tables/post_comment.interface.ts";
+import ICommentDB from "../../interfaces/functions/ICommentDB.interface.ts";
 
-export default function makeCommentDb({ db }: { db: typeof connection }) {
+export default function makeCommentDb({
+  db
+}: {
+  db: typeof connection;
+}): Readonly<ICommentDB> {
+  async function getCommentsByPostId({
+    postId,
+    userId,
+    page,
+    pageSize
+  }: {
+    postId: number;
+    userId?: number;
+    page: number;
+    pageSize: number;
+  }): Promise<IPostComment[]> {
+    const offset = (page - 1) * pageSize;
+    const limit = pageSize;
+
+    const [comments] = await db.query(
+      `
+      WITH CTE AS (
+        SELECT DISTINCT
+          pc.*
+          ${
+            userId
+              ? ",CASE WHEN cl.profile_id = ? AND cl.created_at IS NOT NULL THEN 1 END AS is_liked"
+              : ""
+          } 
+          FROM post_comment pc
+          ${userId ? "LEFT JOIN comment_like cl ON pc.id = cl.comment_id" : ""}
+          WHERE pc.post_id = ?
+      )
+      ${
+        userId
+          ? `
+      SELECT *
+        FROM (
+          SELECT *,
+          ROW_NUMBER() OVER (PARTITION BY id ORDER BY is_liked DESC) AS rn
+          FROM CTE
+        ) AS Ranked
+        WHERE rn = 1`
+          : `SELECT * FROM CTE`
+      }
+      LIMIT ?
+      OFFSET ?;
+      `,
+      userId ? [userId, postId, limit, offset] : [postId, limit, offset]
+    );
+
+    return comments as IPostComment[];
+  }
+
   async function createComment({
     commentCreateData
   }: {
@@ -90,6 +144,7 @@ export default function makeCommentDb({ db }: { db: typeof connection }) {
   }
 
   return Object.freeze({
+    getCommentsByPostId,
     createComment,
     updateComment,
     deleteComment,
