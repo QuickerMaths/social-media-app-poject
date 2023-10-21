@@ -32,7 +32,7 @@ export default function makeUserDB({
     const limit = pageSize;
 
     const sql = `
-    SELECT * 
+    SELECT id, username, avatar_url, first_name, last_name
       FROM user_profile
       LIMIT ?
       OFFSET ?
