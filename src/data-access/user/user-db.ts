@@ -1,14 +1,10 @@
 import { ResultSetHeader } from "mysql2/promise";
 import connection from "../../../db/db.ts";
 import IUserProfile from "../../interfaces/tables/user_profile.interface.ts";
-import IUserDB from "../../interfaces/functions/IUserDB.interface.ts";
 import { UserCreateDataType, UserUpdateDataType } from "./types.ts";
 
-export default function makeUserDB({
-  db
-}: {
-  db: typeof connection;
-}): Readonly<IUserDB> {
+export default function makeUserDB({ db }: { db: typeof connection }) {
+  //TODO: when user is logged in, query should also return friendship status of both selected and logged in user
   async function selectUserById({
     userId
   }: {

@@ -1,14 +1,9 @@
 import { ResultSetHeader } from "mysql2/promise";
 import connection from "../../../db/db.ts";
-import IPostDB from "../../interfaces/functions/IPostDB.interface.ts";
 import IUserPost from "../../interfaces/tables/user_post.interface.ts";
 import { PostCreateDataType, PostUpdateDataType } from "./types.ts";
 
-export default function makePostDb({
-  db
-}: {
-  db: typeof connection;
-}): Readonly<IPostDB> {
+export default function makePostDb({ db }: { db: typeof connection }) {
   async function selectAllPosts({
     page,
     pageSize,
@@ -56,8 +51,6 @@ export default function makePostDb({
       LIMIT ?
       OFFSET ?;
     `;
-
-    console.log(sql);
 
     const [result] = await db.query(
       sql,

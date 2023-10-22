@@ -2,13 +2,8 @@ import { ResultSetHeader } from "mysql2/promise";
 import connection from "../../../db/db.ts";
 import { CommentCreateDataType, CommentUpdateDataType } from "./types.ts";
 import IPostComment from "../../interfaces/tables/post_comment.interface.ts";
-import ICommentDB from "../../interfaces/functions/ICommentDB.interface.ts";
 
-export default function makeCommentDb({
-  db
-}: {
-  db: typeof connection;
-}): Readonly<ICommentDB> {
+export default function makeCommentDb({ db }: { db: typeof connection }) {
   async function getCommentsByPostId({
     postId,
     userId,
