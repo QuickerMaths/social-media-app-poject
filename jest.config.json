@@ -1,0 +1,8 @@
+{
+  "collectCoverage": false,
+  "detectOpenHandles": true,
+  "verbose": true,
+  "testEnvironment": "node",
+  "forceExit": true,
+  "clearMocks": true
+}
