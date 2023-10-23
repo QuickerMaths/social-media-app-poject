@@ -95,7 +95,17 @@ export default function makePostDb({ db }: { db: typeof connection }) {
     return result as IUserPost[];
   }
 
-  //TODO: select single post by id and figure out good way to fetch paginated comments with it
+  async function selectPostById({ postId }: { postId: number }) {
+    const sql = `
+    SELECT * 
+      FROM user_post
+      WHERE id = ?;
+    `;
+
+    const [post] = await db.query(sql, [postId]);
+
+    return (post as IUserPost[])[0];
+  }
 
   async function createPost({
     postCreateData
@@ -199,6 +209,7 @@ export default function makePostDb({ db }: { db: typeof connection }) {
   return Object.freeze({
     selectAllPosts,
     selectPostsByUserId,
+    selectPostById,
     createPost,
     updatePost,
     deletePost,
