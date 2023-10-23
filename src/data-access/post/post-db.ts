@@ -83,7 +83,7 @@ export default function makePostDb({ db }: { db: typeof connection }) {
       CASE WHEN up.is_shared = 1 THEN sp.media_location END AS shared_media_location,
       CASE WHEN pl.profile_id = ? THEN 1 END AS is_liked
       FROM user_post up
-        LEFT JOIN post_like pl ON up.id = pl.post_id
+        LEFT JOIN post_like pl ON up.id = pl.profile_id
         LEFT JOIN user_post sp ON up.shared_post_id = sp.id
         WHERE up.profile_id = ?
       LIMIT ?
@@ -94,6 +94,8 @@ export default function makePostDb({ db }: { db: typeof connection }) {
 
     return result as IUserPost[];
   }
+
+  //TODO: select single post by id and figure out good way to fetch paginated comments with it
 
   async function createPost({
     postCreateData
