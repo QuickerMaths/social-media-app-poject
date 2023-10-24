@@ -109,7 +109,6 @@ ALTER TABLE
 
 INSERT INTO `friendship_status` (`id`, `status`) VALUES (1, 'pending');
 INSERT INTO `friendship_status` (`id`, `status`) VALUES (2, 'accepted');
-INSERT INTO `friendship_status` (`id`, `status`) VALUES (3, 'declined');
 INSERT INTO `friendship_status` (`id`, `status`) VALUES (4, 'blocked');
 
 

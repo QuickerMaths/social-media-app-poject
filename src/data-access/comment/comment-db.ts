@@ -4,6 +4,65 @@ import { CommentCreateDataType, CommentUpdateDataType } from "./types.ts";
 import IPostComment from "../../interfaces/tables/post_comment.interface.ts";
 
 export default function makeCommentDb({ db }: { db: typeof connection }) {
+  async function getCommentsByPostId({
+    postId,
+    loggedInUserId,
+    page,
+    pageSize
+  }: {
+    postId: number;
+    loggedInUserId?: number;
+    page: number;
+    pageSize: number;
+  }): Promise<IPostComment[]> {
+    const offset = (page - 1) * pageSize;
+    const limit = pageSize;
+
+    // this query is fetching all comments from database
+    // if userId is provided, it will also fetch the is_liked column to indicate if the comment is liked by the user
+    // the is_liked filed is set to true when created_at is not null, otherwise it is set to null
+
+    const [comments] = await db.query(
+      `
+      WITH CTE AS (
+        SELECT DISTINCT
+          pc.*
+          ${
+            loggedInUserId
+              ? ",CASE WHEN cl.profile_id = ? AND cl.created_at IS NOT NULL THEN 1 END AS is_liked"
+              : ""
+          } 
+          FROM post_comment pc
+          ${
+            loggedInUserId
+              ? "LEFT JOIN comment_like cl ON pc.id = cl.comment_id"
+              : ""
+          }
+          WHERE pc.post_id = ?
+      )
+      ${
+        loggedInUserId
+          ? `
+      SELECT *
+        FROM (
+          SELECT *,
+          ROW_NUMBER() OVER (PARTITION BY id ORDER BY is_liked DESC) AS rn
+          FROM CTE
+        ) AS Ranked
+        WHERE rn = 1`
+          : `SELECT * FROM CTE`
+      }
+      LIMIT ?
+      OFFSET ?;
+      `,
+      loggedInUserId
+        ? [loggedInUserId, postId, limit, offset]
+        : [postId, limit, offset]
+    );
+
+    return comments as IPostComment[];
+  }
+
   async function createComment({
     commentCreateData
   }: {
@@ -90,6 +149,7 @@ export default function makeCommentDb({ db }: { db: typeof connection }) {
   }
 
   return Object.freeze({
+    getCommentsByPostId,
     createComment,
     updateComment,
     deleteComment,
