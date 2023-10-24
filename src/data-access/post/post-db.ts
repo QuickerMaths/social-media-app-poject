@@ -7,11 +7,11 @@ export default function makePostDb({ db }: { db: typeof connection }) {
   async function selectAllPosts({
     page,
     pageSize,
-    userId
+    loggedInUserId
   }: {
     page: number;
     pageSize: number;
-    userId?: number;
+    loggedInUserId?: number;
   }): Promise<IUserPost[]> {
     const offset = (page - 1) * pageSize;
     const limit = pageSize;
@@ -28,16 +28,16 @@ export default function makePostDb({ db }: { db: typeof connection }) {
           CASE WHEN up.is_shared = 1 THEN sp.post_text END AS shared_post_text,
           CASE WHEN up.is_shared = 1 THEN sp.media_location END AS shared_media_location
           ${
-            userId
+            loggedInUserId
               ? ",CASE WHEN pl.profile_id = ? AND pl.created_at IS NOT NULL THEN 1 END AS is_liked"
               : ""
           }
         FROM user_post up
         LEFT JOIN user_post sp ON up.shared_post_id = sp.id
-        ${userId ? "LEFT JOIN post_like pl ON up.id = pl.post_id" : ""}
+        ${loggedInUserId ? "LEFT JOIN post_like pl ON up.id = pl.post_id" : ""}
       )
       ${
-        userId
+        loggedInUserId
           ? `
       SELECT *
         FROM (
@@ -54,7 +54,7 @@ export default function makePostDb({ db }: { db: typeof connection }) {
 
     const [result] = await db.query(
       sql,
-      userId ? [userId, limit, offset] : [limit, offset]
+      loggedInUserId ? [loggedInUserId, limit, offset] : [limit, offset]
     );
 
     return result as IUserPost[];
@@ -62,10 +62,12 @@ export default function makePostDb({ db }: { db: typeof connection }) {
 
   async function selectPostsByUserId({
     userId,
+    loggedInUserId,
     page,
     pageSize
   }: {
     userId: number;
+    loggedInUserId?: number;
     page: number;
     pageSize: number;
   }): Promise<IUserPost[]> {
@@ -77,32 +79,88 @@ export default function makePostDb({ db }: { db: typeof connection }) {
     // as user cannot like their own post, is_liked column is not fetched
 
     const sql = `
-    SELECT 
-      up.*,
-      CASE WHEN up.is_shared = 1 THEN sp.post_text END AS shared_post_text,
-      CASE WHEN up.is_shared = 1 THEN sp.media_location END AS shared_media_location,
-      CASE WHEN pl.profile_id = ? THEN 1 END AS is_liked
-      FROM user_post up
-        LEFT JOIN post_like pl ON up.id = pl.profile_id
-        LEFT JOIN user_post sp ON up.shared_post_id = sp.id
-        WHERE up.profile_id = ?
+    WITH CTE AS (
+      SELECT 
+        up.*,
+        CASE WHEN up.is_shared = 1 THEN sp.post_text END AS shared_post_text,
+        CASE WHEN up.is_shared = 1 THEN sp.media_location END AS shared_media_location
+        ${
+          loggedInUserId && loggedInUserId !== userId
+            ? ",CASE WHEN pl.profile_id = ? AND pl.created_at IS NOT NULL THEN 1 END AS is_liked"
+            : ""
+        }
+        FROM user_post up
+        ${
+          loggedInUserId && loggedInUserId !== userId
+            ? " LEFT JOIN post_like pl ON up.id = pl.post_id"
+            : ""
+        }
+          LEFT JOIN user_post sp ON up.shared_post_id = sp.id
+          WHERE up.profile_id = ?
+      )
+      ${
+        loggedInUserId && loggedInUserId !== userId
+          ? `
+      SELECT *
+        FROM (
+          SELECT *,
+          ROW_NUMBER() OVER (PARTITION BY id ORDER BY is_liked DESC) AS rn
+          FROM CTE
+        ) AS Ranked
+        WHERE rn = 1`
+          : `SELECT * FROM CTE`
+      }
       LIMIT ?
       OFFSET ?;
     `;
 
-    const [result] = await db.query(sql, [userId, userId, limit, offset]);
+    const [result] = await db.query(
+      sql,
+      loggedInUserId
+        ? [loggedInUserId, userId, limit, offset]
+        : [userId, limit, offset]
+    );
 
     return result as IUserPost[];
   }
 
-  async function selectPostById({ postId }: { postId: number }) {
+  async function selectPostById({
+    postId,
+    loggedInUserId
+  }: {
+    postId: number;
+    loggedInUserId?: number;
+  }) {
     const sql = `
-    SELECT * 
-      FROM user_post
-      WHERE id = ?;
+    WITH CTE AS (
+    SELECT up.* 
+      ${
+        loggedInUserId
+          ? ",CASE WHEN pl.profile_id = ? AND pl.created_at IS NOT NULL THEN 1 END AS is_liked"
+          : ""
+      }
+      FROM user_post up
+      ${loggedInUserId ? "LEFT JOIN post_like pl ON up.id = pl.post_id" : ""}
+      WHERE up.id = ?
+    )
+    ${
+      loggedInUserId
+        ? `
+    SELECT *
+      FROM (
+        SELECT *,
+        ROW_NUMBER() OVER (PARTITION BY id ORDER BY is_liked DESC) AS rn
+        FROM CTE
+      ) AS Ranked
+      WHERE rn = 1`
+        : `SELECT * FROM CTE`
+    }
     `;
 
-    const [post] = await db.query(sql, [postId]);
+    const [post] = await db.query(
+      sql,
+      loggedInUserId ? [loggedInUserId, postId] : [postId]
+    );
 
     return (post as IUserPost[])[0];
   }

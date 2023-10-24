@@ -6,12 +6,12 @@ import IPostComment from "../../interfaces/tables/post_comment.interface.ts";
 export default function makeCommentDb({ db }: { db: typeof connection }) {
   async function getCommentsByPostId({
     postId,
-    userId,
+    loggedInUserId,
     page,
     pageSize
   }: {
     postId: number;
-    userId?: number;
+    loggedInUserId?: number;
     page: number;
     pageSize: number;
   }): Promise<IPostComment[]> {
@@ -28,16 +28,20 @@ export default function makeCommentDb({ db }: { db: typeof connection }) {
         SELECT DISTINCT
           pc.*
           ${
-            userId
+            loggedInUserId
               ? ",CASE WHEN cl.profile_id = ? AND cl.created_at IS NOT NULL THEN 1 END AS is_liked"
               : ""
           } 
           FROM post_comment pc
-          ${userId ? "LEFT JOIN comment_like cl ON pc.id = cl.comment_id" : ""}
+          ${
+            loggedInUserId
+              ? "LEFT JOIN comment_like cl ON pc.id = cl.comment_id"
+              : ""
+          }
           WHERE pc.post_id = ?
       )
       ${
-        userId
+        loggedInUserId
           ? `
       SELECT *
         FROM (
@@ -51,7 +55,9 @@ export default function makeCommentDb({ db }: { db: typeof connection }) {
       LIMIT ?
       OFFSET ?;
       `,
-      userId ? [userId, postId, limit, offset] : [postId, limit, offset]
+      loggedInUserId
+        ? [loggedInUserId, postId, limit, offset]
+        : [postId, limit, offset]
     );
 
     return comments as IPostComment[];

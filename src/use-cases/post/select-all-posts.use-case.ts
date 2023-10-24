@@ -1,23 +1,23 @@
 import postDb from "../../data-access/post/index.ts";
 import commentDb from "../../data-access/comment/index.ts";
 
-export default function makeSelectAllPosts({
+export default function makeSelectAllPostsUseCase({
   post,
   comment
 }: {
   post: typeof postDb;
   comment: typeof commentDb;
 }) {
-  return async function selectAllPosts({
+  return async function selectAllPostsUseCase({
     page,
     pageSize,
-    userId
+    loggedInUserId
   }: {
     page: number;
     pageSize: number;
-    userId?: number;
+    loggedInUserId?: number;
   }) {
-    const posts = await post.selectAllPosts({ page, pageSize, userId });
+    const posts = await post.selectAllPosts({ page, pageSize, loggedInUserId });
 
     const postsWithComments = [];
 
@@ -26,7 +26,7 @@ export default function makeSelectAllPosts({
     for (const post of posts) {
       const comments = await comment.getCommentsByPostId({
         postId: post.id,
-        userId,
+        loggedInUserId,
         page: 1,
         pageSize: 2
       });

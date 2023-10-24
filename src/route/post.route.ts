@@ -4,11 +4,15 @@ import postController from "../controllers/post/index.ts";
 
 const router = express.Router();
 
-const { selectAllPosts, selectAllPostsByUserId } = postController;
+const {
+  selectAllPostsController,
+  selectAllPostsByUserIdController,
+  selectPostByIdController
+} = postController;
 
 router
-  .get("/", expressCallback(selectAllPosts))
-  .get("/:userId", expressCallback(selectAllPostsByUserId))
-  .get("/:userId/:postId", expressCallback(selectAllPostsByUserId));
+  .get("/", expressCallback(selectAllPostsController))
+  .get("/user/:userId", expressCallback(selectAllPostsByUserIdController))
+  .get("/:postId/", expressCallback(selectPostByIdController));
 
 export default router;

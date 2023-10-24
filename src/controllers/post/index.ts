@@ -1,15 +1,22 @@
 import postUseCase from "../../use-cases/post/index.ts";
 import makeSelectAllPostsController from "./select-all-posts.controller.ts";
-import makeSelectAllPostsByUserId from "./select-all-posts-by-user-id.controller.ts";
+import makeSelectAllPostsByUserIdController from "./select-all-posts-by-user-id.controller.ts";
+import makeSelectPostByIdController from "./select-post-by-id.controller.ts";
 
-const selectAllPosts = makeSelectAllPostsController({ useCase: postUseCase });
-const selectAllPostsByUserId = makeSelectAllPostsByUserId({
-  useCase: postUseCase
+const selectAllPostsController = makeSelectAllPostsController({
+  useCase: postUseCase.selectAllPostsUseCase
+});
+const selectAllPostsByUserIdController = makeSelectAllPostsByUserIdController({
+  useCase: postUseCase.selectAllPostsByUserIdUseCase
+});
+const selectPostByIdController = makeSelectPostByIdController({
+  useCase: postUseCase.selectPostByIdUseCase
 });
 
 const postController = Object.freeze({
-  selectAllPosts,
-  selectAllPostsByUserId
+  selectAllPostsController,
+  selectAllPostsByUserIdController,
+  selectPostByIdController
 });
 
 export default postController;
