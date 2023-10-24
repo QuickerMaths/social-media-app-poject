@@ -18,6 +18,10 @@ export default function makeCommentDb({ db }: { db: typeof connection }) {
     const offset = (page - 1) * pageSize;
     const limit = pageSize;
 
+    // this query is fetching all comments from database
+    // if userId is provided, it will also fetch the is_liked column to indicate if the comment is liked by the user
+    // the is_liked filed is set to true when created_at is not null, otherwise it is set to null
+
     const [comments] = await db.query(
       `
       WITH CTE AS (

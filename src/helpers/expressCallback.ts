@@ -12,7 +12,8 @@ interface IResponse {
 export default (controller: IController) =>
   (req: Request, res: Response, next: NextFunction) => {
     const httpRequest = {
-      query: req.query
+      query: req.query,
+      params: req.params
     };
 
     controller(httpRequest)

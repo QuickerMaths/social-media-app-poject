@@ -7,11 +7,12 @@ export default function makeSelectAllPostsController({
 }) {
   return async function selectAllPostsController(httpRequest: any) {
     const { page, pageSize } = httpRequest.query;
+    const userId = httpRequest.params?.userId;
 
     const posts = await useCase.selectAllPosts({
       page: +page || 1,
       pageSize: +pageSize || 10,
-      userId: httpRequest.user?.id
+      userId
     });
 
     return {
