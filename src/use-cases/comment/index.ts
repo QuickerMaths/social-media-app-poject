@@ -4,10 +4,18 @@ import makeUpdateCommentUseCase from "./update-comment.use-case.ts";
 import makeDeleteCommentUseCase from "./delete-comment.use-case.ts";
 import makeLikeCommentUseCase from "./like-comment.use-case.ts";
 
-const createCommentUseCase = makeCreateCommentUseCase({ comment: commentDb });
-const updateCommentUseCase = makeUpdateCommentUseCase({ comment: commentDb });
-const deleteCommentUseCase = makeDeleteCommentUseCase({ comment: commentDb });
-const likeCommentUseCase = makeLikeCommentUseCase({ comment: commentDb });
+const createCommentUseCase = makeCreateCommentUseCase({
+  commentDataBase: commentDb
+});
+const updateCommentUseCase = makeUpdateCommentUseCase({
+  commentDataBase: commentDb
+});
+const deleteCommentUseCase = makeDeleteCommentUseCase({
+  commentDataBase: commentDb
+});
+const likeCommentUseCase = makeLikeCommentUseCase({
+  commentDataBase: commentDb
+});
 
 const commentUseCase = Object.freeze({
   createCommentUseCase,

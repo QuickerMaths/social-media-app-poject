@@ -2,16 +2,16 @@ import userDB from "../../data-access/user/index.ts";
 import { UserCreateDataType } from "../../data-access/user/types.ts";
 
 export default function makeCreateUserUseCase({
-  user
+  userDataBase
 }: {
-  user: typeof userDB;
+  userDataBase: typeof userDB;
 }) {
   return async function createUserUseCse({
     userCreateData
   }: {
     userCreateData: UserCreateDataType;
   }) {
-    const existingUser = await user.selectUserByEmail({
+    const existingUser = await userDataBase.selectUserByEmail({
       email: userCreateData.email
     });
 
@@ -20,7 +20,7 @@ export default function makeCreateUserUseCase({
     }
     //TODO: validation
     //TODO: hash password
-    const createdUser = await user.createUser({ userCreateData });
+    const createdUser = await userDataBase.createUser({ userCreateData });
 
     return createdUser;
   };

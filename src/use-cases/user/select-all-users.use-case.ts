@@ -1,9 +1,9 @@
 import userDB from "../../data-access/user/index.ts";
 
 export default function makeSelectAllUsersUseCase({
-  user
+  userDataBase
 }: {
-  user: typeof userDB;
+  userDataBase: typeof userDB;
 }) {
   return async function selectAllUsersUseCase({
     page,
@@ -12,7 +12,7 @@ export default function makeSelectAllUsersUseCase({
     page: number;
     pageSize: number;
   }) {
-    const selectedUsers = await user.selectAllUsers({ page, pageSize });
+    const selectedUsers = await userDataBase.selectAllUsers({ page, pageSize });
 
     return selectedUsers;
   };

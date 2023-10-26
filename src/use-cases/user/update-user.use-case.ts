@@ -2,9 +2,9 @@ import userDB from "../../data-access/user/index.ts";
 import { UserUpdateDataType } from "../../data-access/user/types.ts";
 
 export default function makeUpdateUserUseCase({
-  user
+  userDataBase
 }: {
-  user: typeof userDB;
+  userDataBase: typeof userDB;
 }) {
   return async function updateUserUseCase({
     userId,
@@ -13,7 +13,10 @@ export default function makeUpdateUserUseCase({
     userId: number;
     userUpdateData: UserUpdateDataType;
   }) {
-    const updatedUser = await user.updateUser({ userId, userUpdateData });
+    const updatedUser = await userDataBase.updateUser({
+      userId,
+      userUpdateData
+    });
 
     return updatedUser;
   };

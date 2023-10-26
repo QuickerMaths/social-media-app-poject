@@ -1,6 +1,10 @@
 import postDb from "../../data-access/post/index.ts";
 
-export default function makeLikePostUseCase({ post }: { post: typeof postDb }) {
+export default function makeLikePostUseCase({
+  postDataBase
+}: {
+  postDataBase: typeof postDb;
+}) {
   return async function likePostUseCase({
     userId,
     postId
@@ -8,7 +12,7 @@ export default function makeLikePostUseCase({ post }: { post: typeof postDb }) {
     userId: number;
     postId: number;
   }) {
-    const likedPost = await post.likePost({ userId, postId });
+    const likedPost = await postDataBase.likePost({ userId, postId });
 
     return likedPost;
   };

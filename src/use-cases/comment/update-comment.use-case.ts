@@ -2,9 +2,9 @@ import commentDb from "../../data-access/comment/index.ts";
 import { CommentUpdateDataType } from "../../data-access/comment/types.ts";
 
 export default function makeUpdateCommentUseCase({
-  comment
+  commentDataBase
 }: {
-  comment: typeof commentDb;
+  commentDataBase: typeof commentDb;
 }) {
   return async function updateCommentUseCase({
     commentId,
@@ -14,7 +14,7 @@ export default function makeUpdateCommentUseCase({
     commentUpdateData: CommentUpdateDataType;
   }) {
     //TODO: validation
-    const updatedComment = await comment.updateComment({
+    const updatedComment = await commentDataBase.updateComment({
       commentId,
       commentUpdateData
     });

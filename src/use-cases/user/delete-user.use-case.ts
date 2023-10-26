@@ -1,12 +1,12 @@
 import userDB from "../../data-access/user/index.ts";
 
 export default function makeDeleteUserUseCase({
-  user
+  userDataBase
 }: {
-  user: typeof userDB;
+  userDataBase: typeof userDB;
 }) {
   return async function deleteUserUseCase({ userId }: { userId: number }) {
-    const deletedUser = await user.deleteUser({ userId });
+    const deletedUser = await userDataBase.deleteUser({ userId });
 
     return deletedUser;
   };

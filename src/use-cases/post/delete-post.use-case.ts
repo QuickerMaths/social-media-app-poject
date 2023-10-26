@@ -1,12 +1,12 @@
 import postDb from "../../data-access/post/index.ts";
 
 export default function makeDeletePostUseCase({
-  post
+  postDataBase
 }: {
-  post: typeof postDb;
+  postDataBase: typeof postDb;
 }) {
   return async function deletePostUseCase({ postId }: { postId: number }) {
-    const deletedPost = await post.deletePost({ postId });
+    const deletedPost = await postDataBase.deletePost({ postId });
 
     return deletedPost;
   };

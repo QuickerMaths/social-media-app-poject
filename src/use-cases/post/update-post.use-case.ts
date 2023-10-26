@@ -2,9 +2,9 @@ import postDb from "../../data-access/post/index.ts";
 import { PostUpdateDataType } from "../../data-access/post/types.ts";
 
 export default function makeUpdatePostUseCase({
-  post
+  postDataBase
 }: {
-  post: typeof postDb;
+  postDataBase: typeof postDb;
 }) {
   return async function updatePostUseCase({
     postId,
@@ -14,7 +14,10 @@ export default function makeUpdatePostUseCase({
     postUpdateData: PostUpdateDataType;
   }) {
     //TODO: validate data
-    const updatedPost = await post.updatePost({ postId, postUpdateData });
+    const updatedPost = await postDataBase.updatePost({
+      postId,
+      postUpdateData
+    });
 
     return updatedPost;
   };

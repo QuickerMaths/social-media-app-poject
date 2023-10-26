@@ -10,31 +10,31 @@ import makeDeletePostUseCase from "./delete-post.use-case.ts";
 import makeLikePostUseCase from "./like-post.use-case.ts";
 
 const selectAllPostsUseCase = makeSelectAllPostsUseCase({
-  post: postDb,
-  comment: commentDb,
-  user: userDB
+  postDataBase: postDb,
+  commentDataBase: commentDb,
+  userDataBase: userDB
 });
 const selectAllPostsByUserIdUseCase = makeSelectAllPostsByUserIdUseCase({
-  post: postDb,
-  comment: commentDb,
-  user: userDB
+  postDataBase: postDb,
+  commentDataBase: commentDb,
+  userDataBase: userDB
 });
 const selectPostByIdUseCase = makeSelectPostByIdUseCase({
-  post: postDb,
-  comment: commentDb,
-  user: userDB
+  postDataBase: postDb,
+  commentDataBase: commentDb,
+  userDataBase: userDB
 });
 const createPostUseCase = makeCreatePostUseCase({
-  post: postDb
+  postDataBase: postDb
 });
 const updatePostUseCase = makeUpdatePostUseCase({
-  post: postDb
+  postDataBase: postDb
 });
 const deletePostUseCase = makeDeletePostUseCase({
-  post: postDb
+  postDataBase: postDb
 });
 const likePostUseCase = makeLikePostUseCase({
-  post: postDb
+  postDataBase: postDb
 });
 
 const postUseCase = Object.freeze({

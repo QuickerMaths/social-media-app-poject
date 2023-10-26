@@ -2,9 +2,9 @@ import postDb from "../../data-access/post/index.ts";
 import { PostCreateDataType } from "../../data-access/post/types.ts";
 
 export default function makeCreatePostUseCase({
-  post
+  postDataBase
 }: {
-  post: typeof postDb;
+  postDataBase: typeof postDb;
 }) {
   return async function createPostUseCase({
     userId,
@@ -14,7 +14,10 @@ export default function makeCreatePostUseCase({
     postCreateData: PostCreateDataType;
   }) {
     //TODO: validate data
-    const createdPost = await post.createPost({ userId, postCreateData });
+    const createdPost = await postDataBase.createPost({
+      userId,
+      postCreateData
+    });
 
     return createdPost;
   };

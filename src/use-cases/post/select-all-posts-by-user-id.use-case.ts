@@ -3,13 +3,13 @@ import postDb from "../../data-access/post/index.ts";
 import userDB from "../../data-access/user/index.ts";
 
 export default function makeSelectAllPostsByUserIdUseCase({
-  post,
-  comment,
-  user
+  postDataBase,
+  commentDataBase,
+  userDataBase
 }: {
-  post: typeof postDb;
-  comment: typeof commentDb;
-  user: typeof userDB;
+  postDataBase: typeof postDb;
+  commentDataBase: typeof commentDb;
+  userDataBase: typeof userDB;
 }) {
   return async function selectAllPostsByUserIdUseCase({
     userId,
@@ -22,7 +22,7 @@ export default function makeSelectAllPostsByUserIdUseCase({
     page: number;
     pageSize: number;
   }) {
-    const posts = await post.selectPostsByUserId({
+    const posts = await postDataBase.selectPostsByUserId({
       userId,
       loggedInUserId,
       page,
@@ -34,13 +34,13 @@ export default function makeSelectAllPostsByUserIdUseCase({
     // page and pageSize has hard coded values because there are only two comments displayed per post
     // rest of the comments is displayed when user clicks on selected post and navigates to post details page
     for (const post of posts) {
-      const postOwner = await user.selectUserAvatarAndUsernameById({
+      const postOwner = await userDataBase.selectUserAvatarAndUsernameById({
         // @ts-ignore
         userId: post.profile_id
       });
       const postWithOwner = { ...post, post_owner: postOwner };
 
-      const comments = await comment.selectCommentsByPostId({
+      const comments = await commentDataBase.selectCommentsByPostId({
         postId: post.id,
         loggedInUserId,
         page: 1,
@@ -50,10 +50,12 @@ export default function makeSelectAllPostsByUserIdUseCase({
       const commentsWithOwner = [];
 
       for (const comment of comments) {
-        const commentOwner = await user.selectUserAvatarAndUsernameById({
-          // @ts-ignore
-          userId: comment.profile_id
-        });
+        const commentOwner = await userDataBase.selectUserAvatarAndUsernameById(
+          {
+            // @ts-ignore
+            userId: comment.profile_id
+          }
+        );
 
         commentsWithOwner.push({ ...comment, comment_owner: commentOwner });
       }
@@ -63,8 +65,6 @@ export default function makeSelectAllPostsByUserIdUseCase({
         comments: commentsWithOwner
       });
     }
-
-    return postsWithOwnerAndComments;
 
     return postsWithOwnerAndComments;
   };

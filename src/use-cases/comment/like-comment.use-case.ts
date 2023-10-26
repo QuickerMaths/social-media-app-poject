@@ -1,9 +1,9 @@
 import commentDb from "../../data-access/comment/index.ts";
 
 export default function makeLikeCommentUseCase({
-  comment
+  commentDataBase
 }: {
-  comment: typeof commentDb;
+  commentDataBase: typeof commentDb;
 }) {
   return async function likeComment({
     commentId,
@@ -12,7 +12,10 @@ export default function makeLikeCommentUseCase({
     commentId: number;
     userId: number;
   }) {
-    const likedComment = await comment.likeComment({ commentId, userId });
+    const likedComment = await commentDataBase.likeComment({
+      commentId,
+      userId
+    });
 
     return likedComment;
   };
