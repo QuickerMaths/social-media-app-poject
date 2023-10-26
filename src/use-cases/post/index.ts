@@ -1,6 +1,5 @@
 import postDb from "../../data-access/post/index.ts";
 import commentDb from "../../data-access/comment/index.ts";
-import userDB from "../../data-access/user/index.ts";
 import makeSelectAllPostsUseCase from "./select-all-posts.use-case.ts";
 import makeSelectAllPostsByUserIdUseCase from "./select-all-posts-by-user-id.use-case.ts";
 import makeSelectPostByIdUseCase from "./select-post-by-id.use-case.ts";
@@ -11,18 +10,15 @@ import makeLikePostUseCase from "./like-post.use-case.ts";
 
 const selectAllPostsUseCase = makeSelectAllPostsUseCase({
   postDataBase: postDb,
-  commentDataBase: commentDb,
-  userDataBase: userDB
+  commentDataBase: commentDb
 });
 const selectAllPostsByUserIdUseCase = makeSelectAllPostsByUserIdUseCase({
   postDataBase: postDb,
-  commentDataBase: commentDb,
-  userDataBase: userDB
+  commentDataBase: commentDb
 });
 const selectPostByIdUseCase = makeSelectPostByIdUseCase({
   postDataBase: postDb,
-  commentDataBase: commentDb,
-  userDataBase: userDB
+  commentDataBase: commentDb
 });
 const createPostUseCase = makeCreatePostUseCase({
   postDataBase: postDb

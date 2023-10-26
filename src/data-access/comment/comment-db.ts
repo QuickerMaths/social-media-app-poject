@@ -26,7 +26,8 @@ export default function makeCommentDb({ db }: { db: typeof connection }) {
       `
       WITH CTE AS (
         SELECT DISTINCT
-          pc.*
+          pc.*,
+          json_object('username', up.username, 'avatar_url', up.avatar_url) AS comment_owner
           ${
             loggedInUserId
               ? ",CASE WHEN cl.profile_id = ? AND cl.created_at IS NOT NULL THEN 1 END AS is_liked"
@@ -38,6 +39,7 @@ export default function makeCommentDb({ db }: { db: typeof connection }) {
               ? "LEFT JOIN comment_like cl ON pc.id = cl.comment_id"
               : ""
           }
+          LEFT JOIN user_profile up ON pc.profile_id = up.id
           WHERE pc.post_id = ?
       )
       ${

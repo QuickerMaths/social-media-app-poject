@@ -25,8 +25,19 @@ export default function makePostDb({ db }: { db: typeof connection }) {
       WITH CTE AS (
         SELECT DISTINCT
           up.*,
-          CASE WHEN up.is_shared = 1 THEN sp.post_text END AS shared_post_text,
-          CASE WHEN up.is_shared = 1 THEN sp.media_location END AS shared_media_location
+          json_object(
+            'username', upr.username,
+             'avatar_url', upr.avatar_url
+          ) AS post_owner,
+          CASE
+          WHEN up.is_shared = 1 THEN JSON_OBJECT(
+              'post_owner', JSON_OBJECT('username', spr.username, 'avatar_url', spr.avatar_url),
+              'post_text', sp.post_text,
+              'media_location', sp.media_location,
+              'created_at', sp.created_at
+          )
+          ELSE NULL 
+          END AS shared_post
           ${
             loggedInUserId
               ? ",CASE WHEN pl.profile_id = ? AND pl.created_at IS NOT NULL THEN 1 END AS is_liked"
@@ -34,6 +45,8 @@ export default function makePostDb({ db }: { db: typeof connection }) {
           }
         FROM user_post up
         LEFT JOIN user_post sp ON up.shared_post_id = sp.id
+        LEFT JOIN user_profile upr ON upr.id = up.profile_id
+        LEFT JOIN user_profile spr ON sp.profile_id = spr.id
         ${loggedInUserId ? "LEFT JOIN post_like pl ON up.id = pl.post_id" : ""}
       )
       ${
@@ -82,8 +95,19 @@ export default function makePostDb({ db }: { db: typeof connection }) {
     WITH CTE AS (
       SELECT 
         up.*,
-        CASE WHEN up.is_shared = 1 THEN sp.post_text END AS shared_post_text,
-        CASE WHEN up.is_shared = 1 THEN sp.media_location END AS shared_media_location
+        json_object(
+          'username', upr.username,
+           'avatar_url', upr.avatar_url
+        ) AS post_owner,
+        CASE
+        WHEN up.is_shared = 1 THEN JSON_OBJECT(
+            'post_owner', JSON_OBJECT('username', spr.username, 'avatar_url', spr.avatar_url),
+            'post_text', sp.post_text,
+            'media_location', sp.media_location,
+            'created_at', sp.created_at
+        )
+        ELSE NULL 
+        END AS shared_post
         ${
           loggedInUserId && loggedInUserId !== userId
             ? ",CASE WHEN pl.profile_id = ? AND pl.created_at IS NOT NULL THEN 1 END AS is_liked"
@@ -96,6 +120,8 @@ export default function makePostDb({ db }: { db: typeof connection }) {
             : ""
         }
           LEFT JOIN user_post sp ON up.shared_post_id = sp.id
+          LEFT JOIN user_profile upr ON upr.id = up.profile_id
+          LEFT JOIN user_profile spr ON sp.profile_id = spr.id
           WHERE up.profile_id = ?
       )
       ${
@@ -133,13 +159,30 @@ export default function makePostDb({ db }: { db: typeof connection }) {
   }) {
     const sql = `
     WITH CTE AS (
-    SELECT up.* 
+    SELECT 
+        up.*,
+        json_object(
+            'username', upr.username,
+             'avatar_url', upr.avatar_url
+        ) AS post_owner,
+        CASE
+        WHEN up.is_shared = 1 THEN JSON_OBJECT(
+            'post_owner', JSON_OBJECT('username', spr.username, 'avatar_url', spr.avatar_url),
+            'post_text', sp.post_text,
+            'media_location', sp.media_location,
+            'created_at', sp.created_at
+        )
+        ELSE NULL 
+        END AS shared_post
       ${
         loggedInUserId
           ? ",CASE WHEN pl.profile_id = ? AND pl.created_at IS NOT NULL THEN 1 END AS is_liked"
           : ""
       }
       FROM user_post up
+      LEFT JOIN user_profile upr ON up.profile_id = upr.id
+      LEFT JOIN user_post sp ON up.shared_post_id = sp.id
+      LEFT JOIN user_profile spr ON sp.profile_id = spr.id
       ${loggedInUserId ? "LEFT JOIN post_like pl ON up.id = pl.post_id" : ""}
       WHERE up.id = ?
     )
