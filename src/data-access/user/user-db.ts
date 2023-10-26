@@ -91,7 +91,7 @@ export default function makeUserDB({ db }: { db: typeof connection }) {
     return (userRecord as IUserProfile[])[0];
   }
 
-  async function updateUserById({
+  async function updateUser({
     userId,
     userUpdateData
   }: {
@@ -114,7 +114,7 @@ export default function makeUserDB({ db }: { db: typeof connection }) {
     return (userRecord as IUserProfile[])[0];
   }
 
-  async function deleteUserById({ userId }: { userId: number }): Promise<{}> {
+  async function deleteUser({ userId }: { userId: number }): Promise<{}> {
     const sql = `
     DELETE FROM user_profile
       WHERE id = ?
@@ -130,7 +130,7 @@ export default function makeUserDB({ db }: { db: typeof connection }) {
     selectAllUsers,
     selectAllUserFriends,
     createUser,
-    updateUserById,
-    deleteUserById
+    updateUser,
+    deleteUser
   });
 }
