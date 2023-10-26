@@ -7,12 +7,14 @@ export default function makeCreatePostUseCase({
   post: typeof postDb;
 }) {
   return async function createPostUseCase({
+    userId,
     postCreateData
   }: {
+    userId: number;
     postCreateData: PostCreateDataType;
   }) {
     //TODO: validate data
-    const createdPost = await post.createPost({ postCreateData });
+    const createdPost = await post.createPost({ userId, postCreateData });
 
     return createdPost;
   };

@@ -6,9 +6,10 @@ export default function makeCreatePostController({
   useCase: typeof postUseCase.createPostUseCase;
 }) {
   return async function createPostController(httpRequest: any) {
-    const postCreateData = httpRequest.body;
+    const userId = httpRequest.body.userId;
+    const postCreateData = httpRequest.body.postCreateData;
 
-    const createdPost = await useCase({ postCreateData });
+    const createdPost = await useCase({ userId, postCreateData });
 
     return {
       statusCode: 201,

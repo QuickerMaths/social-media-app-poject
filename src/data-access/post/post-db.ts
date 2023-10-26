@@ -166,8 +166,10 @@ export default function makePostDb({ db }: { db: typeof connection }) {
   }
 
   async function createPost({
+    userId,
     postCreateData
   }: {
+    userId: number;
     postCreateData: PostCreateDataType;
   }): Promise<IUserPost> {
     const sql = `
@@ -175,10 +177,9 @@ export default function makePostDb({ db }: { db: typeof connection }) {
     VALUES (?, ?, ?, ?, ?, NOW());
     `;
 
-    const { profile_id, post_text, media_location, shared_post_id } =
-      postCreateData;
+    const { post_text, media_location, shared_post_id } = postCreateData;
     const [result] = await db.query(sql, [
-      profile_id,
+      userId,
       post_text,
       media_location,
       shared_post_id ? true : false,
