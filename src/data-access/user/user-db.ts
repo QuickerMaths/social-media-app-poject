@@ -17,6 +17,14 @@ export default function makeUserDB({ db }: { db: typeof connection }) {
     return (result as IUserProfile[])[0];
   }
 
+  async function selectUserByEmail({ email }: { email: string }) {
+    const sql = "SELECT * FROM user_profile WHERE email = ?";
+
+    const [result] = await db.query(sql, [email]);
+
+    return (result as IUserProfile[])[0];
+  }
+
   async function selectAllUsers({
     page,
     pageSize
@@ -52,12 +60,22 @@ export default function makeUserDB({ db }: { db: typeof connection }) {
     const limit = pageSize;
 
     const sql = `
-    SELECT user_profile.id
+    SELECT 
+      user_profile.id,
+      user_profile.username,
+      user_profile.avatar_url,
+      user_profile.first_name,
+      user_profile.last_name
         FROM user_profile 
         INNER JOIN friendship ON user_profile.id = friendship.profile_responder_id
         WHERE friendship.profile_request_id = ? AND friendship.status_id = 1
       UNION
-    SELECT user_profile.id
+    SELECT 
+      user_profile.id,
+      user_profile.username,
+      user_profile.avatar_url,
+      user_profile.first_name,
+      user_profile.last_name
         FROM user_profile 
         INNER JOIN friendship ON user_profile.id = friendship.profile_request_id
         WHERE friendship.profile_responder_id = ? AND friendship.status_id = 1
@@ -127,6 +145,7 @@ export default function makeUserDB({ db }: { db: typeof connection }) {
 
   return Object.freeze({
     selectUserById,
+    selectUserByEmail,
     selectAllUsers,
     selectAllUserFriends,
     createUser,
