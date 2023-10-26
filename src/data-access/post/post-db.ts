@@ -26,12 +26,13 @@ export default function makePostDb({ db }: { db: typeof connection }) {
         SELECT DISTINCT
           up.*,
           json_object(
+            'id', upr.id,
             'username', upr.username,
              'avatar_url', upr.avatar_url
           ) AS post_owner,
           CASE
           WHEN up.is_shared = 1 THEN JSON_OBJECT(
-              'post_owner', JSON_OBJECT('username', spr.username, 'avatar_url', spr.avatar_url),
+              'post_owner', JSON_OBJECT('id', spr.id, 'username', spr.username, 'avatar_url', spr.avatar_url),
               'post_text', sp.post_text,
               'media_location', sp.media_location,
               'created_at', sp.created_at
@@ -96,12 +97,13 @@ export default function makePostDb({ db }: { db: typeof connection }) {
       SELECT 
         up.*,
         json_object(
+          'id', upr.id,
           'username', upr.username,
            'avatar_url', upr.avatar_url
         ) AS post_owner,
         CASE
         WHEN up.is_shared = 1 THEN JSON_OBJECT(
-            'post_owner', JSON_OBJECT('username', spr.username, 'avatar_url', spr.avatar_url),
+            'post_owner', JSON_OBJECT('id', spr.id, 'username', spr.username, 'avatar_url', spr.avatar_url),
             'post_text', sp.post_text,
             'media_location', sp.media_location,
             'created_at', sp.created_at
@@ -162,12 +164,13 @@ export default function makePostDb({ db }: { db: typeof connection }) {
     SELECT 
         up.*,
         json_object(
-            'username', upr.username,
-             'avatar_url', upr.avatar_url
+          'id', upr.id,
+          'username', upr.username,
+           'avatar_url', upr.avatar_url
         ) AS post_owner,
         CASE
         WHEN up.is_shared = 1 THEN JSON_OBJECT(
-            'post_owner', JSON_OBJECT('username', spr.username, 'avatar_url', spr.avatar_url),
+            'post_owner', JSON_OBJECT('id', spr.id, 'username', spr.username, 'avatar_url', spr.avatar_url),
             'post_text', sp.post_text,
             'media_location', sp.media_location,
             'created_at', sp.created_at
