@@ -175,18 +175,18 @@ export default function makePostDb({ db }: { db: typeof connection }) {
     VALUES (?, ?, ?, ?, ?, NOW());
     `;
 
-    const { profile_id, post_text, media_location, is_shared, shared_post_id } =
+    const { profile_id, post_text, media_location, shared_post_id } =
       postCreateData;
     const [result] = await db.query(sql, [
       profile_id,
       post_text,
       media_location,
-      is_shared,
+      shared_post_id ? true : false,
       shared_post_id
     ]);
 
     //TODO: refactor this in the future?
-    if (is_shared && shared_post_id) {
+    if (shared_post_id) {
       await db.query(
         `UPDATE user_post 
           SET share_count = share_count + 1 

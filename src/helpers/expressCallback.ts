@@ -13,7 +13,8 @@ export default (controller: IController) =>
   (req: Request, res: Response, next: NextFunction) => {
     const httpRequest = {
       query: req.query,
-      params: req.params
+      params: req.params,
+      body: req.body
     };
 
     controller(httpRequest)

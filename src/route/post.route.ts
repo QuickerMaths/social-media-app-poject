@@ -7,12 +7,20 @@ const router = express.Router();
 const {
   selectAllPostsController,
   selectAllPostsByUserIdController,
-  selectPostByIdController
+  selectPostByIdController,
+  createPostController,
+  updatePostController,
+  deletePostController,
+  likePostController
 } = postController;
 
 router
   .get("/", expressCallback(selectAllPostsController))
   .get("/user/:userId", expressCallback(selectAllPostsByUserIdController))
-  .get("/:postId/", expressCallback(selectPostByIdController));
+  .get("/:postId/", expressCallback(selectPostByIdController))
+  .post("/", expressCallback(createPostController))
+  .patch("/:postId", expressCallback(updatePostController))
+  .delete("/:postId", expressCallback(deletePostController))
+  .post("/:postId/like", expressCallback(likePostController));
 
 export default router;

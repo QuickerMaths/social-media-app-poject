@@ -3,7 +3,6 @@ type PostCreateDataType = {
   shared_post_id?: number;
   post_text?: string;
   media_location?: string;
-  is_shared?: boolean;
 };
 
 type PostUpdateDataType = {
