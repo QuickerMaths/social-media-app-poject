@@ -5,6 +5,7 @@ import { UserCreateDataType, UserUpdateDataType } from "./types.ts";
 
 export default function makeUserDB({ db }: { db: typeof connection }) {
   //TODO: when user is logged in, query should also return friendship status of both selected and logged in user
+  //TODO: should also return 4 friends of selected user to display on profile page
   async function selectUserById({
     userId
   }: {
@@ -17,8 +18,21 @@ export default function makeUserDB({ db }: { db: typeof connection }) {
     return (result as IUserProfile[])[0];
   }
 
+  async function selectUserAvatarAndUsernameById({
+    userId
+  }: {
+    userId: number;
+  }): Promise<Pick<IUserProfile, "id" | "username" | "avatar_url">> {
+    const sql =
+      "SELECT id, username, avatar_url FROM user_profile WHERE id = ?";
+
+    const [result] = await db.query(sql, [userId]);
+
+    return (result as IUserProfile[])[0];
+  }
+
   async function selectUserByEmail({ email }: { email: string }) {
-    const sql = "SELECT * FROM user_profile WHERE email = ?";
+    const sql = "SELECT id FROM user_profile WHERE email = ?";
 
     const [result] = await db.query(sql, [email]);
 
@@ -146,6 +160,7 @@ export default function makeUserDB({ db }: { db: typeof connection }) {
   return Object.freeze({
     selectUserById,
     selectUserByEmail,
+    selectUserAvatarAndUsernameById,
     selectAllUsers,
     selectAllUserFriends,
     createUser,

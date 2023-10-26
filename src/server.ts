@@ -17,9 +17,9 @@ function createServer() {
     })
   );
 
-  app.use("/post", postRouter);
-  app.use("/user", userRouter);
-  app.use("/comment", commentRouter);
+  app.use("/api/post", postRouter);
+  app.use("/api/user", userRouter);
+  app.use("/api/comment", commentRouter);
 
   return app;
 }
