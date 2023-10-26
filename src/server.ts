@@ -1,8 +1,7 @@
 import express from "express";
 import cors from "cors";
 import logger from "./helpers/logger.ts";
-import postDb from "./data-access/post/index.ts";
-import commentDb from "./data-access/comment/index.ts";
+import postRouter from "./route/post.route.ts";
 
 function createServer() {
   const app = express();
@@ -16,24 +15,7 @@ function createServer() {
     })
   );
 
-  app.get("/", async (_req, res) => {
-    logger().info("Hello World");
-    // const commentUpdateData = {
-    //   comment_text: "updated comment text"
-    // };
-    const post = await postDb.selectAllPosts({
-      page: 10,
-      pageSize: 10
-    });
-
-    // const post = await postDb.selectAllPosts({
-    //   userId: 100,
-    //   page: 1,
-    //   pageSize: 10
-    // });
-    console.log(post);
-    res.send(post[9].comments);
-  });
+  app.use("/post", postRouter);
 
   return app;
 }
