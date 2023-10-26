@@ -4,7 +4,7 @@ import { CommentCreateDataType, CommentUpdateDataType } from "./types.ts";
 import IPostComment from "../../interfaces/tables/post_comment.interface.ts";
 
 export default function makeCommentDb({ db }: { db: typeof connection }) {
-  async function getCommentsByPostId({
+  async function selectCommentsByPostId({
     postId,
     loggedInUserId,
     page,
@@ -64,8 +64,10 @@ export default function makeCommentDb({ db }: { db: typeof connection }) {
   }
 
   async function createComment({
+    userId,
     commentCreateData
   }: {
+    userId: number;
     commentCreateData: CommentCreateDataType;
   }): Promise<IPostComment> {
     const sql = `
@@ -73,8 +75,8 @@ export default function makeCommentDb({ db }: { db: typeof connection }) {
     VALUES (?, ?, ?, NOW());
     `;
 
-    const { profile_id, post_id, comment_text } = commentCreateData;
-    const [result] = await db.query(sql, [profile_id, post_id, comment_text]);
+    const { post_id, comment_text } = commentCreateData;
+    const [result] = await db.query(sql, [userId, post_id, comment_text]);
 
     const [commentRecord] = await db.query(
       "SELECT * FROM post_comment WHERE id = ?",
@@ -149,7 +151,7 @@ export default function makeCommentDb({ db }: { db: typeof connection }) {
   }
 
   return Object.freeze({
-    getCommentsByPostId,
+    selectCommentsByPostId,
     createComment,
     updateComment,
     deleteComment,

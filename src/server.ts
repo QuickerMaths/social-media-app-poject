@@ -3,6 +3,7 @@ import cors from "cors";
 import logger from "./helpers/logger.ts";
 import postRouter from "./route/post.route.ts";
 import userRouter from "./route/user.route.ts";
+import commentRouter from "./route/comment.route.ts";
 
 function createServer() {
   const app = express();
@@ -18,6 +19,7 @@ function createServer() {
 
   app.use("/post", postRouter);
   app.use("/user", userRouter);
+  app.use("/comment", commentRouter);
 
   return app;
 }
