@@ -29,7 +29,7 @@ export default function makeSelectPostByIdUseCase({
       userId: selectedPost.profile_id
     });
 
-    const postWithOwner = { ...selectedPost, postOwner };
+    const postWithOwner = { ...selectedPost, post_owner: postOwner };
 
     const comments = await comment.selectCommentsByPostId({
       postId: selectedPost.id,
@@ -46,7 +46,7 @@ export default function makeSelectPostByIdUseCase({
         userId: comment.profile_id
       });
 
-      commentsWithOwner.push({ ...comment, commentOwner });
+      commentsWithOwner.push({ ...comment, comment_owner: commentOwner });
     }
 
     return {
