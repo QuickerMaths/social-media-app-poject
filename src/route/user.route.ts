@@ -8,7 +8,6 @@ const {
   selectUserByIdController,
   selectAllUsersController,
   selectAllUserFriendsController,
-  createUserController,
   updateUserController,
   deleteUserController
 } = userController;
@@ -17,7 +16,6 @@ router
   .get("/:userId", expressCallback(selectUserByIdController))
   .get("/", expressCallback(selectAllUsersController))
   .get("/:userId/friends", expressCallback(selectAllUserFriendsController))
-  .post("/", expressCallback(createUserController))
   .patch("/:userId", expressCallback(updateUserController))
   .delete("/:userId", expressCallback(deleteUserController));
 
