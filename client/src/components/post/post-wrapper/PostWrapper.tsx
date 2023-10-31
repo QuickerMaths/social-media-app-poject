@@ -2,7 +2,6 @@
 
 import React from "react";
 import moment from "moment";
-import { EntityId } from "@reduxjs/toolkit";
 
 // Internal dependencies
 
@@ -13,50 +12,36 @@ import Post from "./original-post/Post";
 import RePost from "./rePost/RePost";
 import { useAppSelector } from "../../../hooks/reduxHooks";
 import { RootState } from "../../../redux/store";
-import { IPost, IRePost } from "../types";
-import { useSelectPostFromResult } from "../../../hooks/useSelectPostFromResult";
+import { IPost } from "../types";
 
 interface Props {
-  postId: EntityId;
-  userId: string | undefined;
+  post: IPost;
+  userId: number | undefined;
 }
 
-const PostWrapper: React.FC<Props> = ({ postId, userId }) => {
+const PostWrapper: React.FC<Props> = ({ post }) => {
   const { userId: activeUserId } = useAppSelector(
     (state: RootState) => state.auth
   );
   const { modals } = useAppSelector((state: RootState) => state.modal);
 
-  const post = useSelectPostFromResult({
-    userId,
-    postId,
-  });
-
-  const { owner, isRePost, postBody, createdAt } = post;
+  const { is_shared, post_text, created_at, profile_id, post_owner, id } = post;
 
   return (
     <li className="post">
       <div className="post__top-container">
-        <PostOwner owner={owner} />
-        {owner._id === activeUserId ? (
+        <PostOwner post_owner={post_owner} />
+        {profile_id === activeUserId ? (
           <>
-            <PostEdit post={isRePost ? (post as IRePost) : (post as IPost)} />
-            {modals[`${postId}edit`] && (
-              <PostEditModal
-                post={isRePost ? (post as IRePost) : (post as IPost)}
-              />
-            )}
+            <PostEdit post={post} />
+            {modals[`${id}edit`] && <PostEditModal post={post} />}
           </>
         ) : (
-          <p className="post__createdAt">{moment(createdAt).fromNow()}</p>
+          <p className="post__createdAt">{moment(created_at).fromNow()}</p>
         )}
       </div>
-      <p className="post__body">{postBody}</p>
-      {isRePost ? (
-        <RePost rePost={post as IRePost} />
-      ) : (
-        <Post post={post as IPost} />
-      )}
+      <p className="post__body">{post_text}</p>
+      {is_shared ? <RePost rePost={post} /> : <Post post={post} />}
     </li>
   );
 };

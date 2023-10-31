@@ -1,31 +1,20 @@
 // External dependencies
 
-import { createEntityAdapter, SerializedError } from "@reduxjs/toolkit";
+import { EntityState, SerializedError } from "@reduxjs/toolkit";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
 
 // Internal dependencies
 
-import { IUserAddress } from "../../../components/user-details/types";
 import { errorTransformer } from "../../../hooks/reduxHooks";
-import { IUser, IUserBasicData } from "../../../pages/user-profile/types";
+import { IUser, IUserPartial } from "../../../pages/user-profile/types";
 import { apiSlice } from "../apiSlice";
-import { IErrorResponse, IResponse } from "../types";
-
-const friendsAdapter = createEntityAdapter<IUserBasicData>({
-  selectId: (friend) => friend._id,
-});
+import { IErrorResponse } from "../types";
+import { IUserUpdateData } from "../../../pages/user-profile/types";
 
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getAllUsers: builder.query<IUserBasicData[], void>({
-      query: () => "/api/users",
-      transformResponse: (response: IResponse<string, IUser[]>) => {
-        return response.data.map((user) => ({
-          _id: user._id,
-          username: user.username,
-          profilePicture: user.profilePicture,
-        }));
-      },
+    getAllUsers: builder.query<IUserPartial[], { page: number }>({
+      query: ({ page = 1 }) => `/api/user?page=${page}&pageSize=20`,
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
@@ -34,48 +23,34 @@ export const userApiSlice = apiSlice.injectEndpoints({
     getUserById: builder.query<IUser, string>({
       query: (userId: string) => ({
         method: "GET",
-        url: `/api/users/${userId}`,
+        url: `/api/user/${userId}`,
       }),
-      transformResponse: (response: IResponse<string, IUser>) => {
-        response.data.friends = friendsAdapter.setAll(
-          friendsAdapter.getInitialState(),
-          response.data.friends as IUserBasicData[]
-        );
-        return response.data;
-      },
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
       providesTags: (result, error, id) => [{ type: "User", id }],
     }),
 
-    updateUserAddress: builder.mutation<
-      IResponse<string, IUser>,
-      { userId: string; addressToUpdate: IUserAddress }
+    getAllUserFriends: builder.query<
+      IUserPartial[],
+      { userId: number; page: number }
     >({
-      query: ({ userId, addressToUpdate }) => {
-        return {
-          method: "PUT",
-          url: "/api/users",
-          body: { userId, addressToUpdate },
-        };
-      },
+      query: ({ userId, page = 1 }) =>
+        `/api/user/${userId}/friends?page=${page}&pageSize=20`,
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
-      invalidatesTags: (result, error, req) =>
-        error ? [] : [{ type: "User", id: req.userId }],
     }),
 
-    uploadUserImage: builder.mutation<
-      IResponse<string, IUser>,
-      { userId: string; path: string | null }
+    updateUser: builder.mutation<
+      IUser,
+      { userId: number; userUpdateData: IUserUpdateData }
     >({
-      query: ({ userId, path }) => {
+      query: ({ userId, userUpdateData }) => {
         return {
-          method: "PUT",
-          url: "/api/users/uploads",
-          body: { userId, path },
+          method: "PATCH",
+          url: `/api/user/${userId}`,
+          body: userUpdateData,
         };
       },
       transformErrorResponse: (
@@ -90,6 +65,6 @@ export const userApiSlice = apiSlice.injectEndpoints({
 export const {
   useGetAllUsersQuery,
   useGetUserByIdQuery,
-  useUpdateUserAddressMutation,
-  useUploadUserImageMutation,
+  useGetAllUserFriendsQuery,
+  useUpdateUserMutation,
 } = userApiSlice;

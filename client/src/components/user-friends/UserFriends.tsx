@@ -1,12 +1,8 @@
-// External dependencies
-
-import { EntityId, EntityState } from "@reduxjs/toolkit";
-
 // Internal dependencies
 
 import Friend from "../friend/Friend";
 import UserFriendsModal from "../../portals/user-friends-modal/UserFriendsModal";
-import { IUser, IUserBasicData } from "../../pages/user-profile/types";
+import { IUser } from "../../pages/user-profile/types";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { openModal } from "../../features/modalSlice/modalSlice";
 import { RootState } from "../../redux/store";
@@ -16,16 +12,15 @@ interface Props {
 }
 
 const UserFriends: React.FC<Props> = ({ user }) => {
-  const { friends } = user;
   const dispatch = useAppDispatch();
 
   const { modals } = useAppSelector((state: RootState) => state.modal);
-
+  //TODO: display 4 friends after adding it to backend response
   return (
     <>
       <section className="user-friends">
         <h4 className="user-friends__title">Friends</h4>
-        {(friends as EntityState<IUserBasicData>).ids.length > 0 ? (
+        {/* {(friends as EntityState<IUserBasicData>).ids.length > 0 ? (
           <>
             <ul className="users-friends__list">
               {(friends as EntityState<IUserBasicData>).ids.map(
@@ -45,7 +40,13 @@ const UserFriends: React.FC<Props> = ({ user }) => {
           </>
         ) : (
           <p>No friends yet</p>
-        )}
+        )} */}
+        <button
+          className="user-friends__see-more"
+          onClick={() => dispatch(openModal("userFriendsModal"))}
+        >
+          See more...
+        </button>
       </section>
       {modals["userFriendsModal"] && <UserFriendsModal />}
     </>

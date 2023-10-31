@@ -20,7 +20,7 @@ interface Props {
 
 const PostEditImageForm: React.FC<Props> = ({ post }) => {
   //TODO: when image is already uploaded and user wants to edit post, this occures in the console ||| response Formik.tsx:823 Warning: An unhandled error was caught from submitForm() TypeError: Failed to execute 'readAsDataURL' on 'FileReader': parameter 1 is not of type 'Blob'.
-  const { _id: postId, postImage, postBody } = post;
+  const { id, media_location, post_text } = post;
 
   const [updatePost, { isLoading: isUpdating, isError, error }] =
     useUpdatePostMutation();
@@ -30,18 +30,16 @@ const PostEditImageForm: React.FC<Props> = ({ post }) => {
   const dispatch = useAppDispatch();
   const { handleSubmit, values, handleChange, setFieldValue } = useFormik({
     initialValues: {
-      postBody: postBody,
-      postImage: postImage,
+      post_text,
+      media_location,
     },
-    onSubmit: async (values) => {
+    onSubmit: async ({ post_text, media_location }) => {
       await updatePost({
-        _id: postId,
-        postImage: values.postImage
-          ? ((await useConvertToBase64(values.postImage)) as string)
-          : null,
-        postBody: values.postBody,
+        id,
+        media_location,
+        post_text,
       });
-      dispatch(closeModal(`${postId}edit`));
+      dispatch(closeModal(`${id}edit`));
     },
   });
 
@@ -55,30 +53,30 @@ const PostEditImageForm: React.FC<Props> = ({ post }) => {
         <textarea
           rows={5}
           cols={10}
-          name="postBody"
-          id="postBody"
-          value={values.postBody}
+          name="post_text"
+          id="post_text"
+          value={values.post_text || ""}
           onChange={handleChange}
           className="post-edit-modal__text-area"
         />
-        {values.postImage ? (
+        {values.media_location ? (
           <>
-            <label htmlFor="postImage" className="post-edit-modal__label">
+            <label htmlFor="media_location" className="post-edit-modal__label">
               <GrAttachment className="post-edit-modal__icon" />
               <img
-                src={values.postImage}
+                src={values.media_location}
                 alt="post image"
                 className="post-edit-modal__image-label"
               />
             </label>
             <input
               type="file"
-              name="postImage"
-              id="postImage"
+              name="media_location"
+              id="media_location"
               accept=".png, .jpg, .jpeg"
               onChange={async (e) => {
                 setFieldValue(
-                  "postImage",
+                  "media_location",
                   await useConvertToBase64(e.target.files![0])
                 );
               }}
@@ -87,14 +85,14 @@ const PostEditImageForm: React.FC<Props> = ({ post }) => {
           </>
         ) : (
           <>
-            <label htmlFor="postImage">Add Image</label>
+            <label htmlFor="media_location">Add Image</label>
             <input
               type="file"
-              name="postImage"
-              id="postImage"
+              name="media_location"
+              id="media_location"
               accept=".png, .jpg, .jpeg"
               onChange={(e) => {
-                setFieldValue("postImage", e.target.files![0]);
+                setFieldValue("media_location", e.target.files![0]);
               }}
               className="post-edit-modal__file-input"
             />

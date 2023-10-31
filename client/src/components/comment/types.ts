@@ -1,13 +1,19 @@
+export type ICommentOwner = {
+  id: number;
+  username: string;
+  avatar_url: string;
+};
+
 export type IComment = {
-  commentBody: string;
-  likedBy: string[];
-  createdAt: string;
-  updatedAt: string;
-  _id: string;
-  owner: {
-    _id: string;
-    profilePicture: string;
-    username: string;
-  };
-  postId: string;
+  id: number;
+  profile_id: number;
+  comment_owner: ICommentOwner;
+  post_id: number;
+  comment_owner_username: string;
+  comment_owner_avatar_url: string | null;
+  comment_text: string;
+  like_count: number;
+  is_liked: boolean | null;
+  created_at: string;
+  updated_at: string;
 };

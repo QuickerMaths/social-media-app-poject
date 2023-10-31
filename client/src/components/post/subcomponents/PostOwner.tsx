@@ -5,19 +5,18 @@ import { Link } from "react-router-dom";
 
 // Internal dependencies
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
-import { IUserBasicData } from "../../../pages/user-profile/types";
 import { RootState } from "../../../redux/store";
 
 // Assets
 import defaultImg from "../../../assets/images/default_img.png";
 import { closeModal } from "../../../features/modalSlice/modalSlice";
-
+import { IPostOwner } from "../types";
 interface Props {
-  owner: IUserBasicData;
+  post_owner: IPostOwner;
 }
 
 const PostOwner: React.FC<Props> = ({
-  owner: { _id, profilePicture, username },
+  post_owner: { id, username, avatar_url },
 }) => {
   const dispatch = useAppDispatch();
   const { userId, userImg } = useAppSelector((state: RootState) => state.auth);
@@ -25,7 +24,7 @@ const PostOwner: React.FC<Props> = ({
 
   return (
     <Link
-      to={`/user/${_id}`}
+      to={`/user/${id}`}
       className="post__owner-wrapper"
       onClick={() => {
         if (modals["friends-request-list"]) {
@@ -38,10 +37,10 @@ const PostOwner: React.FC<Props> = ({
         className="post__profile-img"
         //TODO: figure out how to display userImg even if its null (displaying after img its removal without need to reloading the page)
         src={
-          userImg && userId === _id
+          userImg && userId === id
             ? userImg
-            : profilePicture
-            ? profilePicture
+            : avatar_url
+            ? avatar_url
             : defaultImg
         }
         width={50}

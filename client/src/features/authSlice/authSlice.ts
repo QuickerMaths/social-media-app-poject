@@ -10,7 +10,7 @@ import { friendsApiSlice } from "../apiSlice/friendsApiSlice/friendsApiSlice";
 
 const initialState: IAuthSliceState = {
   username: null,
-  userId: null,
+  userId: 3,
   userImg: null,
   friendsRequests: [],
 };
@@ -53,12 +53,12 @@ export const authSlice = createSlice({
         state.username = username;
       }
     );
-    builder.addMatcher(
-      friendsApiSlice.endpoints.resolveFriendRequest.matchFulfilled,
-      (state, { payload }) => {
-        state.friendsRequests = payload.friendsRequests as string[];
-      }
-    );
+    // builder.addMatcher(
+    //   friendsApiSlice.endpoints.resolveFriendRequest.matchFulfilled,
+    //   (state, { payload }) => {
+    //     state.friendsRequests = payload.friendsRequests as string[];
+    //   }
+    // );
   },
 });
 

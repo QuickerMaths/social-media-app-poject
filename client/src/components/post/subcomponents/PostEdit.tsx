@@ -8,13 +8,13 @@ import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 
 import { openModal } from "../../../features/modalSlice/modalSlice";
 import { useAppDispatch } from "../../../hooks/reduxHooks";
-import { IPost, IRePost } from "../types";
+import { IPost } from "../types";
 import { useDeletePostMutation } from "../../../features/apiSlice/postApiSlice/postApiSlice";
 import useToastCreator from "../../../hooks/useToastCreator";
 import Spinner from "../../../utilities/spinner/Spinner";
 
 interface Props {
-  post: IPost | IRePost;
+  post: IPost;
 }
 
 const PostEdit: React.FC<Props> = ({ post }) => {
@@ -24,7 +24,7 @@ const PostEdit: React.FC<Props> = ({ post }) => {
   if (isError) useToastCreator(error as string, "error");
 
   const dispatch = useAppDispatch();
-  const { createdAt, _id: postId } = post;
+  const { created_at, id: postId } = post;
 
   return (
     <>
@@ -43,8 +43,7 @@ const PostEdit: React.FC<Props> = ({ post }) => {
             className="post__edit-button"
             onClick={() => {
               deletePost({
-                _id: postId,
-                isRePost: post.isRePost,
+                id: postId,
               });
             }}
             disabled={isDeleting}
@@ -52,7 +51,7 @@ const PostEdit: React.FC<Props> = ({ post }) => {
             <AiOutlineDelete className="post__edit-icon" />
           </button>
         )}
-        <p className="post__createdAt">{moment(createdAt).fromNow()}</p>
+        <p className="post__createdAt">{moment(created_at).fromNow()}</p>
       </div>
     </>
   );

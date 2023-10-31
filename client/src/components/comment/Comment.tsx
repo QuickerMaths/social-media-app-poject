@@ -1,9 +1,7 @@
 // External dependencies
 
 import React from "react";
-import { useParams } from "react-router-dom";
 import { AiOutlineLike } from "react-icons/ai";
-import { EntityId } from "@reduxjs/toolkit";
 
 // Internal dependencies
 
@@ -14,68 +12,48 @@ import { useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import { IComment } from "./types";
 import { useLikeCommentMutation } from "../../features/apiSlice/commentApiSlice/commentApiSlice";
-import { useSelectCommentsFromResult } from "../../hooks/useSelectCommentsFromResult";
 
 interface Props {
-  commentId: EntityId;
-  postId: EntityId;
+  comment: IComment;
 }
-const Comment: React.FC<Props> = ({
-  commentId: commentEntityId,
-  postId: postEntityId,
-}) => {
-  const { userId: activeUserId } = useAppSelector(
-    (state: RootState) => state.auth
-  );
-  const { userId } = useParams();
+const Comment: React.FC<Props> = ({ comment }) => {
+  const { userId } = useAppSelector((state: RootState) => state.auth);
 
-  const comment = useSelectCommentsFromResult({
-    userId,
-    postEntityId,
-    commentEntityId,
-  });
-
-  const {
-    owner,
-    postId,
-    _id: commentId,
-    commentBody,
-    likedBy,
-  } = comment as IComment;
+  const { post_id, id, comment_text, is_liked, like_count, comment_owner } =
+    comment;
 
   const [likeComment, { isError, error }] = useLikeCommentMutation();
+
+  const handleCommentLike = () => {
+    userId === null
+      ? useToastCreator("You have to be logged in to like this post", "error")
+      : likeComment({
+          id,
+          post_id,
+          userId,
+        });
+    if (isError) useToastCreator(error as string, "error");
+  };
 
   return (
     <li className="comment">
       <div className="comment__top-container">
-        <CommentOwner owner={owner} />
+        <CommentOwner comment_owner={comment_owner} />
         <CommentEdit comment={comment as IComment} />
       </div>
-      <p className="comment__body">{commentBody}</p>
+      <p className="comment__body">{comment_text}</p>
       <button
         className={`comment__action-button ${
-          activeUserId && likedBy.includes(activeUserId) && "post__liked"
+          userId && is_liked && "post__liked"
         }`}
-        onClick={() => {
-          activeUserId === null
-            ? useToastCreator(
-                "You have to be logged in to like this post",
-                "error"
-              )
-            : likeComment({
-                _id: commentId,
-                postId,
-                userId: activeUserId,
-              });
-          if (isError) useToastCreator(error as string, "error");
-        }}
+        onClick={handleCommentLike}
       >
         <AiOutlineLike
           className={`comment__action-icon ${
-            activeUserId && likedBy.includes(activeUserId) && "post__liked"
+            userId && is_liked && "post__liked"
           }`}
         />
-        {likedBy.length}
+        {like_count}
       </button>
     </li>
   );

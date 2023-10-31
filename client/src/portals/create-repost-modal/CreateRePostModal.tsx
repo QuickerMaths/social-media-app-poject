@@ -26,20 +26,19 @@ const CreateRePostModal: React.FC<Props> = ({ post }) => {
   if (isError) useToastCreator(error as string, "error");
 
   const dispatch = useAppDispatch();
-  const { _id: postId } = post;
+  const { id: postId } = post;
   const { userId } = useAppSelector((state: RootState) => state.auth);
   const { modals } = useAppSelector((state: RootState) => state.modal);
 
   const { handleSubmit, values, handleChange } = useFormik({
     initialValues: {
-      postBody: "",
+      post_text: "",
     },
     onSubmit: async (values) => {
       await createPost({
-        postBody: values.postBody,
-        originalPost: postId,
-        _id: userId as string,
-        isRePost: true,
+        post_text: values.post_text,
+        shared_post_id: postId,
+        userId: userId as number,
       });
       dispatch(closeModal(`${postId}repost`));
     },
@@ -63,9 +62,9 @@ const CreateRePostModal: React.FC<Props> = ({ post }) => {
           <textarea
             rows={5}
             cols={10}
-            name="postBody"
-            id="postBody"
-            value={values.postBody}
+            name="post_text"
+            id="post_text"
+            value={values.post_text}
             onChange={handleChange}
             className="create-repost-modal__text-area"
           />

@@ -55,14 +55,14 @@ const UserProfile = () => {
     content = (
       <>
         <div className="user-profile__presentation">
-          {activeUserId === userId && userImg ? (
+          {activeUserId === +(userId ?? "") && userImg ? (
             <>
               <img
                 src={
-                  userImg && activeUserId === userId
+                  userImg && activeUserId === +(userId ?? "")
                     ? userImg
-                    : user.profilePicture
-                    ? user.profilePicture
+                    : user.avatar_url
+                    ? user.avatar_url
                     : defaultImg
                 }
                 alt="user profile image"
@@ -74,11 +74,11 @@ const UserProfile = () => {
               />
               <UserProfileImgModal />
             </>
-          ) : activeUserId === userId ? (
+          ) : activeUserId === +(userId ?? "") ? (
             <ProfileImage />
           ) : (
             <img
-              src={user.profilePicture ? user.profilePicture : defaultImg}
+              src={user.avatar_url ? user.avatar_url : defaultImg}
               alt="user profile image"
               className="user-profile__img"
               width={150}
@@ -88,10 +88,10 @@ const UserProfile = () => {
           <div className="user-profile__info">
             <h2 className="user-profile__username">{user.username}</h2>
             <h3 className="user-profile__full-name">
-              {user.firstName} {user.lastName}
+              {user.first_name} {user.last_name}
             </h3>
           </div>
-          <FriendAction user={user} />
+          {/* <FriendAction user={user} /> */}
         </div>
         {isMobile && (
           <UserProfileMobileNavigation

@@ -1,11 +1,7 @@
 // External dependencies
 
 import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
-import {
-  createEntityAdapter,
-  EntityState,
-  SerializedError,
-} from "@reduxjs/toolkit";
+import { SerializedError } from "@reduxjs/toolkit";
 
 // Internal dependencies
 
@@ -13,160 +9,116 @@ import { apiSlice } from "../apiSlice";
 import {
   applyOptimisticPostUpdate,
   errorTransformer,
-  invalidatesList,
   providesList,
 } from "../../../hooks/reduxHooks";
-import { IPost, IRePost } from "../../../components/post/types";
-import {
-  IPostPick,
-  ICreatePostParams,
-  IResponse,
-  IErrorResponse,
-} from "../types";
-import { IComment } from "../../../components/comment/types";
+import { IPost } from "../../../components/post/types";
+import { ICreatePostParams, IErrorResponse } from "../types";
 
-const postAdapter = createEntityAdapter<IPost | IRePost>({
-  selectId: (post) => post._id,
-  sortComparer: (a, b) => b.createdAt.localeCompare(a.createdAt),
-});
-
-const commentAdapter = createEntityAdapter<IComment>({
-  selectId: (comment) => comment._id,
-  sortComparer: (a, b) => b.createdAt.localeCompare(a.createdAt),
-});
+//TODO: after implementing authorization on backend, add loggedInUserId to get endpoints to check if user liked post
 
 export const postApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getPosts: builder.query<EntityState<IPost | IRePost>, string>({
-      query: () => "/api/posts",
-      transformResponse: (response: IResponse<string, (IPost | IRePost)[]>) => {
-        response.data.forEach((post) => {
-          post.comments = commentAdapter.setAll(
-            commentAdapter.getInitialState(),
-            post.comments as IComment[]
-          );
-        });
-        return postAdapter.setAll(postAdapter.getInitialState(), response.data);
-      },
+    getPosts: builder.query<IPost[], { page: number | void }>({
+      query: ({ page = 1 }) => `/api/post?page=${page}&pageSize=20`,
+
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
-      providesTags: (result, error, arg) => providesList(result?.ids, "Post"),
+      providesTags: (result, _error, _arg) => providesList(result, "Post"),
     }),
 
-    getPostsByUser: builder.query<EntityState<IPost | IRePost>, string>({
-      query: (userId) => `/api/posts/user/${userId}`,
-      transformResponse: (response: IResponse<string, (IPost | IRePost)[]>) => {
-        response.data.forEach((post) => {
-          post.comments = commentAdapter.setAll(
-            commentAdapter.getInitialState(),
-            post.comments as IComment[]
-          );
-        });
-        return postAdapter.setAll(postAdapter.getInitialState(), response.data);
-      },
-      transformErrorResponse: (
-        error: FetchBaseQueryError | IErrorResponse | SerializedError
-      ) => errorTransformer(error),
-      providesTags: (result, error, arg) => providesList(result?.ids, "Post"),
-    }),
-
-    createPost: builder.mutation<IPost | IRePost, ICreatePostParams>({
-      query: ({ postBody, _id, isRePost, originalPost, postImage }) => ({
-        url: `/api/${isRePost ? "repost" : "posts"}`,
-        method: "POST",
-        body: isRePost
-          ? {
-              postBody,
-              postId: originalPost,
-              userId: _id,
-            }
-          : {
-              postBody,
-              postImage,
-              _id,
-            },
-      }),
-      transformResponse: (response: IResponse<string, IPost | IRePost>) => {
-        return response.data;
-      },
-      transformErrorResponse: (
-        error: FetchBaseQueryError | IErrorResponse | SerializedError
-      ) => errorTransformer(error),
-
-      invalidatesTags: (result, error, req) => (error ? [] : ["Post"]),
-    }),
-
-    deletePost: builder.mutation<
-      null,
-      Pick<IPost | IRePost, "_id" | "isRePost">
+    getPostsByUser: builder.query<
+      IPost[],
+      { userId: number; page: number | void }
     >({
-      query: ({ _id, isRePost }) => ({
-        url: `/api/${isRePost ? "repost" : "posts"}`,
-        method: "DELETE",
+      query: ({ userId, page = 1 }) =>
+        `/api/post/user/${userId}?page=${page}&pageSize=20`,
+
+      transformErrorResponse: (
+        error: FetchBaseQueryError | IErrorResponse | SerializedError
+      ) => errorTransformer(error),
+      providesTags: (result, _error, _arg) => providesList(result, "Post"),
+    }),
+
+    //TODO: write getPostById query, with paginated comments
+
+    createPost: builder.mutation<IPost, ICreatePostParams>({
+      query: ({ userId, post_text, media_location, shared_post_id }) => ({
+        url: `/api/post`,
+        method: "POST",
         body: {
-          _id,
+          userId,
+          postCreateData: {
+            post_text,
+            media_location,
+            shared_post_id,
+          },
         },
       }),
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
-      invalidatesTags: (result, error, req) =>
-        error ? [] : [{ type: "Post", id: req._id }],
+
+      invalidatesTags: (_result, error, _req) => (error ? [] : ["Post"]),
+    }),
+
+    deletePost: builder.mutation<{}, Pick<IPost, "id">>({
+      query: ({ id }) => ({
+        url: `/api/post/${id}`,
+        method: "DELETE",
+      }),
+      transformErrorResponse: (
+        error: FetchBaseQueryError | IErrorResponse | SerializedError
+      ) => errorTransformer(error),
+      invalidatesTags: (_result, error, { id }) =>
+        error ? [] : [{ type: "Post", id }],
     }),
 
     updatePost: builder.mutation<
       IPost,
-      IPostPick | Omit<ICreatePostParams, "originalPost">
+      Pick<IPost, "id" | "post_text" | "media_location">
     >({
-      query: ({ postBody, _id, isRePost, postImage }) => ({
-        url: `/api/${isRePost ? "repost" : "posts"}/edit`,
-        method: "PUT",
-        body: isRePost
-          ? {
-              postBody,
-              postId: _id,
-            }
-          : {
-              postBody,
-              postImage,
-              postId: _id,
-            },
+      query: ({ id, post_text, media_location }) => ({
+        url: `/api/post/${id}`,
+        method: "PATCH",
+        body: {
+          post_text,
+          media_location,
+        },
       }),
-      transformResponse: (response: IResponse<string, IPost>) => {
-        return response.data;
-      },
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
-      invalidatesTags: (result, error, req) =>
-        error ? [] : [{ type: "Post", id: req._id }],
+      invalidatesTags: (_result, error, { id }) =>
+        error ? [] : [{ type: "Post", id }],
     }),
 
-    likePost: builder.mutation<
-      IPost | IRePost,
-      Pick<IPost | IRePost, "_id" | "isRePost"> & { userId: string }
-    >({
-      query: ({ _id, isRePost, userId }) => ({
-        url: `/api/${isRePost ? "repost" : "posts"}`,
-        method: "PUT",
+    likePost: builder.mutation<IPost, Pick<IPost, "id"> & { userId: number }>({
+      query: ({ id, userId }) => ({
+        url: `/api/post/${id}/like`,
+        method: "POST",
         body: {
-          postId: _id,
           userId,
         },
       }),
-      onQueryStarted({ _id, userId }, { dispatch, queryFulfilled }) {
+      onQueryStarted({ id, userId }, { dispatch, queryFulfilled, getState }) {
         const resultGetPosts = dispatch(
-          postApiSlice.util.updateQueryData("getPosts", "", (draft) => {
-            applyOptimisticPostUpdate({ draft, postId: _id, userId });
-          })
+          postApiSlice.util.updateQueryData(
+            "getPosts",
+            //@ts-ignore
+            { page: getState().pagination.postPage },
+            (draft) => {
+              applyOptimisticPostUpdate({ draft, postId: id });
+            }
+          )
         );
         const resultGetPostsByUser = dispatch(
           postApiSlice.util.updateQueryData(
             "getPostsByUser",
-            userId,
+            //@ts-ignore
+            { userId, page: getState().pagination.postPage },
             (draft) => {
-              applyOptimisticPostUpdate({ draft, postId: _id, userId });
+              applyOptimisticPostUpdate({ draft, postId: id });
             }
           )
         );
@@ -174,9 +126,6 @@ export const postApiSlice = apiSlice.injectEndpoints({
           queryFulfilled.catch(resultGetPosts.undo),
           queryFulfilled.catch(resultGetPostsByUser.undo),
         ]);
-      },
-      transformResponse: (response: IResponse<string, IPost | IRePost>) => {
-        return response.data;
       },
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError

@@ -4,7 +4,7 @@ import { useFormik } from "formik";
 
 // Internal dependencies
 import profileImageValidation from "../../../validation/profileImageValidation";
-import { useUploadUserImageMutation } from "../../../features/apiSlice/userApiSlice/userApiSlice";
+import { useUpdateUserMutation } from "../../../features/apiSlice/userApiSlice/userApiSlice";
 import { setProfileImage } from "../../../features/authSlice/authSlice";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import { useConvertToBase64 } from "../../../hooks/useConvertToBase64";
@@ -20,27 +20,25 @@ const ProfileImage = () => {
   const dispatch = useAppDispatch();
   const { userImg, userId } = useAppSelector((state: RootState) => state.auth);
 
-  const [
-    uploadUserImage,
-    { isLoading: isUploading, isError, error, isSuccess },
-  ] = useUploadUserImageMutation();
+  const [updateUser, { isLoading: isUploading, isError, error, isSuccess }] =
+    useUpdateUserMutation();
 
   if (isError) useToastCreator(error as string, "error");
 
   const { setFieldValue, handleSubmit } = useFormik({
     initialValues: {
-      profilePicture: "",
+      avatar_url: "",
     },
     // validationSchema: profileImageValidation,
     onSubmit: async (values) => {
-      await uploadUserImage({
-        userId: userId as string,
-        path: await useConvertToBase64(values.profilePicture),
+      await updateUser({
+        userId: userId as number,
+        userUpdateData: values,
       });
       if (isSuccess) {
         dispatch(
           setProfileImage(
-            (await useConvertToBase64(values.profilePicture)) as string
+            (await useConvertToBase64(values.avatar_url)) as string
           )
         );
       }
@@ -54,7 +52,7 @@ const ProfileImage = () => {
   } else {
     content = (
       <>
-        <label htmlFor="profilePicture" className="user-profile__label">
+        <label htmlFor="avatar_url" className="user-profile__label">
           <img
             src={userImg ? userImg : defaultImg}
             alt="user profile image"
@@ -66,12 +64,12 @@ const ProfileImage = () => {
 
         <input
           type="file"
-          name="profilePicture"
-          id="profilePicture"
+          name="avatar_url"
+          id="avatar_url"
           accept=".jpeg, .png, .jpg"
           className="user-profile__input"
           onChange={(e) => {
-            setFieldValue("profilePicture", e.target.files![0]);
+            setFieldValue("avatar_url", e.target.files![0]);
 
             setTimeout(() => {
               handleSubmit();

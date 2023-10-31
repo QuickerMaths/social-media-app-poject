@@ -11,14 +11,14 @@ import PostEditRePostForm from "./subcomponents/PostEditRePostForm";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import { closeModal } from "../../features/modalSlice/modalSlice";
-import { IPost, IRePost } from "../../components/post/types";
+import { IPost } from "../../components/post/types";
 
 interface Props {
-  post: IPost | IRePost;
+  post: IPost;
 }
 
 const PostEditModal: React.FC<Props> = ({ post }) => {
-  const { _id: postId, isRePost } = post;
+  const { id: postId, is_shared } = post;
 
   const dispatch = useAppDispatch();
   const { modals } = useAppSelector((state: RootState) => state.modal);
@@ -38,7 +38,7 @@ const PostEditModal: React.FC<Props> = ({ post }) => {
           <AiOutlineClose className="post-edit-modal__close-icon" />
         </button>
         <h2 className="post-edit-modal__title">Edit post</h2>
-        {isRePost === true ? (
+        {is_shared === true ? (
           <PostEditRePostForm post={post as IRePost} />
         ) : (
           <PostEditImageForm post={post as IPost} />

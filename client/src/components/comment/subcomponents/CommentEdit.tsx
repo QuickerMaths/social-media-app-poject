@@ -18,7 +18,7 @@ interface Props {
 }
 
 const CommentEdit: React.FC<Props> = ({
-  comment: { owner, _id: commentId, postId, createdAt },
+  comment: { profile_id, id, post_id, created_at },
 }) => {
   const { userId: activeUserId } = useAppSelector(
     (state: RootState) => state.auth
@@ -31,22 +31,22 @@ const CommentEdit: React.FC<Props> = ({
 
   return (
     <>
-      {owner._id === activeUserId ? (
+      {profile_id === activeUserId ? (
         <div className="comment__wrapper">
           {isDeleting ? (
             <Spinner size={20} />
           ) : (
             <button
               className="comment__edit-button"
-              onClick={() => deleteComment({ _id: commentId, postId })}
+              onClick={() => deleteComment({ id, post_id })}
             >
               <AiOutlineDelete className="comment__edit-icon" />
             </button>
           )}
-          <p className="comment__createdAt">{moment(createdAt).fromNow()}</p>
+          <p className="comment__createdAt">{moment(created_at).fromNow()}</p>
         </div>
       ) : (
-        <p className="comment__createdAt">{moment(createdAt).fromNow()}</p>
+        <p className="comment__createdAt">{moment(created_at).fromNow()}</p>
       )}
     </>
   );

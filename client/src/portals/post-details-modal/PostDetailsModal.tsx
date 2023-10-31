@@ -16,7 +16,7 @@ import PostDetailsPost from "./subcomponents/PostDetailsPost";
 import PostDetailsRePost from "./subcomponents/PostDetailsRePost";
 import Spinner from "../../utilities/spinner/Spinner";
 import useToastCreator from "../../hooks/useToastCreator";
-import { IPost, IRePost } from "../../components/post/types";
+import { IPost } from "../../components/post/types";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import { closeModal } from "../../features/modalSlice/modalSlice";
@@ -24,39 +24,32 @@ import { useCreateCommentMutation } from "../../features/apiSlice/commentApiSlic
 import { IComment } from "../../components/comment/types";
 
 interface Props {
-  post: IPost | IRePost;
+  post: IPost;
 }
 
 const PostDetailsModal: React.FC<Props> = ({ post }) => {
   const [createComment, { isLoading: isUpdating, error, isError }] =
     useCreateCommentMutation();
 
-  const {
-    _id: postId,
-    isRePost,
-    createdAt,
-    owner,
-    comments,
-    commentTotal,
-  } = post;
+  const { id, created_at, comments, comment_count, post_owner, is_shared } =
+    post;
   const dispatch = useAppDispatch();
   const { userId } = useAppSelector((state: RootState) => state.auth);
   const { modals } = useAppSelector((state: RootState) => state.modal);
 
   const { handleSubmit, values, handleChange } = useFormik({
     initialValues: {
-      commentBody: "",
+      comment_text: "",
     },
-    onSubmit: async (values) => {
+    onSubmit: async ({ comment_text }) => {
       await createComment({
-        commentBody: values.commentBody,
-        _id: postId,
-        userId: userId as string,
-        isRePost,
+        comment_text,
+        id,
+        userId: userId as number,
       });
       if (isError) useToastCreator(error as string, "error");
       if (!isUpdating && !isError) {
-        values.commentBody = "";
+        comment_text = "";
       }
     },
   });
@@ -69,9 +62,9 @@ const PostDetailsModal: React.FC<Props> = ({ post }) => {
     content = (
       <form onSubmit={handleSubmit} className="post-details-modal__form">
         <input
-          name="commentBody"
-          id="commentBody"
-          value={values.commentBody}
+          name="comment_text"
+          id="comment_text"
+          value={values.comment_text}
           onChange={handleChange}
           className="post-details-modal__text-area"
           placeholder="Write a comment..."
@@ -83,38 +76,37 @@ const PostDetailsModal: React.FC<Props> = ({ post }) => {
     );
   }
 
-  if (!modals[`${postId}details`]) return null;
+  if (!modals[`${id}details`]) return null;
   return ReactDOM.createPortal(
     <div className="post-details-modal">
       <div
         className="post-details-modal__overlay"
-        onClick={() => dispatch(closeModal(`${postId}details`))}
+        onClick={() => dispatch(closeModal(`${id}details`))}
       ></div>
       <div className="post-details-modal__content">
-        {" "}
         <button
           className="post-details-modal__close"
-          onClick={() => dispatch(closeModal(`${postId}details`))}
+          onClick={() => dispatch(closeModal(`${id}details`))}
         >
           <AiOutlineClose className="post-details-modal__close-icon" />
         </button>
         <div className="post-details-modal__top-container">
-          <PostOwner owner={owner} />
+          <PostOwner post_owner={post_owner} />
 
           <p className="post-details-modal__createdAt">
-            {moment(createdAt).fromNow()}
+            {moment(created_at).fromNow()}
           </p>
         </div>
         <div className="post-details-modal__overflow">
-          {isRePost ? (
-            <PostDetailsRePost post={post as IRePost} />
+          {is_shared ? (
+            <PostDetailsRePost post={post} />
           ) : (
-            <PostDetailsPost post={post as IPost} />
+            <PostDetailsPost post={post} />
           )}
           <PostAction post={post} />
-          {commentTotal > 0 && (
+          {comment_count > 0 && (
             <PostComments
-              postId={postId}
+              postId={id}
               comments={comments as EntityState<IComment>}
             />
           )}

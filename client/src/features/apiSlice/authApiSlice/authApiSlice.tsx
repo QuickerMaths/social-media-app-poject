@@ -1,5 +1,5 @@
 // Internal dependencies
-
+//TODO: refactor
 import { SerializedError } from "@reduxjs/toolkit";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
 import { errorTransformer } from "../../../hooks/reduxHooks";

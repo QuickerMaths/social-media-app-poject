@@ -25,7 +25,7 @@ const UsersList = lazy(() => import("./pages/users-list/UsersList"));
 function App() {
   //check if user is already loggedin
 
-  useUserAuthorizationQuery("");
+  // useUserAuthorizationQuery("");
 
   return (
     <>

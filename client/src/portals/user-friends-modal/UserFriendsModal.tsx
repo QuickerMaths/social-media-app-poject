@@ -2,7 +2,6 @@
 
 import ReactDOM from "react-dom";
 import { skipToken } from "@reduxjs/toolkit/dist/query";
-import { EntityId, EntityState } from "@reduxjs/toolkit";
 import { AiOutlineClose } from "react-icons/ai";
 import { useParams } from "react-router";
 
@@ -11,20 +10,21 @@ import { useParams } from "react-router";
 import Friend from "../../components/friend/Friend";
 import QueryError from "../../utilities/error/QueryError";
 import Spinner from "../../utilities/spinner/Spinner";
-import { useGetFriendsByUserIdQuery } from "../../features/apiSlice/friendsApiSlice/friendsApiSlice";
+import { useGetAllUserFriendsQuery } from "../../features/apiSlice/userApiSlice/userApiSlice";
 import { closeModal } from "../../features/modalSlice/modalSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
-import { IUserBasicData } from "../../pages/user-profile/types";
-
-//TODO: created modal wrapper to avoid code duplication
 
 const UserFriendsModal = () => {
   const dispatch = useAppDispatch();
 
   const { userId } = useParams();
+  const numberUserId = +(userId ?? "");
 
   const { modals } = useAppSelector((state: RootState) => state.modal);
+
+  //TODO: user friend pagination
+  const page = 1;
 
   const {
     data: friends,
@@ -34,7 +34,7 @@ const UserFriendsModal = () => {
     isError,
     error,
     refetch,
-  } = useGetFriendsByUserIdQuery(userId ?? skipToken);
+  } = useGetAllUserFriendsQuery({ userId: numberUserId, page } ?? skipToken);
 
   let content;
 
@@ -45,11 +45,9 @@ const UserFriendsModal = () => {
   } else if (isSuccess) {
     content = (
       <ul className="user-friends-modal__list-modal">
-        {(friends as EntityState<IUserBasicData>).ids.map(
-          (friendId: EntityId) => (
-            <Friend key={friendId} friendId={friendId} />
-          )
-        )}
+        {friends.map((friend) => (
+          <Friend key={friend.id} friend={friend} />
+        ))}
       </ul>
     );
   }

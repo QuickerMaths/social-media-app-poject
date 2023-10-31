@@ -1,6 +1,6 @@
 // External dependencies
 
-import { EntityId, EntityState, SerializedError } from "@reduxjs/toolkit";
+import { SerializedError } from "@reduxjs/toolkit";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
 import { MaybeDrafted } from "@reduxjs/toolkit/dist/query/core/buildThunks";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
@@ -8,8 +8,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 // Internal dependencies
 
 import { IErrorResponse, isIErrorResponse } from "../features/apiSlice/types";
-import { IComment } from "../components/comment/types";
-import { IPost, IRePost } from "../components/post/types";
+import { IPost } from "../components/post/types";
 import { RootState, AppDispatch } from "../redux/store";
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
@@ -17,14 +16,14 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export type CacheItem<T, ID> = { type: T; id: ID };
 
-export function providesList<R extends EntityId[], T extends string>(
+export function providesList<R extends any[], T extends string>(
   resultsWithIds: R | undefined,
   tagType: T
 ) {
   return resultsWithIds
     ? [
         { type: tagType, id: "LIST" },
-        ...resultsWithIds.map((id) => ({ type: tagType, id })),
+        ...resultsWithIds.map(({ id }) => ({ type: tagType, id })),
       ]
     : [{ type: tagType, id: "LIST" }];
 }
@@ -49,23 +48,23 @@ export const errorTransformer = (
 };
 
 type IOptimisticUpdateParams = {
-  draft: MaybeDrafted<EntityState<IPost | IRePost>>;
-  postId: string;
-  userId: string;
-  commentId?: string;
+  draft: MaybeDrafted<IPost[]>;
+  postId: number;
+  commentId?: number;
 };
 
 export function applyOptimisticPostUpdate({
   draft,
   postId,
-  userId,
 }: IOptimisticUpdateParams) {
-  const post = draft.entities[postId];
+  const post = draft.find((post) => post.id === postId);
   if (post) {
-    if (post.likedBy.includes(userId)) {
-      post.likedBy = post.likedBy.filter((id) => id !== userId);
+    if (post.is_liked) {
+      post.is_liked = false;
+      post.like_count--;
     } else {
-      post.likedBy.push(userId);
+      post.is_liked = true;
+      post.like_count++;
     }
   }
 }
@@ -74,16 +73,20 @@ export function applyOptimisticCommentUpdate({
   draft,
   postId,
   commentId,
-  userId,
 }: IOptimisticUpdateParams) {
   if (commentId) {
-    const comment = (draft.entities[postId]?.comments as EntityState<IComment>)
-      .entities[commentId];
-    if (comment) {
-      if (comment.likedBy.includes(userId)) {
-        comment.likedBy = comment.likedBy.filter((id) => id !== userId);
-      } else {
-        comment.likedBy.push(userId);
+    const post = draft.find((post) => post.id === postId);
+
+    if (post) {
+      const comment = post.comments.find((comment) => comment.id === commentId);
+      if (comment) {
+        if (comment.is_liked) {
+          comment.is_liked = false;
+          comment.like_count--;
+        } else {
+          comment.is_liked = true;
+          comment.like_count++;
+        }
       }
     }
   }

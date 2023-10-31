@@ -7,76 +7,92 @@ import { SerializedError } from "@reduxjs/toolkit";
 
 import { apiSlice } from "../apiSlice";
 import { IComment } from "../../../components/comment/types";
-import { IErrorResponse, IRePostOrPost } from "../types";
+import { IErrorResponse } from "../types";
 import { postApiSlice } from "../postApiSlice/postApiSlice";
 import {
   applyOptimisticCommentUpdate,
   errorTransformer,
 } from "../../../hooks/reduxHooks";
+import { IPost } from "../../../components/post/types";
 
 export const commentApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    //TODO: after implementing authorization on backend, change userId to loggedInUserId
     createComment: builder.mutation<
       IComment,
-      Pick<IComment, "commentBody"> & IRePostOrPost & { userId: string }
+      Pick<IComment, "comment_text"> & Pick<IPost, "id"> & { userId: number }
     >({
-      query: ({ commentBody, userId, _id, isRePost }) => ({
-        url: `/api/comments`,
+      query: ({ comment_text, userId, id }) => ({
+        url: `/api/comment`,
         method: "POST",
-        body: { commentBody, userId, postId: _id, isRePost },
+        body: {
+          commentCreateData: {
+            comment_text,
+            post_id: id,
+          },
+          userId,
+        },
       }),
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
       invalidatesTags: (result, error, arg) =>
-        error ? [] : [{ type: "Post", id: arg._id }],
+        error ? [] : [{ type: "Post", id: arg.id }],
     }),
 
-    deleteComment: builder.mutation<IComment, Pick<IComment, "_id" | "postId">>(
+    deleteComment: builder.mutation<IComment, Pick<IComment, "id" | "post_id">>(
       {
-        query: ({ _id, postId }) => ({
-          url: `/api/comments`,
+        query: ({ id }) => ({
+          url: `/api/comment/${id}`,
           method: "DELETE",
-          body: { commentId: _id, postId },
         }),
         transformErrorResponse: (
           error: FetchBaseQueryError | IErrorResponse | SerializedError
         ) => errorTransformer(error),
-        invalidatesTags: (result, error, arg) =>
-          error ? [] : [{ type: "Post", id: arg.postId }],
+        invalidatesTags: (_result, error, arg) =>
+          error ? [] : [{ type: "Post", id: arg.post_id }],
       }
     ),
 
     likeComment: builder.mutation<
       IComment,
-      Pick<IComment, "_id" | "postId"> & { userId: string }
+      Pick<IComment, "id" | "post_id"> & { userId: number }
     >({
-      query: ({ _id, userId }) => ({
-        url: `/api/comments`,
-        method: "PUT",
-        body: { commentId: _id, userId },
+      query: ({ id, userId }) => ({
+        url: `/api/comment/${id}/like`,
+        method: "POST",
+        body: { userId },
       }),
-      onQueryStarted({ _id, postId, userId }, { dispatch, queryFulfilled }) {
+      onQueryStarted(
+        { id, post_id, userId },
+        { dispatch, queryFulfilled, getState }
+      ) {
+        console.log(id, post_id, userId);
         const resultGetPosts = dispatch(
-          postApiSlice.util.updateQueryData("getPosts", "", (draft) => {
-            applyOptimisticCommentUpdate({
-              draft,
-              postId,
-              commentId: _id,
-              userId,
-            });
-          })
-        );
-        const resultGetPostsByUser = dispatch(
           postApiSlice.util.updateQueryData(
-            "getPostsByUser",
-            userId,
+            "getPosts",
+            //@ts-ignore
+            { page: getState().pagination.postPage },
             (draft) => {
               applyOptimisticCommentUpdate({
                 draft,
-                postId,
-                commentId: _id,
-                userId,
+                postId: post_id,
+                commentId: id,
+              });
+            }
+          )
+        );
+
+        const resultGetPostsByUser = dispatch(
+          postApiSlice.util.updateQueryData(
+            "getPostsByUser",
+            //@ts-ignore
+            { userId, page: getState().pagination.postPage },
+            (draft) => {
+              applyOptimisticCommentUpdate({
+                draft,
+                postId: post_id,
+                commentId: id,
               });
             }
           )

@@ -4,9 +4,11 @@ import User from "../../components/user/User";
 import QueryError from "../../utilities/error/QueryError";
 import Spinner from "../../utilities/spinner/Spinner";
 import { useGetAllUsersQuery } from "../../features/apiSlice/userApiSlice/userApiSlice";
-import { IUserBasicData } from "../../pages/user-profile/types";
+import { IUserPartial } from "../../pages/user-profile/types";
 
 const UsersList = () => {
+  //TODO: user pagination
+  const page = 1;
   const {
     data: users,
     isLoading,
@@ -15,7 +17,7 @@ const UsersList = () => {
     isError,
     error,
     refetch,
-  } = useGetAllUsersQuery();
+  } = useGetAllUsersQuery({ page });
 
   let content;
 
@@ -28,8 +30,8 @@ const UsersList = () => {
       <>
         <h2 className="users-list__title">Users List</h2>
         <ul className="users-list__list">
-          {users?.map((user: IUserBasicData) => (
-            <User key={user._id} user={user} />
+          {users?.map((user: IUserPartial) => (
+            <User key={user.id} user={user} />
           ))}
         </ul>
       </>

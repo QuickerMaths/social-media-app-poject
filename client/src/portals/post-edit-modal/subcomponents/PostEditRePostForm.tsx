@@ -9,11 +9,11 @@ import Spinner from "../../../utilities/spinner/Spinner";
 import { closeModal } from "../../../features/modalSlice/modalSlice";
 import { useAppDispatch } from "../../../hooks/reduxHooks";
 import { useUpdatePostMutation } from "../../../features/apiSlice/postApiSlice/postApiSlice";
-import { IRePost } from "../../../components/post/types";
+import { IPost } from "../../../components/post/types";
 import useToastCreator from "../../../hooks/useToastCreator";
 
 interface Props {
-  post: IRePost;
+  post: IPost;
 }
 
 const PostEditRePostForm: React.FC<Props> = ({ post }) => {
@@ -23,19 +23,18 @@ const PostEditRePostForm: React.FC<Props> = ({ post }) => {
   if (isError) useToastCreator(error as string, "error");
 
   const dispatch = useAppDispatch();
-  const { _id: postId, postBody } = post;
+  const { id, post_text } = post;
 
   const { handleSubmit, values, handleChange } = useFormik({
     initialValues: {
-      postBody: postBody,
+      post_text,
     },
-    onSubmit: async (values) => {
+    onSubmit: async ({ post_text }) => {
       await updatePost({
-        _id: postId,
-        postBody: values.postBody,
-        isRePost: true,
+        id,
+        post_text,
       });
-      dispatch(closeModal(`${postId}edit`));
+      dispatch(closeModal(`${id}edit`));
     },
   });
 
@@ -49,9 +48,9 @@ const PostEditRePostForm: React.FC<Props> = ({ post }) => {
         <textarea
           rows={5}
           cols={10}
-          name="postBody"
-          id="postBody"
-          value={values.postBody}
+          name="post_text"
+          id="post_text"
+          value={values.post_text || ""}
           onChange={handleChange}
           className="post-edit-modal__text-area"
         />

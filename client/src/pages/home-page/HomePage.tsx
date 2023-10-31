@@ -1,7 +1,3 @@
-// External dependencies
-
-import { EntityId } from "@reduxjs/toolkit";
-
 // Internal dependencies
 
 import TextArea from "../../components/textArea/TextArea";
@@ -9,8 +5,10 @@ import Spinner from "../../utilities/spinner/Spinner";
 import PostWrapper from "../../components/post/post-wrapper/PostWrapper";
 import QueryError from "../../utilities/error/QueryError";
 import { useGetPostsQuery } from "../../features/apiSlice/postApiSlice/postApiSlice";
+import { useState } from "react";
 
 const HomePage = () => {
+  const [page, setPage] = useState(1);
   const {
     data: posts,
     isLoading,
@@ -19,7 +17,7 @@ const HomePage = () => {
     isSuccess,
     error,
     refetch,
-  } = useGetPostsQuery("");
+  } = useGetPostsQuery({ page });
 
   let content;
 
@@ -29,11 +27,14 @@ const HomePage = () => {
     content = <QueryError error={error as string} refetch={refetch} />;
   } else if (isSuccess) {
     content = (
-      <ul className="home-page__posts-list">
-        {posts?.ids.map((postId: EntityId) => (
-          <PostWrapper key={postId} postId={postId} userId={undefined} />
-        ))}
-      </ul>
+      <>
+        <ul className="home-page__posts-list">
+          {posts.map((post) => (
+            <PostWrapper key={post.id} post={post} userId={undefined} />
+          ))}
+        </ul>
+        <button onClick={() => setPage(page + 1)}>Load more...</button>
+      </>
     );
   }
 

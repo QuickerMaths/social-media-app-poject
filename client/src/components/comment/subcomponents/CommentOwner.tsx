@@ -5,26 +5,26 @@ import { Link } from "react-router-dom";
 
 // Internal dependencies
 
-import { IUserBasicData } from "../../../pages/user-profile/types";
+import { ICommentOwner } from "../types";
 
 // Assets
 
 import defaultImg from "../../../assets/images/default_img.png";
 
 interface Props {
-  owner: IUserBasicData;
+  comment_owner: ICommentOwner;
 }
 
 const CommentOwner: React.FC<Props> = ({
-  owner: { _id, profilePicture, username },
+  comment_owner: { id, avatar_url, username },
 }) => {
   return (
-    <Link to={`/user/${_id}`} className="comment__owner">
+    <Link to={`/user/${id}`} className="comment__owner">
       <img
         width={30}
         height={30}
         className="comment__user-profile-img"
-        src={profilePicture ? profilePicture : defaultImg}
+        src={avatar_url || defaultImg}
         alt="users profile img"
       />
       <h2 className="comment__username">{username}</h2>

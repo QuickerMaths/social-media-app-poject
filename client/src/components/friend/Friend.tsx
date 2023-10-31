@@ -1,14 +1,10 @@
 // External dependencies
 
 import React from "react";
-import { Link, useParams } from "react-router-dom";
-import { EntityId, EntityState } from "@reduxjs/toolkit";
-import { skipToken } from "@reduxjs/toolkit/dist/query";
+import { Link } from "react-router-dom";
 
 //Internal dependencies
 
-import { useGetUserByIdQuery } from "../../features/apiSlice/userApiSlice/userApiSlice";
-import { IUserBasicData } from "../../pages/user-profile/types";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import { closeModal } from "../../features/modalSlice/modalSlice";
@@ -16,29 +12,21 @@ import { closeModal } from "../../features/modalSlice/modalSlice";
 // Assets
 
 import defaultImg from "../../assets/images/default_img.png";
+import { IUserPartial } from "../../pages/user-profile/types";
 
 interface Props {
-  friendId: EntityId;
+  friend: IUserPartial;
 }
-const Friend: React.FC<Props> = ({ friendId }) => {
+const Friend: React.FC<Props> = ({ friend }) => {
   const dispatch = useAppDispatch();
-  const { userId } = useParams();
-  const { friend } = useGetUserByIdQuery(userId ?? skipToken, {
-    selectFromResult: ({ data }) => ({
-      friend: (data?.friends as EntityState<IUserBasicData>)?.entities[
-        friendId
-      ],
-    }),
-  });
-
   const { modals } = useAppSelector((state: RootState) => state.modal);
 
-  const { profilePicture } = friend as IUserBasicData;
+  const { id, avatar_url } = friend;
 
   return (
-    <Link to={`/user/${friendId}`}>
+    <Link to={`/user/${id}`}>
       <img
-        src={profilePicture ? profilePicture : defaultImg}
+        src={avatar_url || defaultImg}
         alt="user profile"
         className="friend__img"
         width={50}

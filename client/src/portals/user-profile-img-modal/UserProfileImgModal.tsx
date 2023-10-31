@@ -12,35 +12,33 @@ import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import { setProfileImage } from "../../features/authSlice/authSlice";
 import { closeModal } from "../../features/modalSlice/modalSlice";
-import { useUploadUserImageMutation } from "../../features/apiSlice/userApiSlice/userApiSlice";
+import { useUpdateUserMutation } from "../../features/apiSlice/userApiSlice/userApiSlice";
 
 const UserProfileImgModal = () => {
   const dispatch = useAppDispatch();
   const { modals } = useAppSelector((state: RootState) => state.modal);
   const { userId } = useAppSelector((state: RootState) => state.auth);
 
-  const [
-    uploadUserImage,
-    { isLoading: isUploading, isError, error, isSuccess },
-  ] = useUploadUserImageMutation();
+  const [updateUser, { isLoading: isUploading, isError, error, isSuccess }] =
+    useUpdateUserMutation();
 
   if (isError) useToastCreator(error as string, "error");
 
   const { handleSubmit, setFieldValue, errors, touched } = useFormik({
     initialValues: {
-      profilePicture: "",
+      avatar_url: "",
     },
     validationSchema: profileImageValidation,
     onSubmit: async (values) => {
-      await uploadUserImage({
-        userId: userId as string,
-        path: (await useConvertToBase64(values.profilePicture)) as string,
+      await updateUser({
+        userId: userId as number,
+        userUpdateData: values,
       });
 
       if (isSuccess) {
         dispatch(
           setProfileImage(
-            (await useConvertToBase64(values.profilePicture)) as string
+            (await useConvertToBase64(values.avatar_url)) as string
           )
         );
         dispatch(closeModal("profileImgModal"));
@@ -49,9 +47,11 @@ const UserProfileImgModal = () => {
   });
 
   const handleImgDelete = async () => {
-    await uploadUserImage({
-      userId: userId as string,
-      path: null,
+    await updateUser({
+      userId: userId as number,
+      userUpdateData: {
+        avatar_url: undefined,
+      },
     });
 
     if (isSuccess) {
@@ -70,20 +70,20 @@ const UserProfileImgModal = () => {
         <ul className="user-profile-img-modal__list">
           <li className="user-profile-img-modal__item">
             <form className="user-profile__form">
-              <label htmlFor="profilePicture" className="user-profile__label">
+              <label htmlFor="avatar_url" className="user-profile__label">
                 {isUploading ? "Uploading..." : "Upload new image"}
               </label>
-              {errors.profilePicture && touched.profilePicture && (
-                <p style={{ color: "red" }}>{errors.profilePicture}</p>
+              {errors.avatar_url && touched.avatar_url && (
+                <p style={{ color: "red" }}>{errors.avatar_url}</p>
               )}
               <input
                 type="file"
-                name="profilePicture"
-                id="profilePicture"
+                name="avatar_url"
+                id="avatar_url"
                 accept=".jpeg, .png, .jpg"
                 className="user-profile__input"
                 onChange={(e) => {
-                  setFieldValue("profilePicture", e.target.files![0]);
+                  setFieldValue("avatar_url", e.target.files![0]);
                   setTimeout(() => {
                     handleSubmit();
                   }, 0);

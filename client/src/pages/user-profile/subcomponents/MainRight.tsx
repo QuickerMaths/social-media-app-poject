@@ -14,6 +14,8 @@ import { useGetPostsByUserQuery } from "../../../features/apiSlice/postApiSlice/
 
 const MainRight = () => {
   const { userId } = useParams();
+  const numberUserId = +(userId ?? "");
+  const page = 1;
 
   const {
     data: posts,
@@ -23,7 +25,7 @@ const MainRight = () => {
     isSuccess,
     error,
     refetch,
-  } = useGetPostsByUserQuery(userId ?? skipToken);
+  } = useGetPostsByUserQuery({ userId: numberUserId, page } ?? skipToken);
 
   let content;
 
@@ -34,9 +36,9 @@ const MainRight = () => {
   } else if (isSuccess) {
     content = (
       <ul className="user-profile__posts-list">
-        {posts?.ids.length > 0 ? (
-          posts?.ids.map((postId: EntityId) => (
-            <PostWrapper key={postId} postId={postId} userId={userId} />
+        {posts.length > 0 ? (
+          posts.map((post) => (
+            <PostWrapper key={post.id} post={post} userId={numberUserId} />
           ))
         ) : (
           <p className="user-profile__no-posts-msg">No posts yet...</p>

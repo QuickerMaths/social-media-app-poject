@@ -1,23 +1,20 @@
-import { EntityState } from "@reduxjs/toolkit";
-
 export type IUser = {
-  _id: string;
+  id: number;
   username: string;
   email: string;
-  firstName: string;
-  lastName: string;
-  profilePicture: string | null;
-  friends: IUserBasicData[] | EntityState<IUserBasicData>;
-  friendsRequests: string[] | IUserBasicData[];
-  address: {
-    street: string;
-    city: string;
-    state: string;
-    zip: string;
-  };
-  refreshToken?: string;
-  createdAt: string;
-  updatedAt: string;
+  is_email_confirmation: boolean;
+  password: string;
+  avatar_url: string;
+  first_name?: string;
+  last_name?: string;
+  country?: string;
+  state?: string;
+  city?: string;
+  street?: string;
+  postal_code?: string;
+  created_at: string;
 };
 
-export type IUserBasicData = Pick<IUser, "_id" | "username" | "profilePicture">;
+export type IUserPartial = Pick<IUser, "username" | "id" | "avatar_url">;
+
+export type IUserUpdateData = Partial<IUser>;

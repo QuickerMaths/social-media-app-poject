@@ -11,7 +11,7 @@ import addressValidation from "../../validation/addressValidation";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import { closeModal } from "../../features/modalSlice/modalSlice";
-import { useUpdateUserAddressMutation } from "../../features/apiSlice/userApiSlice/userApiSlice";
+import { useUpdateUserMutation } from "../../features/apiSlice/userApiSlice/userApiSlice";
 import useToastCreator from "../../hooks/useToastCreator";
 import Spinner from "../../utilities/spinner/Spinner";
 
@@ -20,10 +20,8 @@ const UserDetailsModal = () => {
   const { userId } = useAppSelector((state: RootState) => state.auth);
   const { modals } = useAppSelector((state: RootState) => state.modal);
 
-  const [
-    updateUserAddress,
-    { isLoading: isUpdating, isError, error, isSuccess },
-  ] = useUpdateUserAddressMutation();
+  const [updateUser, { isLoading: isUpdating, isError, error, isSuccess }] =
+    useUpdateUserMutation();
 
   if (isError) useToastCreator(error as string, "error");
 
@@ -33,19 +31,20 @@ const UserDetailsModal = () => {
         street: "",
         city: "",
         state: "",
-        zip: "",
+        postal_code: "",
       },
       validationSchema: addressValidation,
       onSubmit: async (values) => {
-        await updateUserAddress({
-          userId: userId as string,
-          addressToUpdate: values,
+        await updateUser({
+          userId: userId as number,
+          userUpdateData: values,
         });
 
         if (isSuccess) dispatch(closeModal("userDetailsModal"));
       },
     });
 
+  //TODO: for some reason, submiting form is not working at all
   let content;
 
   if (isUpdating) {
@@ -95,15 +94,15 @@ const UserDetailsModal = () => {
             value={values.state}
           />
           <InputField
-            type="zip"
-            label="Zip code"
-            name="zip"
+            type="postal_code"
+            label="Postal_code"
+            name="postal_code"
             className="user-details-modal"
-            touched={touched.zip}
-            error={errors.zip}
+            touched={touched.postal_code}
+            error={errors.postal_code}
             onChange={handleChange}
             onBlur={handleBlur}
-            value={values.zip}
+            value={values.postal_code}
           />
           <button
             type="submit"
@@ -123,7 +122,7 @@ const UserDetailsModal = () => {
       <div
         className="user-details-modal__overlay"
         onClick={() => dispatch(closeModal("userDetailsModal"))}
-      ></div>
+      />
       {content}
     </div>,
     document.body

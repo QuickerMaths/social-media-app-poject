@@ -1,32 +1,18 @@
-import { IPost, IRePost } from "../../components/post/types";
-import { IUserBasicData } from "../../pages/user-profile/types";
-
 export type IResponse<K, T> = {
   status: K;
   data: T;
 };
 
-export type IRePostOrPost = Pick<IPost | IRePost, "isRePost" | "_id">;
-
-export type IPostPick = Partial<
-  Pick<IPost, "postBody" | "postImage" | "_id" | "isRePost">
->;
-
-export type IRePostPick = Partial<
-  Pick<IRePost, "postBody" | "originalPost" | "_id" | "isRePost">
->;
-
 export type ICreatePostParams = {
-  postBody: string;
-  _id: string;
-  isRePost: boolean;
-  originalPost?: string;
-  postImage?: string | null;
+  userId: number;
+  shared_post_id?: number;
+  post_text?: string;
+  media_location?: string;
 };
 
 export type IAuthResponse = {
   username: string | null;
-  userId: string | null;
+  userId: number | null;
   userImg: string | null;
   friendsRequests: string[] | [];
 };
@@ -42,13 +28,6 @@ export type IRegisterProps = {
   firstName: string;
   lastName: string;
   password: string;
-};
-
-export type IRequest = IUserBasicData;
-
-export type IFriendsRequestResponse = {
-  _id: string;
-  friendsRequests: IRequest[];
 };
 
 export type IResolveFriendRequestProps = {

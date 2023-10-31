@@ -1,7 +1,6 @@
 // External dependencies
 
 import React from "react";
-import { EntityState } from "@reduxjs/toolkit";
 
 // Internal dependencies
 
@@ -13,34 +12,30 @@ import { useAppDispatch, useAppSelector } from "../../../../hooks/reduxHooks";
 import { openModal } from "../../../../features/modalSlice/modalSlice";
 import { RootState } from "../../../../redux/store";
 import { IPost } from "../../types";
-import { IComment } from "../../../comment/types";
 
 interface Props {
   post: IPost;
 }
 
 const Post: React.FC<Props> = ({ post }) => {
-  const { postImage, comments, commentTotal, _id: postId } = post;
+  const { media_location, comments, comment_count, id } = post;
 
   const dispatch = useAppDispatch();
   const { modals } = useAppSelector((state: RootState) => state.modal);
 
   return (
     <>
-      {postImage && (
-        <img src={postImage} alt="post image" className="post__image" />
+      {media_location && (
+        <img src={media_location} alt="post image" className="post__image" />
       )}
       <PostAction post={post} />
-      {commentTotal > 0 && (
+      {comment_count > 0 && (
         <>
-          <PostComments
-            postId={postId}
-            comments={comments as EntityState<IComment>}
-          />
-          {commentTotal > 2 && (
+          <PostComments comments={comments} />
+          {comment_count > 2 && (
             <button
               className="post__see-more"
-              onClick={() => dispatch(openModal(`${postId}details`))}
+              onClick={() => dispatch(openModal(`${id}details`))}
             >
               See more
             </button>
@@ -48,8 +43,8 @@ const Post: React.FC<Props> = ({ post }) => {
         </>
       )}
 
-      {modals[`${postId}repost`] && <CreateRePostModal post={post as IPost} />}
-      {modals[`${postId}details`] && <PostDetailsModal post={post} />}
+      {modals[`${id}repost`] && <CreateRePostModal post={post} />}
+      {modals[`${id}details`] && <PostDetailsModal post={post} />}
     </>
   );
 };

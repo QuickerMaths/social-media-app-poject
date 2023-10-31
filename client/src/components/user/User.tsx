@@ -5,23 +5,23 @@ import { Link } from "react-router-dom";
 
 // Internal dependencies
 
-import { IUserBasicData } from "../../pages/user-profile/types";
+import { IUserPartial } from "../../pages/user-profile/types";
 
 // Assets
 
 import defaultImg from "../../assets/images/default_img.png";
 
 interface Props {
-  user: IUserBasicData;
+  user: IUserPartial;
 }
 
-const User: React.FC<Props> = ({ user: { username, _id, profilePicture } }) => {
+const User: React.FC<Props> = ({ user: { username, id, avatar_url } }) => {
   return (
     <li className="user">
-      <Link to={`/user/${_id}`} className="user__link">
+      <Link to={`/user/${id}`} className="user__link">
         <img
           className="user__img"
-          src={profilePicture || defaultImg}
+          src={avatar_url || defaultImg}
           alt={username}
         />
         <p className="user__name">{username}</p>

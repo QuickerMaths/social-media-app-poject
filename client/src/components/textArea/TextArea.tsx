@@ -18,19 +18,19 @@ const TextArea = () => {
 
   const { handleChange, values, handleSubmit, setFieldValue } = useFormik({
     initialValues: {
-      postBody: "",
+      post_text: "",
       image: null,
     },
     onSubmit: async (values) => {
       await createPost({
-        postBody: values.postBody,
-        _id: userId as string,
-        postImage: values.image
+        post_text: values.post_text,
+        media_location: values.image
           ? ((await useConvertToBase64(values.image)) as string)
-          : null,
-        isRePost: false,
+          : undefined,
+        userId: userId as number,
+        shared_post_id: undefined,
       });
-      if (!isUpdating && !isError) setFieldValue("postBody", "");
+      if (!isUpdating && !isError) setFieldValue("post_text", "");
       if (isError) useToastCreator(error as string, "error");
     },
   });
@@ -40,14 +40,14 @@ const TextArea = () => {
       <form className="feed__form" onSubmit={handleSubmit}>
         <div className="feed__main">
           <textarea
-            name="postBody"
-            id="postBody"
+            name="post_text"
+            id="post_text"
             placeholder={
               isUpdating ? "Posting your thoughts..." : "What's on your mind?"
             }
             className="feed__textarea"
             onChange={handleChange}
-            value={values.postBody}
+            value={values.post_text}
           />
           <button type="submit" className="feed__button" disabled={isUpdating}>
             Public

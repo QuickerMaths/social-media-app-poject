@@ -10,61 +10,56 @@ import useToastCreator from "../../../hooks/useToastCreator";
 import { openModal } from "../../../features/modalSlice/modalSlice";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import { RootState } from "../../../redux/store";
-import { IPost, IRePost } from "../types";
+import { IPost } from "../types";
 import { useLikePostMutation } from "../../../features/apiSlice/postApiSlice/postApiSlice";
 
 interface Props {
-  post: IPost | IRePost;
+  post: IPost;
 }
 
 const PostAction: React.FC<Props> = ({ post }) => {
-  const [likePost, { isError, error }] = useLikePostMutation();
-
   const dispatch = useAppDispatch();
-  const { likedBy, _id, commentTotal, isRePost } = post;
+  const { is_liked, like_count, id, comment_count, is_shared, share_count } =
+    post;
   const { userId } = useAppSelector((state: RootState) => state.auth);
 
+  const [likePost, { isError, error }] = useLikePostMutation();
+
+  const handlePostLike = () => {
+    userId === null
+      ? useToastCreator("You have to be logged in to like this post", "error")
+      : likePost({ id, userId });
+    if (isError) useToastCreator(error as string, "error");
+  };
   return (
     <>
       <div className="post__bottom-container">
         <button
-          className={`post__action-button ${
-            likedBy.includes(userId as string) && "post__liked"
-          }`}
-          onClick={() => {
-            userId === null
-              ? useToastCreator(
-                  "You have to be logged in to like this post",
-                  "error"
-                )
-              : likePost({ _id, userId, isRePost });
-            if (isError) useToastCreator(error as string, "error");
-          }}
+          className={`post__action-button ${is_liked && "post__liked"}`}
+          onClick={handlePostLike}
         >
           <AiOutlineLike
-            className={`post__action-icon ${
-              likedBy.includes(userId as string) && "post__liked"
-            }`}
+            className={`post__action-icon ${is_liked && "post__liked"}`}
           />
-          {likedBy.length}
+          {like_count}
         </button>
         <button
           className="post__action-button"
-          onClick={() => dispatch(openModal(`${_id}details`))}
+          onClick={() => dispatch(openModal(`${id}details`))}
         >
-          <AiOutlineComment className="post__action-icon" /> {commentTotal}
+          <AiOutlineComment className="post__action-icon" /> {comment_count}
         </button>
-        {!isRePost && (
+        {!is_shared && (
           <button
             className="post__action-button"
             onClick={() => {
               userId === null
                 ? useToastCreator("You have to be logged in to repost", "error")
-                : dispatch(openModal(`${_id}repost`));
+                : dispatch(openModal(`${id}repost`));
             }}
           >
             <BiRepost className="post__action-icon" />
-            {(post as IPost).rePostsCount}
+            {share_count}
           </button>
         )}
       </div>
