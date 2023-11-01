@@ -6,7 +6,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { IAuthSliceState } from "./types";
 import { authApiSlice } from "../apiSlice/authApiSlice/authApiSlice";
-import { friendsApiSlice } from "../apiSlice/friendsApiSlice/friendsApiSlice";
 
 const initialState: IAuthSliceState = {
   username: null,
@@ -53,12 +52,6 @@ export const authSlice = createSlice({
         state.username = username;
       }
     );
-    // builder.addMatcher(
-    //   friendsApiSlice.endpoints.resolveFriendRequest.matchFulfilled,
-    //   (state, { payload }) => {
-    //     state.friendsRequests = payload.friendsRequests as string[];
-    //   }
-    // );
   },
 });
 

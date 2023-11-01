@@ -19,8 +19,6 @@ const Register = () => {
   const { handleChange, handleBlur, errors, touched, values, handleSubmit } =
     useFormik({
       initialValues: {
-        firstName: "",
-        lastName: "",
         username: "",
         email: "",
         password: "",
@@ -50,28 +48,6 @@ const Register = () => {
 
         <h2 className="register__title">SignIn</h2>
         <form className="register__form" onSubmit={handleSubmit}>
-          <InputField
-            type="firstName"
-            label="First Name"
-            name="firstName"
-            className="register"
-            touched={touched.firstName}
-            error={errors.firstName}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.firstName}
-          />
-          <InputField
-            type="lastName"
-            label="Last Name"
-            name="lastName"
-            className="register"
-            touched={touched.lastName}
-            error={errors.lastName}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.lastName}
-          />
           <InputField
             type="username"
             label="Username"

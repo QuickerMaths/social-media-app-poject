@@ -48,15 +48,13 @@ export const authApiSlice = apiSlice.injectEndpoints({
       ) => errorTransformer(error),
     }),
 
-    registerUser: builder.mutation<IResponse<string, IUser>, IRegisterProps>({
-      query: ({ username, email, firstName, lastName, password }) => ({
-        url: "/register",
+    registerUser: builder.mutation<IUser, IRegisterProps>({
+      query: ({ username, email, password }) => ({
+        url: "/api/auth/register",
         method: "POST",
         body: {
           username,
           email,
-          firstName,
-          lastName,
           password,
         },
       }),

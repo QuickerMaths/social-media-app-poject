@@ -18,6 +18,8 @@ const HomePage = () => {
     error,
     refetch,
   } = useGetPostsQuery({ page });
+  
+
 
   let content;
 
