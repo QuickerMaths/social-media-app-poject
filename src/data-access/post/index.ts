@@ -1,6 +1,6 @@
-import connection from "../../../db/db.ts";
+import db from "../../../db/db.ts";
 import makePostDb from "./post-db.ts";
 
-const postDb = makePostDb({ db: connection });
+const postDb = makePostDb({ db });
 
 export default postDb;

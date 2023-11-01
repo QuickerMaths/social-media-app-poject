@@ -1,6 +1,6 @@
-import connection from "../../../db/db.ts";
+import db from "../../../db/db.ts";
 import makeUserDB from "./user-db.ts";
 
-const userDB = makeUserDB({ db: connection });
+const userDB = makeUserDB({ db });
 
 export default userDB;
