@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import logger from "./helpers/logger.ts";
 import postRouter from "./route/post.route.ts";
 import userRouter from "./route/user.route.ts";
@@ -17,6 +18,7 @@ function createServer() {
       origin: true
     })
   );
+  app.use(cookieParser());
 
   app.use("/api/post", postRouter);
   app.use("/api/user", userRouter);
