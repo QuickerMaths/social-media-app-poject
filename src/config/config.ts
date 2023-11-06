@@ -10,5 +10,11 @@ export default {
   },
   server: {
     port: process.env.PORT || 3000
+  },
+  jwt: {
+    jwt_token: process.env.JWT_SECRET || "secret",
+    jwt_expiration: process.env.JWT_EXPIRATION || 3600,
+    jwt_refresh_token: process.env.JWT_REFRESH_SECRET || "refresh_secret",
+    jwt_refresh_expiration: process.env.JWT_EXPIRATION || 86400
   }
 };
