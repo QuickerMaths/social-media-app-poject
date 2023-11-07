@@ -17,26 +17,27 @@ const Login = () => {
   const [loginUser, { isLoading: isLoginIn, isError, error, isSuccess }] =
     useLoginUserMutation();
 
-  if (isError) useToastCreator(error as string, "error");
-
   const { handleChange, handleBlur, errors, touched, values, handleSubmit } =
     useFormik({
       initialValues: {
-        username: "",
+        email: "",
         password: "",
       },
-      validationSchema: loginSchema,
-      onSubmit: async (values) => {
+      // validationSchema: loginSchema,
+      onSubmit: async ({ email, password }) => {
         await loginUser({
-          username: values.username,
-          password: values.password,
+          email,
+          password,
         });
-        if (isSuccess) {
-          useToastCreator("You have been logged in successfully", "success");
-          navigate("/");
-        }
       },
     });
+
+  if (isError) useToastCreator(error as string, "error");
+
+  if (isSuccess) {
+    navigate("/");
+    useToastCreator("Logged in successful", "success");
+  }
 
   let content;
 
@@ -51,15 +52,15 @@ const Login = () => {
         <h2 className="login__title">LogIn</h2>
         <form className="login__form" onSubmit={handleSubmit}>
           <InputField
-            type="username"
-            label="Username"
-            name="username"
+            type="email"
+            label="Email"
+            name="email"
             className="login"
-            touched={touched.username}
-            error={errors.username}
+            touched={touched.email}
+            error={errors.email}
             onChange={handleChange}
             onBlur={handleBlur}
-            value={values.username}
+            value={values.email}
           />
           <InputField
             type="password"

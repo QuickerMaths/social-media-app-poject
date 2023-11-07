@@ -1,8 +1,3 @@
-export type IResponse<K, T> = {
-  status: K;
-  data: T;
-};
-
 export type ICreatePostParams = {
   userId: number;
   shared_post_id?: number;
@@ -10,15 +5,8 @@ export type ICreatePostParams = {
   media_location?: string;
 };
 
-export type IAuthResponse = {
-  username: string | null;
-  userId: number | null;
-  userImg: string | null;
-  friendsRequests: string[] | [];
-};
-
 export type IAuthProps = {
-  username: string;
+  email: string;
   password: string;
 };
 

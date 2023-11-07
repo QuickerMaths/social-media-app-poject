@@ -23,7 +23,7 @@ const Header = () => {
     content = (
       <button
         className="header__login-button"
-        onClick={() => logoutUser("")}
+        onClick={() => logoutUser(undefined)}
         disabled={isLoggingOut}
       >
         LogOut

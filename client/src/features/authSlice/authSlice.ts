@@ -9,7 +9,7 @@ import { authApiSlice } from "../apiSlice/authApiSlice/authApiSlice";
 
 const initialState: IAuthSliceState = {
   username: null,
-  userId: 3,
+  userId: null,
   userImg: null,
   friendsRequests: [],
 };
@@ -26,11 +26,11 @@ export const authSlice = createSlice({
     builder.addMatcher(
       authApiSlice.endpoints.userAuthorization.matchFulfilled,
       (state, { payload }) => {
-        const { friendsRequests, userId, userImg, username } = payload.data;
-        state.friendsRequests = friendsRequests;
-        state.userId = userId;
-        state.userImg = userImg;
+        const { id, username, avatar_url } = payload;
+
         state.username = username;
+        state.userId = id;
+        state.userImg = avatar_url;
       }
     );
     builder.addMatcher(
@@ -45,11 +45,11 @@ export const authSlice = createSlice({
     builder.addMatcher(
       authApiSlice.endpoints.loginUser.matchFulfilled,
       (state, { payload }) => {
-        const { friendsRequests, userId, userImg, username } = payload.data;
-        state.friendsRequests = friendsRequests;
-        state.userId = userId;
-        state.userImg = userImg;
+        const { id, username, avatar_url } = payload;
+
         state.username = username;
+        state.userId = id;
+        state.userImg = avatar_url;
       }
     );
   },

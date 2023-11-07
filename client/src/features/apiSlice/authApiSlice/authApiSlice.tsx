@@ -1,30 +1,23 @@
 // Internal dependencies
-//TODO: refactor
 import { SerializedError } from "@reduxjs/toolkit";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
 import { errorTransformer } from "../../../hooks/reduxHooks";
 import { IUser } from "../../../pages/user-profile/types";
 import { apiSlice } from "../apiSlice";
-import {
-  IAuthProps,
-  IAuthResponse,
-  IErrorResponse,
-  IRegisterProps,
-  IResponse,
-} from "../types";
+import { IAuthProps, IErrorResponse, IRegisterProps } from "../types";
 
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    userAuthorization: builder.query<IResponse<string, IAuthResponse>, string>({
+    userAuthorization: builder.query<IUser, undefined>({
       query: () => ({
-        url: "/auth/me",
+        url: "/api/auth/me",
         credentials: "include",
       }),
     }),
 
-    logoutUser: builder.mutation<IResponse<string, null>, string>({
+    logoutUser: builder.mutation<{}, undefined>({
       query: () => ({
-        url: "/api/logout",
+        url: "/api/auth/logout",
         method: "POST",
         credentials: "include",
       }),
@@ -33,13 +26,13 @@ export const authApiSlice = apiSlice.injectEndpoints({
       ) => errorTransformer(error),
     }),
 
-    loginUser: builder.mutation<IResponse<string, IAuthResponse>, IAuthProps>({
-      query: ({ username, password }) => ({
-        url: `/auth`,
+    loginUser: builder.mutation<IUser, IAuthProps>({
+      query: ({ email, password }) => ({
+        url: `/api/auth/login`,
         method: "POST",
         credentials: "include",
         body: {
-          username,
+          email,
           password,
         },
       }),

@@ -27,13 +27,14 @@ const Register = () => {
       validationSchema: registerSchema,
       onSubmit: async (values) => {
         await registerUser(values);
-        if (isSuccess) {
-          navigate("/");
-          useToastCreator("Registered successful, you can login", "success");
-        }
-        if (isError) useToastCreator(error as string, "error");
       },
     });
+
+  if (isSuccess) {
+    navigate("/login");
+    useToastCreator("Registered successful, you can login", "success");
+  }
+  if (isError) useToastCreator(error as string, "error");
 
   let content;
 
