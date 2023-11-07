@@ -4,7 +4,7 @@ import { VerifyErrors } from "jsonwebtoken";
 import { ITokenPayload } from "./types.ts";
 
 export default function jwtService() {
-  const verifyToken = ({ token }: { token: string }) =>
+  const verifyToken = ({ token }: { token: string }): any =>
     jwt.verify(
       token,
       config.jwt.jwt_token,

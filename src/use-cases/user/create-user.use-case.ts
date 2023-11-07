@@ -1,10 +1,13 @@
 import userDB from "../../data-access/user/index.ts";
 import { UserCreateDataType } from "../../data-access/user/types.ts";
+import authService from "../../services/auth/index.ts";
 
 export default function makeCreateUserUseCase({
-  userDataBase
+  userDataBase,
+  hash
 }: {
   userDataBase: typeof userDB;
+  hash: typeof authService.hash;
 }) {
   return async function createUserUseCse({
     userCreateData
@@ -19,8 +22,16 @@ export default function makeCreateUserUseCase({
       throw new Error("User with this email already exists");
     }
     //TODO: validation
-    //TODO: hash password
-    const createdUser = await userDataBase.createUser({ userCreateData });
+    const hashedPassword = await hash.encrypt({
+      password: userCreateData.password
+    });
+
+    const createdUser = await userDataBase.createUser({
+      userCreateData: {
+        ...userCreateData,
+        password: hashedPassword
+      }
+    });
 
     return createdUser;
   };

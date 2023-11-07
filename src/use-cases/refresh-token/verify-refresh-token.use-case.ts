@@ -13,7 +13,7 @@ export default function makeVerifyRefreshTokenUseCase({
   }: {
     requestToken: string;
   }) {
-    const decodedToken = auth.jwtService().decodeToken({ token: requestToken });
+    const decodedToken = auth.jwt.decodeToken({ token: requestToken });
 
     //TODO: custom error
     if (!decodedToken || typeof decodedToken === "string")
@@ -26,9 +26,9 @@ export default function makeVerifyRefreshTokenUseCase({
     if (!isTokenInDB) throw new Error("Invalid token");
     if (isTokenInDB.token !== requestToken) throw new Error("Invalid token");
 
-    const verificationResult = auth
-      .jwtService()
-      .verifyRefreshToken({ token: requestToken });
+    const verificationResult = auth.jwt.verifyRefreshToken({
+      token: requestToken
+    });
 
     if (verificationResult instanceof Error) {
       await db.deleteRefreshToken({ userId: decodedToken.id });

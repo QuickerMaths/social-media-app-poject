@@ -5,6 +5,7 @@ import makeSelectAllUserFriendsUseCase from "./select-all-user-friends.use-case.
 import makeCreateUserUseCase from "./create-user.use-case.ts";
 import makeUpdateUserUseCase from "./update-user.use-case.ts";
 import makeDeleteUserUseCase from "./delete-user.use-case.ts";
+import authService from "../../services/auth/index.ts";
 
 const selectUserByIdUseCase = makeSelectUserByIdUseCase({
   userDataBase: userDB
@@ -15,7 +16,10 @@ const selectAllUsersUseCase = makeSelectAllUsersUseCase({
 const selectAllUserFriendsUseCase = makeSelectAllUserFriendsUseCase({
   userDataBase: userDB
 });
-const createUserUseCase = makeCreateUserUseCase({ userDataBase: userDB });
+const createUserUseCase = makeCreateUserUseCase({
+  userDataBase: userDB,
+  hash: authService.hash
+});
 const updateUserUseCase = makeUpdateUserUseCase({ userDataBase: userDB });
 const deleteUserUseCase = makeDeleteUserUseCase({ userDataBase: userDB });
 

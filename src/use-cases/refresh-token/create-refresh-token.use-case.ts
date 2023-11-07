@@ -14,7 +14,7 @@ export default function makeCreateRefreshTokenUseCase({
   }: {
     payload: ITokenPayload;
   }) {
-    const token = auth.jwtService().generateRefreshToken({ payload });
+    const token = auth.jwt.generateRefreshToken({ payload });
 
     const refreshToken = await db.createRefreshToken({
       token,

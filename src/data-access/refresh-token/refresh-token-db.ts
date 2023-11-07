@@ -28,21 +28,17 @@ export default function makeRefreshTokenDb({ db }: { db: typeof connection }) {
     const [result] = await db.query(sql, [token, userId]);
 
     const [refreshTokenRecord] = await db.query(
-      "SELECT * FROM refresh_token WHERE id = ?;",
+      "SELECT * FROM refresh_token WHERE token = ?;",
       [(result as ResultSetHeader).insertId]
     );
 
     return (refreshTokenRecord as IRefreshToken[])[0];
   }
 
-  async function deleteRefreshToken({
-    userId
-  }: {
-    userId: number;
-  }): Promise<{}> {
-    const sql = "DELETE FROM refresh_token WHERE profile_id = ?;";
+  async function deleteRefreshToken({ token }: { token: string }): Promise<{}> {
+    const sql = "DELETE FROM refresh_token WHERE token = ?;";
 
-    await db.query(sql, [userId]);
+    await db.query(sql, [token]);
 
     return {};
   }

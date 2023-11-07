@@ -32,7 +32,7 @@ export default function makeUserDB({ db }: { db: typeof connection }) {
   }
 
   async function selectUserByEmail({ email }: { email: string }) {
-    const sql = "SELECT id FROM user_profile WHERE email = ?";
+    const sql = "SELECT * FROM user_profile WHERE email = ?";
 
     const [result] = await db.query(sql, [email]);
 

@@ -7,6 +7,7 @@ interface IController {
 interface IResponse {
   statusCode: number;
   body: any;
+  cookies?: { name: string; value: string; options: any }[];
 }
 
 export default (controller: IController) =>
@@ -14,12 +15,23 @@ export default (controller: IController) =>
     const httpRequest = {
       query: req.query,
       params: req.params,
-      body: req.body
+      body: req.body,
+      cookies: req.cookies,
+      path: req.path
     };
 
     controller(httpRequest)
       .then((httpResponse) => {
-        console.log(httpResponse);
+        if (httpResponse?.cookies) {
+          httpResponse.cookies.forEach(({ name, value, options }) => {
+            res.cookie(name, value, options);
+          });
+        }
+
+        if (httpRequest?.path === "/logout") {
+          res.clearCookie("refreshToken");
+          res.clearCookie("accessToken");
+        }
 
         return res.status(httpResponse.statusCode).send(httpResponse.body);
       })
