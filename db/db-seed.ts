@@ -1,17 +1,22 @@
 import { faker } from "@faker-js/faker";
+import bcrypt from "bcrypt";
 import { UniqueEnforcer } from "enforce-unique";
 import connection from "./db.js";
 
 const uniqueEnforcerEmail = new UniqueEnforcer();
 
 async function generateRandomUser() {
+  const hashedPassword = async () => {
+    const salt = await bcrypt.genSalt(10);
+    return await bcrypt.hash(faker.internet.password(), salt);
+  };
   return {
     username: faker.internet.userName(),
     email: uniqueEnforcerEmail.enforce(() => {
       return faker.internet.email();
     }),
     is_email_confirmation: faker.datatype.boolean(),
-    password: faker.internet.password(),
+    password: await hashedPassword(),
     avatar_url: faker.internet.avatar(),
     first_name: faker.person.firstName(),
     last_name: faker.person.lastName(),
@@ -157,6 +162,7 @@ async function seed(table: string, rows: number, schema: Function) {
   const data = [];
 
   for (let i = 0; i < rows; i++) {
+    console.log(`Generating row ${i + 1} for ${table} table`);
     data.push(await schema());
   }
 
