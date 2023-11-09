@@ -382,8 +382,9 @@ input {
   margin-top: 20px;
 }
 .post__image {
-  margin-top: 20px;
-  max-width: 100%;
+  margin: 20px auto 0px auto;
+  width: 100%;
+  cursor: pointer;
 }
 .post__bottom-container {
   display: flex;
@@ -1764,11 +1765,11 @@ input {
 }
 .post-details-modal__body {
   margin-top: 20px;
-  width: 70%;
+  width: 100%;
 }
 .post-details-modal__image {
-  margin-top: 20px;
-  max-width: 100%;
+  margin: 20px auto 0px auto;
+  width: 100%;
 }
 .post-details-modal__bottom-container {
   display: flex;
@@ -2106,17 +2107,7 @@ input {
   border-radius: 50%;
   display: inline-block;
   box-sizing: border-box;
-  -webkit-animation: rotation 1s linear infinite;
-          animation: rotation 1s linear infinite;
-}
-
-@-webkit-keyframes rotation {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  animation: rotation 1s linear infinite;
 }
 
 @keyframes rotation {

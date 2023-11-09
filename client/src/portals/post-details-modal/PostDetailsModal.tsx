@@ -5,7 +5,6 @@ import ReactDOM from "react-dom";
 import moment from "moment";
 import { AiOutlineClose } from "react-icons/ai";
 import { useFormik } from "formik";
-import { EntityState } from "@reduxjs/toolkit";
 
 // Internal dependencies
 
@@ -21,7 +20,6 @@ import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import { closeModal } from "../../features/modalSlice/modalSlice";
 import { useCreateCommentMutation } from "../../features/apiSlice/commentApiSlice/commentApiSlice";
-import { IComment } from "../../components/comment/types";
 
 interface Props {
   post: IPost;
@@ -104,12 +102,7 @@ const PostDetailsModal: React.FC<Props> = ({ post }) => {
             <PostDetailsPost post={post} />
           )}
           <PostAction post={post} />
-          {comment_count > 0 && (
-            <PostComments
-              postId={id}
-              comments={comments as EntityState<IComment>}
-            />
-          )}
+          {comment_count > 0 && <PostComments comments={comments} />}
         </div>
         {content}
       </div>

@@ -26,7 +26,12 @@ const Post: React.FC<Props> = ({ post }) => {
   return (
     <>
       {media_location && (
-        <img src={media_location} alt="post image" className="post__image" />
+        <img
+          src={media_location}
+          alt="post image"
+          className="post__image"
+          onClick={() => dispatch(openModal(`${id}details`))}
+        />
       )}
       <PostAction post={post} />
       {comment_count > 0 && (
