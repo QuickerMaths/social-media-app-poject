@@ -1,0 +1,40 @@
+version: "3.0.0"
+services:
+  db:
+    image: mysql:8
+    restart: always
+
+    environment:
+      MYSQL_DATABASE: "socialyDB"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "password"
+      MYSQL_ROOT_PASSWORD: "password"
+    ports:
+      - "3306:3306"
+    expose:
+      - "3306"
+    volumes:
+      - db:/var/lib/mysql
+      - ./docker_mysql_init.sql:/docker-entrypoint-initdb.d/docker_mysql_init.sql
+      
+  cache:
+    image: redis:7.2
+    restart: always
+    environment:
+      REDIS_HOST: "cache"
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: "redisPassword"
+    ports:
+      - "6379:6379"
+    expose:
+      - "6379"
+    command: redis-server --save 20 1 --loglevel warning --requirepass redisPassword
+    volumes: 
+      - cache:/var/lib/redis
+
+volumes:
+  db:
+    driver: local
+  cache: 
+    driver: local
+

@@ -15,21 +15,21 @@ const UserFriends: React.FC<Props> = ({ user }) => {
   const dispatch = useAppDispatch();
 
   const { modals } = useAppSelector((state: RootState) => state.modal);
-  //TODO: display 4 friends after adding it to backend response
+
+  const { friends } = user;
+  console.log(user);
   return (
     <>
       <section className="user-friends">
         <h4 className="user-friends__title">Friends</h4>
-        {/* {(friends as EntityState<IUserBasicData>).ids.length > 0 ? (
+        {friends.length > 0 ? (
           <>
             <ul className="users-friends__list">
-              {(friends as EntityState<IUserBasicData>).ids.map(
-                (friendId: EntityId) => (
-                  <Friend key={friendId} friendId={friendId} />
-                )
-              )}
+              {friends.map((friend) => (
+                <Friend key={friend.id} friend={friend} />
+              ))}
             </ul>
-            {(friends as EntityState<IUserBasicData>).ids.length > 8 && (
+            {friends.length > 9 && (
               <button
                 className="user-friends__see-more"
                 onClick={() => dispatch(openModal("userFriendsModal"))}
@@ -40,13 +40,7 @@ const UserFriends: React.FC<Props> = ({ user }) => {
           </>
         ) : (
           <p>No friends yet</p>
-        )} */}
-        <button
-          className="user-friends__see-more"
-          onClick={() => dispatch(openModal("userFriendsModal"))}
-        >
-          See more...
-        </button>
+        )}
       </section>
       {modals["userFriendsModal"] && <UserFriendsModal />}
     </>

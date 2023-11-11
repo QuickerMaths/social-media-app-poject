@@ -91,7 +91,7 @@ const UserProfile = () => {
               {user.first_name} {user.last_name}
             </h3>
           </div>
-          {/* <FriendAction user={user} /> */}
+          <FriendAction user={user} />
         </div>
         {isMobile && (
           <UserProfileMobileNavigation

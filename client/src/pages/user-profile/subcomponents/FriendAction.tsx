@@ -9,7 +9,7 @@ import { AiOutlineUserSwitch } from "react-icons/ai";
 
 import SendFriendRequest from "../../../components/send-friend-request/SendFriendRequest";
 import RemoveFriend from "../../../components/remove-friends/RemoveFriend";
-import { IUser, IUserBasicData } from "../types";
+import { IUser, IUserPartial } from "../types";
 import { useAppSelector } from "../../../hooks/reduxHooks";
 import { RootState } from "../../../redux/store";
 
@@ -23,16 +23,14 @@ const FriendAction: React.FC<Props> = ({ user }) => {
   );
   const { userId } = useParams();
 
+  const { friendship_status } = user;
+
   let content;
 
   if (activeUserId && activeUserId !== userId) {
-    const alreadyFriends = (
-      user.friends as EntityState<IUserBasicData>
-    ).ids.includes(activeUserId);
+    const alreadyFriends = friendship_status === 1;
 
-    const requestAlreadySent = (user.friendsRequests as string[]).includes(
-      activeUserId
-    );
+    const requestAlreadySent = friendship_status === 2;
 
     if (!alreadyFriends && !requestAlreadySent) {
       content = <SendFriendRequest />;

@@ -1,4 +1,4 @@
-export type IUser = {
+export default interface IUserProfile {
   id: number;
   username: string;
   email: string;
@@ -12,11 +12,5 @@ export type IUser = {
   city?: string;
   street?: string;
   postal_code?: string;
-  friends: IUserPartial[];
-  friendship_status: number;
-  created_at: string;
-};
-
-export type IUserPartial = Pick<IUser, "username" | "id" | "avatar_url">;
-
-export type IUserUpdateData = Partial<IUser>;
+  createdAt: Date;
+}
