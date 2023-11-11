@@ -22,7 +22,7 @@ you can find a deeper dive into the details in its README.
 
 ```
 # clone this repo 
-git clone https://github.com/QuickerMaths/nodejs-clean-architecture
+git clone https://github.com/QuickerMaths/social-media-app-poject
 
 ## navigate to project dir
 cd social-media-app-project
