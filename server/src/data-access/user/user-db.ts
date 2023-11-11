@@ -7,13 +7,60 @@ export default function makeUserDB({ db }: { db: typeof connection }) {
   //TODO: when user is logged in, query should also return friendship status of both selected and logged in user
   //TODO: should also return 4 friends of selected user to display on profile page
   async function selectUserById({
-    userId
+    userId,
+    loggedInUserId
   }: {
     userId: number;
+    loggedInUserId?: number;
   }): Promise<IUserProfile> {
-    const sql = "SELECT * FROM user_profile WHERE id = ?";
+    const sql = `
+    WITH CTE AS (
+      SELECT
+          up.id AS user_id,
+          fp.id AS friend_id, 
+          fp.username AS friend_username, 
+          fp.avatar_url AS friend_avatar_url
+      FROM user_profile up
+      JOIN friendship f ON up.id = f.profile_request_id OR up.id = f.profile_responder_id
+      JOIN user_profile fp ON fp.id = 
+          CASE
+              WHEN up.id = f.profile_request_id THEN f.profile_responder_id
+              WHEN up.id = f.profile_responder_id THEN f.profile_request_id
+          END
+      WHERE up.id = ? AND f.status_id = 1
+      LIMIT 10
+    )
+    SELECT DISTINCT
+      up.*,
+      (
+        SELECT JSON_ARRAYAGG(
+            JSON_OBJECT(
+                'id', friend_id,
+                'username', friend_username,
+                'avatar_url', friend_avatar_url
+            )
+        )
+        FROM CTE AS sub
+        WHERE sub.user_id = up.id
+      ) AS friends
+      ${
+        loggedInUserId
+          ? `,
+      MAX(CASE WHEN f.profile_request_id = ? OR f.profile_responder_id = ? THEN f.status_id END) AS friendship_status`
+          : ""
+      }
+    FROM user_profile up
+      LEFT JOIN CTE ON up.id = CTE.user_id
+      LEFT JOIN friendship f ON up.id = f.profile_request_id OR up.id = f.profile_responder_id
+    WHERE up.id = ?;
+    `;
 
-    const [result] = await db.query(sql, [userId]);
+    const [result] = await db.query(
+      sql,
+      loggedInUserId
+        ? [userId, loggedInUserId, loggedInUserId, userId]
+        : [userId, userId]
+    );
 
     return (result as IUserProfile[])[0];
   }

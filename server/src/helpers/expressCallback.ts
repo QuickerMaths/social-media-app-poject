@@ -17,7 +17,8 @@ export default (controller: IController) =>
       params: req.params,
       body: req.body,
       cookies: req.cookies,
-      path: req.path
+      path: req.path,
+      user: req.user
     };
 
     controller(httpRequest)

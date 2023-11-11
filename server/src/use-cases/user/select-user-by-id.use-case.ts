@@ -5,8 +5,17 @@ export default function makeSelectUserByIdUseCase({
 }: {
   userDataBase: typeof userDB;
 }) {
-  return async function selectUserByIdUseCase({ userId }: { userId: number }) {
-    const selectedUser = await userDataBase.selectUserById({ userId });
+  return async function selectUserByIdUseCase({
+    userId,
+    loggedInUserId
+  }: {
+    userId: number;
+    loggedInUserId?: number;
+  }) {
+    const selectedUser = await userDataBase.selectUserById({
+      userId,
+      loggedInUserId
+    });
 
     return selectedUser;
   };
