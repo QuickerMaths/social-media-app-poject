@@ -7,9 +7,9 @@ export default function makeSelectUserByIdController({
 }) {
   return async function selectUserByIdController(httpRequest: any) {
     const userId = httpRequest.params.userId;
-    const id = httpRequest?.user?.id;
+    const loggedInUserId = httpRequest.user?.id;
 
-    const selectedUser = await useCase({ userId, loggedInUserId: id });
+    const selectedUser = await useCase({ userId, loggedInUserId });
 
     return {
       statusCode: 200,

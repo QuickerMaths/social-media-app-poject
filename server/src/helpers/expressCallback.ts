@@ -3,7 +3,6 @@ import { Response, Request, NextFunction } from "express";
 interface IController {
   (httpRequest: any): Promise<IResponse>;
 }
-
 interface IResponse {
   statusCode: number;
   body: any;

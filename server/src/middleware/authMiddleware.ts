@@ -33,6 +33,8 @@ const authMiddleware =
       });
     }
 
+    req.user = decodedAccessToken;
+
     next();
   };
 
