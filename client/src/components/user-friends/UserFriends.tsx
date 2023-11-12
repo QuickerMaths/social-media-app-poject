@@ -22,7 +22,7 @@ const UserFriends: React.FC<Props> = ({ user }) => {
     <>
       <section className="user-friends">
         <h4 className="user-friends__title">Friends</h4>
-        {friends.length > 0 ? (
+        {friends ? (
           <>
             <ul className="users-friends__list">
               {friends.map((friend) => (
