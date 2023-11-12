@@ -17,7 +17,7 @@ const UserFriends: React.FC<Props> = ({ user }) => {
   const { modals } = useAppSelector((state: RootState) => state.modal);
 
   const { friends } = user;
-  console.log(user);
+
   return (
     <>
       <section className="user-friends">

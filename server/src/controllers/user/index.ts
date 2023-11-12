@@ -5,6 +5,7 @@ import makeSelectAllUserFriendsController from "./select-all-user-friends.contro
 import makeCreateUserController from "./create-user.controller.ts";
 import makeUpdateUserController from "./update-user.controller.ts";
 import makeDeleteUserController from "./delete-user.controller.ts";
+import makeSelectAllRequestsController from "./select-all-requests.controller.ts";
 
 const selectUserByIdController = makeSelectUserByIdController({
   useCase: userUseCase.selectUserByIdUseCase
@@ -25,13 +26,18 @@ const deleteUserController = makeDeleteUserController({
   useCase: userUseCase.deleteUserUseCase
 });
 
+const selectAllRequestsController = makeSelectAllRequestsController({
+  useCase: userUseCase.selectAllRequestsUseCase
+});
+
 const userController = Object.freeze({
   selectUserByIdController,
   selectAllUsersController,
   selectAllUserFriendsController,
   createUserController,
   updateUserController,
-  deleteUserController
+  deleteUserController,
+  selectAllRequestsController
 });
 
 export default userController;

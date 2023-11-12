@@ -1,7 +1,6 @@
 // External dependencies
 
 import React from "react";
-import { EntityState } from "@reduxjs/toolkit";
 import { useParams } from "react-router";
 import { AiOutlineUserSwitch } from "react-icons/ai";
 
@@ -9,7 +8,7 @@ import { AiOutlineUserSwitch } from "react-icons/ai";
 
 import SendFriendRequest from "../../../components/send-friend-request/SendFriendRequest";
 import RemoveFriend from "../../../components/remove-friends/RemoveFriend";
-import { IUser, IUserPartial } from "../types";
+import { IUser } from "../types";
 import { useAppSelector } from "../../../hooks/reduxHooks";
 import { RootState } from "../../../redux/store";
 
@@ -29,14 +28,13 @@ const FriendAction: React.FC<Props> = ({ user }) => {
 
   if (activeUserId && activeUserId !== userId) {
     const alreadyFriends = friendship_status === 1;
-
     const requestAlreadySent = friendship_status === 2;
 
-    if (!alreadyFriends && !requestAlreadySent) {
+    if (!friendship_status) {
       content = <SendFriendRequest />;
     } else if (alreadyFriends) {
       content = <RemoveFriend />;
-    } else if (requestAlreadySent && !alreadyFriends) {
+    } else if (requestAlreadySent) {
       content = (
         <section className="send-friend-request">
           <button className="send-friend-request__button">

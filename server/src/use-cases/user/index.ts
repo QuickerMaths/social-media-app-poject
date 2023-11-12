@@ -5,6 +5,7 @@ import makeSelectAllUserFriendsUseCase from "./select-all-user-friends.use-case.
 import makeCreateUserUseCase from "./create-user.use-case.ts";
 import makeUpdateUserUseCase from "./update-user.use-case.ts";
 import makeDeleteUserUseCase from "./delete-user.use-case.ts";
+import makeSelectAllRequestsUseCase from "./select-all-requests.use-case.ts";
 import authService from "../../services/auth/index.ts";
 
 const selectUserByIdUseCase = makeSelectUserByIdUseCase({
@@ -22,6 +23,9 @@ const createUserUseCase = makeCreateUserUseCase({
 });
 const updateUserUseCase = makeUpdateUserUseCase({ userDataBase: userDB });
 const deleteUserUseCase = makeDeleteUserUseCase({ userDataBase: userDB });
+const selectAllRequestsUseCase = makeSelectAllRequestsUseCase({
+  userDataBase: userDB
+});
 
 const userUseCase = Object.freeze({
   selectUserByIdUseCase,
@@ -29,7 +33,8 @@ const userUseCase = Object.freeze({
   selectAllUserFriendsUseCase,
   createUserUseCase,
   updateUserUseCase,
-  deleteUserUseCase
+  deleteUserUseCase,
+  selectAllRequestsUseCase
 });
 
 export default userUseCase;

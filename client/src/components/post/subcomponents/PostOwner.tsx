@@ -10,9 +10,9 @@ import { RootState } from "../../../redux/store";
 // Assets
 import defaultImg from "../../../assets/images/default_img.png";
 import { closeModal } from "../../../features/modalSlice/modalSlice";
-import { IPostOwner } from "../types";
+import { IUserPartial } from "../../../pages/user-profile/types";
 interface Props {
-  post_owner: IPostOwner;
+  post_owner: IUserPartial;
 }
 
 const PostOwner: React.FC<Props> = ({

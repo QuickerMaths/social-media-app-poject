@@ -112,9 +112,8 @@ ALTER TABLE
 ALTER TABLE
     `user_post` ADD CONSTRAINT `user_post_shared_post_id_foreign` FOREIGN KEY(`shared_post_id`) REFERENCES `user_post`(`id`);
 
-INSERT INTO `friendship_status` (`id`, `status`) VALUES (1, 'pending');
-INSERT INTO `friendship_status` (`id`, `status`) VALUES (2, 'accepted');
-INSERT INTO `friendship_status` (`id`, `status`) VALUES (4, 'blocked');
+INSERT INTO `friendship_status` (`id`, `status`) VALUES (1, 'accepted');
+INSERT INTO `friendship_status` (`id`, `status`) VALUES (2, 'pending');
 
 
 DELIMITER $$

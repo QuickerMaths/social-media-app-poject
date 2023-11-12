@@ -31,7 +31,7 @@ export default function makeVerifyRefreshTokenUseCase({
     });
 
     if (verificationResult instanceof Error) {
-      await db.deleteRefreshToken({ userId: decodedToken.id });
+      await db.deleteRefreshToken({ token: isTokenInDB.token });
       throw new Error("Invalid refresh token.");
     }
     return {

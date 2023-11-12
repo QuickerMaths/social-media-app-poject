@@ -204,6 +204,26 @@ export default function makeUserDB({ db }: { db: typeof connection }) {
     return {};
   }
 
+  async function selectAllUserRequests({ userId }: { userId: number }) {
+    const sql = `
+    (SELECT up.id, up.username, up.avatar_url 
+      FROM friendship f
+        JOIN user_profile up ON up.id = f.profile_request_id
+      WHERE f.profile_responder_id = 301 AND f.status_id = 2)
+      
+        UNION
+      
+    (SELECT up.id, up.username, up.avatar_url
+      FROM friendship f
+        JOIN user_profile up ON up.id = f.profile_responder_id
+      WHERE f.profile_request_id = 301 AND f.status_id = 2)
+    `;
+
+    const [result] = await db.query(sql, [userId, userId]);
+
+    return result as IUserProfile[];
+  }
+
   return Object.freeze({
     selectUserById,
     selectUserByEmail,
@@ -212,6 +232,7 @@ export default function makeUserDB({ db }: { db: typeof connection }) {
     selectAllUserFriends,
     createUser,
     updateUser,
-    deleteUser
+    deleteUser,
+    selectAllUserRequests
   });
 }

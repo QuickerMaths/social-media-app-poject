@@ -1,7 +1,7 @@
 // External dependencies
 
 import { useState } from "react";
-import { useParams } from "react-router";
+import { Navigate, useParams } from "react-router";
 import { skipToken } from "@reduxjs/toolkit/dist/query";
 
 // Internal dependencies
@@ -32,6 +32,9 @@ const UserProfile = () => {
     (state: RootState) => state.auth
   );
   const { userId } = useParams();
+  if (!userId) {
+    return <Navigate to="/" />;
+  }
 
   const [activePage, setActivePage] = useState<"posts" | "details">("posts");
 
@@ -43,7 +46,7 @@ const UserProfile = () => {
     isError,
     error,
     refetch,
-  } = useGetUserByIdQuery(userId ?? skipToken);
+  } = useGetUserByIdQuery({ userId: userId ?? skipToken });
 
   let content;
 

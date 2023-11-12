@@ -30,7 +30,7 @@ export default function jwtService() {
           };
 
           return jwt.sign(toSign, config.jwt.jwt_token, {
-            expiresIn: config.jwt.jwt_refresh_token
+            expiresIn: config.jwt.jwt_expiration
           });
         }
         return;

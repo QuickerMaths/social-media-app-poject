@@ -24,8 +24,8 @@ export const userApiSlice = apiSlice.injectEndpoints({
       ) => errorTransformer(error),
     }),
 
-    getUserById: builder.query<IUser, string>({
-      query: (userId: string) => ({
+    getUserById: builder.query<IUser, { userId: string }>({
+      query: ({ userId }) => ({
         method: "GET",
         url: `/api/user/${userId}`,
         credentials: "include",
@@ -33,7 +33,9 @@ export const userApiSlice = apiSlice.injectEndpoints({
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
-      providesTags: (_result, _error, id) => [{ type: "User", id }],
+      providesTags: (_result, _error, { userId }) => [
+        { type: "User", id: userId },
+      ],
     }),
 
     getAllUserFriends: builder.query<
@@ -68,6 +70,16 @@ export const userApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: (_result, error, req) =>
         error ? [] : [{ type: "User", id: req.userId }],
     }),
+    getAllRequests: builder.query<IUserPartial[], { userId: number }>({
+      query: ({ userId }) => ({
+        method: "GET",
+        url: `/api/user/${userId}/requests`,
+        credentials: "include",
+      }),
+      transformErrorResponse: (
+        error: FetchBaseQueryError | IErrorResponse | SerializedError
+      ) => errorTransformer(error),
+    }),
   }),
 });
 
@@ -76,4 +88,5 @@ export const {
   useGetUserByIdQuery,
   useGetAllUserFriendsQuery,
   useUpdateUserMutation,
+  useGetAllRequestsQuery,
 } = userApiSlice;
