@@ -140,6 +140,44 @@ export const userApiSlice = apiSlice.injectEndpoints({
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
     }),
+    rejectFriendRequest: builder.mutation<
+      {},
+      { requesterId: number; loggedInUserId: number }
+    >({
+      query: ({ requesterId }) => ({
+        method: "DELETE",
+        url: `/api/user/${requesterId}/reject-request`,
+        credentials: "include",
+      }),
+      onQueryStarted: (
+        { requesterId, loggedInUserId },
+        { dispatch, queryFulfilled }
+      ) => {
+        const resultGetUserById = dispatch(
+          userApiSlice.util.updateQueryData(
+            "getUserById",
+            { userId: loggedInUserId },
+            (draft) => {
+              draft.friendship_status = 1;
+            }
+          )
+        );
+        const resultGetAllRequests = dispatch(
+          userApiSlice.util.updateQueryData(
+            "getAllRequests",
+            { userId: loggedInUserId },
+            (draft) => draft.filter((item) => item.id !== requesterId)
+          )
+        );
+        Promise.all([
+          queryFulfilled.catch(resultGetUserById.undo),
+          queryFulfilled.catch(resultGetAllRequests.undo),
+        ]);
+      },
+      transformErrorResponse: (
+        error: FetchBaseQueryError | IErrorResponse | SerializedError
+      ) => errorTransformer(error),
+    }),
   }),
 });
 
@@ -151,4 +189,5 @@ export const {
   useGetAllRequestsQuery,
   useSendFriendRequestMutation,
   useAcceptFriendRequestMutation,
+  useRejectFriendRequestMutation,
 } = userApiSlice;

@@ -266,6 +266,23 @@ export default function makeUserDB({ db }: { db: typeof connection }) {
     return (record as UserRequestDataType[])[0];
   }
 
+  async function rejectFriendRequest({
+    loggedInUserId,
+    requesterId
+  }: {
+    loggedInUserId: number;
+    requesterId: number;
+  }) {
+    const sql = `
+    DELETE FROM friendship
+      WHERE profile_request_id = ? AND profile_responder_id = ?;
+    `;
+
+    await db.query(sql, [requesterId, loggedInUserId]);
+
+    return {};
+  }
+
   return Object.freeze({
     selectUserById,
     selectUserByEmail,
@@ -277,6 +294,7 @@ export default function makeUserDB({ db }: { db: typeof connection }) {
     deleteUser,
     selectAllUserRequests,
     sendFriendRequest,
-    acceptFriendRequest
+    acceptFriendRequest,
+    rejectFriendRequest
   });
 }

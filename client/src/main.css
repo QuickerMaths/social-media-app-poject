@@ -816,7 +816,7 @@ input {
 .request__button--accept {
   background-color: green;
 }
-.request__button--decline {
+.request__button--reject {
   background-color: red;
 }
 

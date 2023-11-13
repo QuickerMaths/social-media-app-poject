@@ -8,6 +8,7 @@ import makeDeleteUserUseCase from "./delete-user.use-case.ts";
 import makeSelectAllRequestsUseCase from "./select-all-requests.use-case.ts";
 import makeSendFriendRequestUseCase from "./send-friend-request.use-case.ts";
 import makeAcceptFriendRequestUseCase from "./accept-friend-request.use-case.ts";
+import makeRejectFriendRequestUseCase from "./reject-friend-request.use-case.ts";
 import authService from "../../services/auth/index.ts";
 
 const selectUserByIdUseCase = makeSelectUserByIdUseCase({
@@ -34,6 +35,9 @@ const sendFriendRequestUseCase = makeSendFriendRequestUseCase({
 const acceptFriendRequestUseCase = makeAcceptFriendRequestUseCase({
   userDataBase: userDB
 });
+const rejectFriendRequestUseCase = makeRejectFriendRequestUseCase({
+  userDataBase: userDB
+});
 
 const userUseCase = Object.freeze({
   selectUserByIdUseCase,
@@ -44,7 +48,8 @@ const userUseCase = Object.freeze({
   deleteUserUseCase,
   selectAllRequestsUseCase,
   sendFriendRequestUseCase,
-  acceptFriendRequestUseCase
+  acceptFriendRequestUseCase,
+  rejectFriendRequestUseCase
 });
 
 export default userUseCase;
