@@ -2,6 +2,7 @@
 
 import React from "react";
 import { AiOutlineLike } from "react-icons/ai";
+import { useParams } from "react-router";
 
 // Internal dependencies
 
@@ -17,7 +18,10 @@ interface Props {
   comment: IComment;
 }
 const Comment: React.FC<Props> = ({ comment }) => {
-  const { userId } = useAppSelector((state: RootState) => state.auth);
+  const { userId: loggedInUserId } = useAppSelector(
+    (state: RootState) => state.auth
+  );
+  const { userId } = useParams();
 
   const { post_id, id, comment_text, is_liked, like_count, comment_owner } =
     comment;
@@ -25,12 +29,12 @@ const Comment: React.FC<Props> = ({ comment }) => {
   const [likeComment, { isError, error }] = useLikeCommentMutation();
 
   const handleCommentLike = () => {
-    userId === null
+    loggedInUserId === null
       ? useToastCreator("You have to be logged in to like this post", "error")
       : likeComment({
           id,
           post_id,
-          userId,
+          userId: +userId!,
         });
     if (isError) useToastCreator(error as string, "error");
   };
@@ -39,18 +43,18 @@ const Comment: React.FC<Props> = ({ comment }) => {
     <li className="comment">
       <div className="comment__top-container">
         <CommentOwner comment_owner={comment_owner} />
-        <CommentEdit comment={comment as IComment} />
+        <CommentEdit comment={comment} />
       </div>
       <p className="comment__body">{comment_text}</p>
       <button
         className={`comment__action-button ${
-          userId && is_liked && "post__liked"
+          loggedInUserId && is_liked && "post__liked"
         }`}
         onClick={handleCommentLike}
       >
         <AiOutlineLike
           className={`comment__action-icon ${
-            userId && is_liked && "post__liked"
+            loggedInUserId && is_liked && "post__liked"
           }`}
         />
         {like_count}

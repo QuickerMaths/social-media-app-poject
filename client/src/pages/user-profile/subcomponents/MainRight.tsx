@@ -1,8 +1,8 @@
 // External dependencies
 
-import { EntityId } from "@reduxjs/toolkit";
-import { useParams } from "react-router";
+import { Navigate, useParams } from "react-router";
 import { skipToken } from "@reduxjs/toolkit/dist/query";
+import { useSelector } from "react-redux";
 
 // Internal dependencies
 
@@ -11,11 +11,12 @@ import Spinner from "../../../utilities/spinner/Spinner";
 import PostWrapper from "../../../components/post/post-wrapper/PostWrapper";
 import QueryError from "../../../utilities/error/QueryError";
 import { useGetPostsByUserQuery } from "../../../features/apiSlice/postApiSlice/postApiSlice";
+import { RootState } from "../../../redux/store";
 
 const MainRight = () => {
+  const { postPage } = useSelector((state: RootState) => state.pagination);
   const { userId } = useParams();
-  const numberUserId = +(userId ?? "");
-  const page = 1;
+  if (!userId) return <Navigate to="/" />;
 
   const {
     data: posts,
@@ -25,7 +26,7 @@ const MainRight = () => {
     isSuccess,
     error,
     refetch,
-  } = useGetPostsByUserQuery({ userId: numberUserId, page } ?? skipToken);
+  } = useGetPostsByUserQuery({ userId: +userId, page: postPage } ?? skipToken);
 
   let content;
 
@@ -38,7 +39,7 @@ const MainRight = () => {
       <ul className="user-profile__posts-list">
         {posts.length > 0 ? (
           posts.map((post) => (
-            <PostWrapper key={post.id} post={post} userId={numberUserId} />
+            <PostWrapper key={post.id} post={post} userId={+userId} />
           ))
         ) : (
           <p className="user-profile__no-posts-msg">No posts yet...</p>

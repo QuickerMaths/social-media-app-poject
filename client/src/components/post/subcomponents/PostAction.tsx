@@ -3,6 +3,7 @@
 import React from "react";
 import { AiOutlineComment, AiOutlineLike } from "react-icons/ai";
 import { BiRepost } from "react-icons/bi";
+import { useParams } from "react-router";
 
 // Internal dependencies
 
@@ -21,14 +22,17 @@ const PostAction: React.FC<Props> = ({ post }) => {
   const dispatch = useAppDispatch();
   const { is_liked, like_count, id, comment_count, is_shared, share_count } =
     post;
-  const { userId } = useAppSelector((state: RootState) => state.auth);
+  const { userId: loggedInUserId } = useAppSelector(
+    (state: RootState) => state.auth
+  );
+  const { userId } = useParams();
 
   const [likePost, { isError, error }] = useLikePostMutation();
 
   const handlePostLike = () => {
-    userId === null
+    loggedInUserId === null
       ? useToastCreator("You have to be logged in to like this post", "error")
-      : likePost({ id, userId });
+      : likePost({ id, userId: +userId! });
     if (isError) useToastCreator(error as string, "error");
   };
   return (

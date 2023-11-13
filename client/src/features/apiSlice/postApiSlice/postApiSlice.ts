@@ -98,7 +98,10 @@ export const postApiSlice = apiSlice.injectEndpoints({
         error ? [] : [{ type: "Post", id }],
     }),
 
-    likePost: builder.mutation<IPost, Pick<IPost, "id"> & { userId: number }>({
+    likePost: builder.mutation<
+      IPost,
+      Pick<IPost, "id"> & { userId: number | undefined }
+    >({
       query: ({ id }) => ({
         url: `/api/post/${id}/like`,
         method: "POST",

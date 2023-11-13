@@ -55,7 +55,7 @@ export const commentApiSlice = apiSlice.injectEndpoints({
 
     likeComment: builder.mutation<
       IComment,
-      Pick<IComment, "id" | "post_id"> & { userId: number }
+      Pick<IComment, "id" | "post_id"> & { userId: number | undefined }
     >({
       query: ({ id }) => ({
         url: `/api/comment/${id}/like`,

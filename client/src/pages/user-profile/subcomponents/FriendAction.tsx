@@ -30,8 +30,6 @@ const FriendAction: React.FC<Props> = ({ user }) => {
     const alreadyFriends = friendship_status === 1;
     const requestAlreadySent = friendship_status === 2;
 
-    console.log(friendship_status);
-
     if (!friendship_status) {
       content = <SendFriendRequest user={user} />;
     } else if (alreadyFriends) {

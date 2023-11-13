@@ -1,3 +1,7 @@
+//External dependencies
+
+import { useAppSelector } from "../../hooks/reduxHooks";
+
 // Internal dependencies
 
 import TextArea from "../../components/textArea/TextArea";
@@ -5,10 +9,11 @@ import Spinner from "../../utilities/spinner/Spinner";
 import PostWrapper from "../../components/post/post-wrapper/PostWrapper";
 import QueryError from "../../utilities/error/QueryError";
 import { useGetPostsQuery } from "../../features/apiSlice/postApiSlice/postApiSlice";
-import { useState } from "react";
+import { RootState } from "../../redux/store";
 
 const HomePage = () => {
-  const [page, setPage] = useState(1);
+  const { postPage } = useAppSelector((state: RootState) => state.pagination);
+
   const {
     data: posts,
     isLoading,
@@ -17,9 +22,7 @@ const HomePage = () => {
     isSuccess,
     error,
     refetch,
-  } = useGetPostsQuery({ page });
-  
-
+  } = useGetPostsQuery({ page: postPage });
 
   let content;
 
@@ -35,7 +38,6 @@ const HomePage = () => {
             <PostWrapper key={post.id} post={post} userId={undefined} />
           ))}
         </ul>
-        <button onClick={() => setPage(page + 1)}>Load more...</button>
       </>
     );
   }
