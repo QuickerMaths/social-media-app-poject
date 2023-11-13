@@ -13,7 +13,8 @@ const {
   updateUserController,
   deleteUserController,
   selectAllRequestsController,
-  sendFriendRequestController
+  sendFriendRequestController,
+  acceptFriendRequestController
 } = userController;
 
 router
@@ -36,8 +37,12 @@ router
     "/:responderId/send-request",
     authMiddleware,
     expressCallback(sendFriendRequestController)
+  )
+  .patch(
+    "/:requesterId/accept-request",
+    authMiddleware,
+    expressCallback(acceptFriendRequestController)
   );
-// .patch('/:responderId/:requesterId/accept-request', expressCallback(acceptFriendRequestController))
 // .delete('/:responderId/:requesterId/reject-request', expressCallback(rejectFriendRequestController))
 // .delete('/:responderId/:requesterId/delete-friend', expressCallback(deleteFriendController))
 

@@ -4,10 +4,10 @@ import React from "react";
 
 // Internal dependencies
 
-import PostOwner from "../post/subcomponents/PostOwner";
-import { IUserPartial } from "../../pages/user-profile/types";
 import AcceptButton from "./subcomponents/AcceptButton";
 import RejectButton from "./subcomponents/RejectButton";
+import PostOwner from "../post/subcomponents/PostOwner";
+import { IUserPartial } from "../../pages/user-profile/types";
 
 interface Props {
   request: IUserPartial;

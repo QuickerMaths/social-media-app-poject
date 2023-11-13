@@ -242,6 +242,30 @@ export default function makeUserDB({ db }: { db: typeof connection }) {
     return (record as UserRequestDataType[])[0];
   }
 
+  async function acceptFriendRequest({
+    loggedInUserId,
+    requesterId
+  }: {
+    loggedInUserId: number;
+    requesterId: number;
+  }) {
+    const sql = `
+    UPDATE friendship
+      SET status_id = 1
+      WHERE profile_request_id = ? AND profile_responder_id = ?;
+    `;
+
+    await db.query(sql, [requesterId, loggedInUserId]);
+
+    const [record] = await db.query(
+      "SELECT * FROM friendship WHERE profile_request_id = ? AND profile_responder_id = ?",
+      [requesterId, loggedInUserId]
+    );
+
+    console.log((record as UserRequestDataType[])[0]);
+    return (record as UserRequestDataType[])[0];
+  }
+
   return Object.freeze({
     selectUserById,
     selectUserByEmail,
@@ -252,6 +276,7 @@ export default function makeUserDB({ db }: { db: typeof connection }) {
     updateUser,
     deleteUser,
     selectAllUserRequests,
-    sendFriendRequest
+    sendFriendRequest,
+    acceptFriendRequest
   });
 }

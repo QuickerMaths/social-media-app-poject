@@ -55,7 +55,10 @@ CREATE TABLE IF NOT EXISTS `friendship`(
     `profile_responder_id` BIGINT NOT NULL,
     `status_id` BIGINT NOT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `a_ordered` varchar(100) as (least(`profile_request_id`, `profile_responder_id`)) STORED,
+    `b_ordered` varchar(100) as (greatest(`profile_request_id`, `profile_responder_id`)) STORED,
+    unique key `unique_friendship_pair` (`a_ordered`, `b_ordered`)
 );
 
 CREATE TABLE IF NOT EXISTS `comment_like`(
@@ -64,7 +67,6 @@ CREATE TABLE IF NOT EXISTS `comment_like`(
     `profile_id` BIGINT NOT NULL,
     `created_at` DATETIME NULL
 );
-
 
 CREATE TABLE IF NOT EXISTS `user_post`(
     `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -207,3 +209,4 @@ END;
 $$
 
 DELIMITER ;
+

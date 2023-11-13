@@ -15,7 +15,9 @@ import { RootState } from "../../redux/store";
 
 const FriendsRequestList = () => {
   const dispatch = useAppDispatch();
-  const { userId } = useAppSelector((state: RootState) => state.auth);
+  const { userId: loggedInUserId } = useAppSelector(
+    (state: RootState) => state.auth
+  );
 
   const {
     data: friendsRequests,
@@ -25,7 +27,7 @@ const FriendsRequestList = () => {
     isError,
     error,
     refetch,
-  } = useGetAllRequestsQuery({ userId: userId ?? skipToken });
+  } = useGetAllRequestsQuery({ userId: loggedInUserId ?? skipToken });
 
   let content;
 
