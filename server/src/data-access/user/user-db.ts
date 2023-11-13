@@ -221,7 +221,7 @@ export default function makeUserDB({ db }: { db: typeof connection }) {
     return result as IUserProfile[];
   }
 
-  async function sendFriendRequest({
+  async function insertFriendshipRecord({
     loggedInUserId,
     responderId
   }: {
@@ -242,7 +242,7 @@ export default function makeUserDB({ db }: { db: typeof connection }) {
     return (record as UserRequestDataType[])[0];
   }
 
-  async function acceptFriendRequest({
+  async function updateFriendshipRecord({
     loggedInUserId,
     requesterId
   }: {
@@ -252,21 +252,36 @@ export default function makeUserDB({ db }: { db: typeof connection }) {
     const sql = `
     UPDATE friendship
       SET status_id = 1
-      WHERE profile_request_id = ? AND profile_responder_id = ?;
+      WHERE 
+        profile_request_id = ? AND profile_responder_id = ? 
+      OR 
+        profile_request_id = ? AND profile_responder_id = ?
     `;
 
-    await db.query(sql, [requesterId, loggedInUserId]);
+    await db.query(sql, [
+      requesterId,
+      loggedInUserId,
+      loggedInUserId,
+      requesterId
+    ]);
 
     const [record] = await db.query(
-      "SELECT * FROM friendship WHERE profile_request_id = ? AND profile_responder_id = ?",
-      [requesterId, loggedInUserId]
+      `
+      SELECT * 
+        FROM friendship 
+          WHERE
+            profile_request_id = ? AND profile_responder_id = ? 
+          OR
+            profile_request_id = ? AND profile_responder_id = ?
+      `,
+      [requesterId, loggedInUserId, loggedInUserId, requesterId]
     );
 
     console.log((record as UserRequestDataType[])[0]);
     return (record as UserRequestDataType[])[0];
   }
 
-  async function rejectFriendRequest({
+  async function deleteFriendshipRecord({
     loggedInUserId,
     requesterId
   }: {
@@ -274,11 +289,20 @@ export default function makeUserDB({ db }: { db: typeof connection }) {
     requesterId: number;
   }) {
     const sql = `
-    DELETE FROM friendship
-      WHERE profile_request_id = ? AND profile_responder_id = ?;
+    DELETE 
+      FROM friendship
+        WHERE 
+          profile_request_id = ? AND profile_responder_id = ? 
+        OR 
+          profile_request_id = ? AND profile_responder_id = ?;
     `;
 
-    await db.query(sql, [requesterId, loggedInUserId]);
+    await db.query(sql, [
+      requesterId,
+      loggedInUserId,
+      loggedInUserId,
+      requesterId
+    ]);
 
     return {};
   }
@@ -293,8 +317,8 @@ export default function makeUserDB({ db }: { db: typeof connection }) {
     updateUser,
     deleteUser,
     selectAllUserRequests,
-    sendFriendRequest,
-    acceptFriendRequest,
-    rejectFriendRequest
+    insertFriendshipRecord,
+    updateFriendshipRecord,
+    deleteFriendshipRecord
   });
 }

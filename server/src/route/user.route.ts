@@ -15,7 +15,8 @@ const {
   selectAllRequestsController,
   sendFriendRequestController,
   acceptFriendRequestController,
-  rejectFriendRequestController
+  rejectFriendRequestController,
+  deleteFriendshipController
 } = userController;
 
 router
@@ -48,7 +49,11 @@ router
     "/:requesterId/reject-request",
     authMiddleware,
     expressCallback(rejectFriendRequestController)
+  )
+  .delete(
+    "/:requesterId/delete-friendship",
+    authMiddleware,
+    expressCallback(deleteFriendshipController)
   );
-// .delete('/:responderId/:requesterId/delete-friend', expressCallback(deleteFriendController))
 
 export default router;

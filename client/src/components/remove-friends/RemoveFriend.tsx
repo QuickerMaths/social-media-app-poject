@@ -1,39 +1,40 @@
 // External dependencies
 
 import { AiOutlineUserDelete } from "react-icons/ai";
-import { useParams } from "react-router";
 
 // Internal dependencies
 
 import useToastCreator from "../../hooks/useToastCreator";
 import Spinner from "../../utilities/spinner/Spinner";
-import { useAppSelector } from "../../hooks/reduxHooks";
-import { RootState } from "../../redux/store";
+import { useDeleteFriendshipMutation } from "../../features/apiSlice/userApiSlice/userApiSlice";
+import { IUser } from "../../pages/user-profile/types";
 
-const RemoveFriend = () => {
-  const { userId } = useAppSelector((state: RootState) => state.auth);
-  const { userId: friendToDeleteId } = useParams();
+interface Props {
+  user: IUser;
+}
 
-  // const [deleteFriend, { isLoading: isDeleting, isError, error }] =
-  //   useDeleteFriendMutation();
+const RemoveFriend: React.FC<Props> = ({ user }) => {
+  const { id } = user;
 
-  // if (isError) useToastCreator(error as string, "error");
+  const [deleteFriendship, { isLoading: isDeleting, isError, error }] =
+    useDeleteFriendshipMutation();
+
+  if (isError) useToastCreator(error as string, "error");
 
   let content;
 
-  if (false) {
+  if (isDeleting) {
     content = <Spinner size={50} />;
   } else {
     content = (
       <button
-        // onClick={() =>
-        //   deleteFriend({
-        //     userId: userId as string,
-        //     friendToDeleteId: friendToDeleteId as string,
-        //   })
-        // }
+        onClick={() =>
+          deleteFriendship({
+            requesterId: id,
+          })
+        }
         className="send-friend-request__button"
-        // disabled={isDeleting}
+        disabled={isDeleting}
       >
         <AiOutlineUserDelete className="send-friend-request__icon" />
       </button>

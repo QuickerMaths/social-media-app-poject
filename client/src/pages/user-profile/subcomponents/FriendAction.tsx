@@ -1,7 +1,6 @@
 // External dependencies
 
 import React from "react";
-import { useParams } from "react-router";
 import { AiOutlineUserSwitch } from "react-icons/ai";
 
 // Internal dependencies
@@ -17,23 +16,22 @@ interface Props {
 }
 
 const FriendAction: React.FC<Props> = ({ user }) => {
-  const { userId: activeUserId } = useAppSelector(
+  const { userId: loggedInUserId } = useAppSelector(
     (state: RootState) => state.auth
   );
-  const { userId } = useParams();
 
-  const { friendship_status } = user;
+  const { friendship_status, id } = user;
 
   let content;
 
-  if (activeUserId && activeUserId !== userId) {
+  if (loggedInUserId && loggedInUserId !== id) {
     const alreadyFriends = friendship_status === 1;
     const requestAlreadySent = friendship_status === 2;
 
     if (!friendship_status) {
       content = <SendFriendRequest user={user} />;
     } else if (alreadyFriends) {
-      content = <RemoveFriend />;
+      content = <RemoveFriend user={user} />;
     } else if (requestAlreadySent) {
       content = (
         <section className="send-friend-request">

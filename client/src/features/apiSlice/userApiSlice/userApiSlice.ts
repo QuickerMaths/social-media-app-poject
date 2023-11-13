@@ -178,6 +178,26 @@ export const userApiSlice = apiSlice.injectEndpoints({
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
     }),
+    deleteFriendship: builder.mutation<{}, { requesterId: number }>({
+      query: ({ requesterId }) => ({
+        method: "DELETE",
+        url: `/api/user/${requesterId}/delete-friendship`,
+        credentials: "include",
+      }),
+      onQueryStarted: ({ requesterId }, { dispatch, queryFulfilled }) => {
+        const resultGetUserById = dispatch(
+          userApiSlice.util.updateQueryData(
+            "getUserById",
+            { userId: requesterId },
+            (draft) => {
+              draft.friendship_status = null;
+            }
+          )
+        );
+
+        Promise.all([queryFulfilled.catch(resultGetUserById.undo)]);
+      },
+    }),
   }),
 });
 
@@ -190,4 +210,5 @@ export const {
   useSendFriendRequestMutation,
   useAcceptFriendRequestMutation,
   useRejectFriendRequestMutation,
+  useDeleteFriendshipMutation,
 } = userApiSlice;

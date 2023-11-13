@@ -12,7 +12,7 @@ export default function makeAcceptFriendRequestUseCase({
     loggedInUserId: number;
     requesterId: number;
   }) {
-    const request = await userDataBase.acceptFriendRequest({
+    const request = await userDataBase.updateFriendshipRecord({
       loggedInUserId,
       requesterId
     });

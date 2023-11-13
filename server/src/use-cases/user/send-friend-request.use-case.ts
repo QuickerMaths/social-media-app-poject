@@ -12,7 +12,7 @@ export default function makeSendFriendRequestUseCase({
     loggedInUserId: number;
     responderId: number;
   }) {
-    const request = await userDataBase.sendFriendRequest({
+    const request = await userDataBase.insertFriendshipRecord({
       loggedInUserId,
       responderId
     });

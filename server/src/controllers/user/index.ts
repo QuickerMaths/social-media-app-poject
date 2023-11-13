@@ -9,6 +9,7 @@ import makeSelectAllRequestsController from "./select-all-requests.controller.ts
 import makeSendFriendRequestController from "./send-friend-request.controller.ts";
 import makeAcceptFriendRequestController from "./accpet-friend-request.controller.ts";
 import makeRejectFriendRequestController from "./reject-friend-request.controller.ts";
+import makeDeleteFriendshipController from "./delete-friendship.controller.ts";
 
 const selectUserByIdController = makeSelectUserByIdController({
   useCase: userUseCase.selectUserByIdUseCase
@@ -40,6 +41,9 @@ const acceptFriendRequestController = makeAcceptFriendRequestController({
 const rejectFriendRequestController = makeRejectFriendRequestController({
   useCase: userUseCase.rejectFriendRequestUseCase
 });
+const deleteFriendshipController = makeDeleteFriendshipController({
+  useCase: userUseCase.deleteFriendshipUseCase
+});
 
 const userController = Object.freeze({
   selectUserByIdController,
@@ -51,7 +55,8 @@ const userController = Object.freeze({
   selectAllRequestsController,
   sendFriendRequestController,
   acceptFriendRequestController,
-  rejectFriendRequestController
+  rejectFriendRequestController,
+  deleteFriendshipController
 });
 
 export default userController;

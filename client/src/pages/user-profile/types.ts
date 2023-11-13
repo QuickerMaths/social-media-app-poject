@@ -13,7 +13,7 @@ export type IUser = {
   street?: string;
   postal_code?: string;
   friends: IUserPartial[] | null;
-  friendship_status: number;
+  friendship_status: number | null;
   created_at: string;
 };
 
