@@ -210,17 +210,10 @@ export default function makeUserDB({ db }: { db: typeof connection }) {
 
   async function selectAllUserRequests({ userId }: { userId: number }) {
     const sql = `
-    (SELECT up.id, up.username, up.avatar_url 
+    SELECT up.id, up.username, up.avatar_url 
       FROM friendship f
         JOIN user_profile up ON up.id = f.profile_request_id
-      WHERE f.profile_responder_id = 301 AND f.status_id = 2)
-      
-        UNION
-      
-    (SELECT up.id, up.username, up.avatar_url
-      FROM friendship f
-        JOIN user_profile up ON up.id = f.profile_responder_id
-      WHERE f.profile_request_id = 301 AND f.status_id = 2)
+      WHERE f.profile_responder_id = ? AND f.status_id = 2
     `;
 
     const [result] = await db.query(sql, [userId, userId]);
