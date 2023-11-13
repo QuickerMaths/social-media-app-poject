@@ -1,7 +1,11 @@
 import { ResultSetHeader } from "mysql2/promise";
 import connection from "../../../db/db.ts";
 import IUserProfile from "../../interfaces/tables/user_profile.interface.ts";
-import { UserCreateDataType, UserUpdateDataType } from "./types.ts";
+import {
+  UserCreateDataType,
+  UserUpdateDataType,
+  UserRequestDataType
+} from "./types.ts";
 
 export default function makeUserDB({ db }: { db: typeof connection }) {
   //TODO: when user is logged in, query should also return friendship status of both selected and logged in user
@@ -224,6 +228,27 @@ export default function makeUserDB({ db }: { db: typeof connection }) {
     return result as IUserProfile[];
   }
 
+  async function sendFriendRequest({
+    loggedInUserId,
+    responderId
+  }: {
+    loggedInUserId: number;
+    responderId: number;
+  }) {
+    const sql = `
+    INSERT INTO friendship (profile_request_id, profile_responder_id, status_id, created_at)
+      VALUES (?, ?, 2, NOW())
+    `;
+
+    const [result] = await db.query(sql, [loggedInUserId, responderId]);
+
+    const [record] = await db.query("SELECT * FROM friendship WHERE id = ?", [
+      (result as ResultSetHeader).insertId
+    ]);
+
+    return (record as UserRequestDataType[])[0];
+  }
+
   return Object.freeze({
     selectUserById,
     selectUserByEmail,
@@ -233,6 +258,7 @@ export default function makeUserDB({ db }: { db: typeof connection }) {
     createUser,
     updateUser,
     deleteUser,
-    selectAllUserRequests
+    selectAllUserRequests,
+    sendFriendRequest
   });
 }

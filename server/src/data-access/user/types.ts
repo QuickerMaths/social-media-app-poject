@@ -7,5 +7,6 @@ type UserUpdateDataType = Partial<
     "id" | "is_email_confirmation" | "email" | "password" | "createdAt"
   >
 >;
+type UserRequestDataType = Pick<IUserProfile, "id" | "username" | "avatar_url">;
 
-export { UserCreateDataType, UserUpdateDataType };
+export { UserCreateDataType, UserUpdateDataType, UserRequestDataType };

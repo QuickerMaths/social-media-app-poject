@@ -24,7 +24,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
       ) => errorTransformer(error),
     }),
 
-    getUserById: builder.query<IUser, { userId: string }>({
+    getUserById: builder.query<IUser, { userId: number }>({
       query: ({ userId }) => ({
         method: "GET",
         url: `/api/user/${userId}`,
@@ -80,6 +80,28 @@ export const userApiSlice = apiSlice.injectEndpoints({
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
     }),
+    sendFriendRequest: builder.mutation<IUserPartial, { responderId: number }>({
+      query: ({ responderId }) => ({
+        method: "POST",
+        url: `/api/user/${responderId}/send-request`,
+        credentials: "include",
+      }),
+      onQueryStarted: ({ responderId }, { dispatch, queryFulfilled }) => {
+        const result = dispatch(
+          userApiSlice.util.updateQueryData(
+            "getUserById",
+            { userId: responderId },
+            (draft) => {
+              draft.friendship_status = 2;
+            }
+          )
+        );
+        queryFulfilled.catch(result.undo);
+      },
+      transformErrorResponse: (
+        error: FetchBaseQueryError | IErrorResponse | SerializedError
+      ) => errorTransformer(error),
+    }),
   }),
 });
 
@@ -89,4 +111,5 @@ export const {
   useGetAllUserFriendsQuery,
   useUpdateUserMutation,
   useGetAllRequestsQuery,
+  useSendFriendRequestMutation,
 } = userApiSlice;

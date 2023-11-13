@@ -1,39 +1,39 @@
 // External dependencies
 
-import { useParams } from "react-router";
+import React from "react";
 import { AiOutlineUserAdd } from "react-icons/ai";
 
 // Internal dependencies
 
 import useToastCreator from "../../hooks/useToastCreator";
 import Spinner from "../../utilities/spinner/Spinner";
-import { useAppSelector } from "../../hooks/reduxHooks";
-import { RootState } from "../../redux/store";
+import { useSendFriendRequestMutation } from "../../features/apiSlice/userApiSlice/userApiSlice";
+import { IUser } from "../../pages/user-profile/types";
 
-const SendFriendRequest = () => {
-  const { userId } = useAppSelector((state: RootState) => state.auth);
-  const { userId: userToAddId } = useParams();
+interface Props {
+  user: IUser;
+}
 
-  // const [sendFriendRequest, { isLoading: isSending, isError, error }] =
-  //   useSendFriendRequestMutation();
+const SendFriendRequest: React.FC<Props> = ({ user }) => {
+  const [sendFriendRequest, { isLoading: isSending, isError, error }] =
+    useSendFriendRequestMutation();
 
-  // if (isError) useToastCreator(error as string, "error");
+  if (isError) useToastCreator(error as string, "error");
 
   let content;
 
-  if (false) {
+  if (isSending) {
     content = <Spinner size={50} />;
   } else {
     content = (
       <button
-        // onClick={() =>
-        //   sendFriendRequest({
-        //     userId: userId as string,
-        //     userToAddId: userToAddId as string,
-        //   })
-        // }
+        onClick={() =>
+          sendFriendRequest({
+            responderId: user.id,
+          })
+        }
         className="send-friend-request__button"
-        // disabled={isSending}
+        disabled={isSending}
       >
         <AiOutlineUserAdd className="send-friend-request__icon" />
       </button>

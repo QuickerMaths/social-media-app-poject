@@ -46,7 +46,7 @@ const UserProfile = () => {
     isError,
     error,
     refetch,
-  } = useGetUserByIdQuery({ userId: userId ?? skipToken });
+  } = useGetUserByIdQuery({ userId: +userId ?? skipToken });
 
   let content;
 
