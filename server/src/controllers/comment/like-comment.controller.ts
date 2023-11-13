@@ -6,11 +6,10 @@ export default function makeLikeCommentController({
   useCase: typeof commentUseCase.likeCommentUseCase;
 }) {
   return async function likeCommentController(httpRequest: any) {
-    //TODO: get userId from access token and switch in api collection
-    const userId = httpRequest.body.userId;
+    const loggedInUserId = httpRequest.user.id;
     const commentId = httpRequest.params.commentId;
 
-    const likedComment = await useCase({ userId, commentId });
+    const likedComment = await useCase({ userId: loggedInUserId, commentId });
 
     return {
       statusCode: 200,

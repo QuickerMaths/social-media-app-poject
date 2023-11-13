@@ -20,23 +20,21 @@ export const commentApiSlice = apiSlice.injectEndpoints({
     //TODO: after implementing authorization on backend, change userId to loggedInUserId
     createComment: builder.mutation<
       IComment,
-      Pick<IComment, "comment_text"> & Pick<IPost, "id"> & { userId: number }
+      Pick<IComment, "comment_text"> & Pick<IPost, "id">
     >({
-      query: ({ comment_text, userId, id }) => ({
+      query: ({ comment_text, id }) => ({
         url: `/api/comment`,
         method: "POST",
         body: {
-          commentCreateData: {
-            comment_text,
-            post_id: id,
-          },
-          userId,
+          comment_text,
+          post_id: id,
         },
+        credentials: "include",
       }),
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
-      invalidatesTags: (result, error, arg) =>
+      invalidatesTags: (_result, error, arg) =>
         error ? [] : [{ type: "Post", id: arg.id }],
     }),
 
@@ -45,6 +43,7 @@ export const commentApiSlice = apiSlice.injectEndpoints({
         query: ({ id }) => ({
           url: `/api/comment/${id}`,
           method: "DELETE",
+          credentials: "include",
         }),
         transformErrorResponse: (
           error: FetchBaseQueryError | IErrorResponse | SerializedError
@@ -58,10 +57,10 @@ export const commentApiSlice = apiSlice.injectEndpoints({
       IComment,
       Pick<IComment, "id" | "post_id"> & { userId: number }
     >({
-      query: ({ id, userId }) => ({
+      query: ({ id }) => ({
         url: `/api/comment/${id}/like`,
         method: "POST",
-        body: { userId },
+        credentials: "include",
       }),
       onQueryStarted(
         { id, post_id, userId },

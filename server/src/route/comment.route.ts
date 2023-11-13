@@ -1,6 +1,7 @@
 import express from "express";
 import commentController from "../controllers/comment/index.ts";
 import expressCallback from "../helpers/expressCallback.ts";
+import authMiddleware from "../middleware/authMiddleware.ts";
 
 const router = express.Router();
 
@@ -12,9 +13,21 @@ const {
 } = commentController;
 
 router
-  .post("/", expressCallback(createCommentController))
-  .patch("/:commentId", expressCallback(updateCommentController))
-  .delete("/:commentId", expressCallback(deleteCommentController))
-  .post("/:commentId/like", expressCallback(likeCommentController));
+  .post("/", authMiddleware, expressCallback(createCommentController))
+  .patch(
+    "/:commentId",
+    authMiddleware,
+    expressCallback(updateCommentController)
+  )
+  .delete(
+    "/:commentId",
+    authMiddleware,
+    expressCallback(deleteCommentController)
+  )
+  .post(
+    "/:commentId/like",
+    authMiddleware,
+    expressCallback(likeCommentController)
+  );
 
 export default router;
