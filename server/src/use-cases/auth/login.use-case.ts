@@ -24,8 +24,6 @@ export default function makeLoginUseCase({
       throw new Error("User not found");
     }
 
-    console.log(userFound);
-
     const isPasswordValid = auth.hash.compare({
       password,
       hashedPassword: userFound.password

@@ -7,10 +7,13 @@ export default function makeCreatePostController({
 }) {
   return async function createPostController(httpRequest: any) {
     //TODO: get userId from auth middleware
-    const userId = httpRequest.body.userId;
-    const postCreateData = httpRequest.body.postCreateData;
+    const loggedInUserId = httpRequest.user.id;
+    const postCreateData = httpRequest.body;
 
-    const createdPost = await useCase({ userId, postCreateData });
+    const createdPost = await useCase({
+      userId: loggedInUserId,
+      postCreateData
+    });
 
     return {
       statusCode: 201,

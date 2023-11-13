@@ -1,6 +1,8 @@
 import express from "express";
 import expressCallback from "../helpers/expressCallback.ts";
 import postController from "../controllers/post/index.ts";
+import readCredentialsMiddleware from "../middleware/readCredentialsMiddleware.ts";
+import authMiddleware from "../middleware/authMiddleware.ts";
 
 const router = express.Router();
 
@@ -15,12 +17,24 @@ const {
 } = postController;
 
 router
-  .get("/", expressCallback(selectAllPostsController))
-  .get("/user/:userId", expressCallback(selectAllPostsByUserIdController))
-  .get("/:postId/", expressCallback(selectPostByIdController))
-  .post("/", expressCallback(createPostController))
-  .patch("/:postId", expressCallback(updatePostController))
-  .delete("/:postId", expressCallback(deletePostController))
-  .post("/:postId/like", expressCallback(likePostController));
+  .get(
+    "/",
+    readCredentialsMiddleware,
+    expressCallback(selectAllPostsController)
+  )
+  .get(
+    "/user/:userId",
+    readCredentialsMiddleware,
+    expressCallback(selectAllPostsByUserIdController)
+  )
+  .get(
+    "/:postId/",
+    readCredentialsMiddleware,
+    expressCallback(selectPostByIdController)
+  )
+  .post("/", readCredentialsMiddleware, expressCallback(createPostController))
+  .patch("/:postId", authMiddleware, expressCallback(updatePostController))
+  .delete("/:postId", authMiddleware, expressCallback(deletePostController))
+  .post("/:postId/like", authMiddleware, expressCallback(likePostController));
 
 export default router;

@@ -66,7 +66,6 @@ export const commentApiSlice = apiSlice.injectEndpoints({
         { id, post_id, userId },
         { dispatch, queryFulfilled, getState }
       ) {
-        console.log(id, post_id, userId);
         const resultGetPosts = dispatch(
           postApiSlice.util.updateQueryData(
             "getPosts",

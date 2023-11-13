@@ -7,10 +7,9 @@ export default function makeLikePostController({
 }) {
   return async function likePostController(httpRequest: any) {
     const postId = httpRequest.params.postId;
-    //TODO: get userId from access token and switch in api collection
-    const userId = httpRequest.body.userId;
+    const loggedInUserId = httpRequest.user.id;
 
-    const likedPost = await useCase({ postId, userId });
+    const likedPost = await useCase({ postId, userId: loggedInUserId });
 
     return {
       statusCode: 200,

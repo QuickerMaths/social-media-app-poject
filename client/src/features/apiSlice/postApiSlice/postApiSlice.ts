@@ -19,8 +19,11 @@ import { ICreatePostParams, IErrorResponse } from "../types";
 export const postApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getPosts: builder.query<IPost[], { page: number | void }>({
-      query: ({ page = 1 }) => `/api/post?page=${page}&pageSize=20`,
-
+      query: ({ page = 1 }) => ({
+        method: "GET",
+        url: `/api/post?page=${page}&pageSize=20`,
+        credentials: "include",
+      }),
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
@@ -31,9 +34,11 @@ export const postApiSlice = apiSlice.injectEndpoints({
       IPost[],
       { userId: number; page: number | void }
     >({
-      query: ({ userId, page = 1 }) =>
-        `/api/post/user/${userId}?page=${page}&pageSize=20`,
-
+      query: ({ userId, page = 1 }) => ({
+        method: "GET",
+        url: `/api/post/user/${userId}?page=${page}&pageSize=20`,
+        credentials: "include",
+      }),
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
@@ -43,17 +48,15 @@ export const postApiSlice = apiSlice.injectEndpoints({
     //TODO: write getPostById query, with paginated comments
 
     createPost: builder.mutation<IPost, ICreatePostParams>({
-      query: ({ userId, post_text, media_location, shared_post_id }) => ({
+      query: ({ post_text, media_location, shared_post_id }) => ({
         url: `/api/post`,
         method: "POST",
         body: {
-          userId,
-          postCreateData: {
-            post_text,
-            media_location,
-            shared_post_id,
-          },
+          post_text,
+          media_location,
+          shared_post_id,
         },
+        credentials: "include",
       }),
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
@@ -66,6 +69,7 @@ export const postApiSlice = apiSlice.injectEndpoints({
       query: ({ id }) => ({
         url: `/api/post/${id}`,
         method: "DELETE",
+        credentials: "include",
       }),
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
@@ -85,6 +89,7 @@ export const postApiSlice = apiSlice.injectEndpoints({
           post_text,
           media_location,
         },
+        credentials: "include",
       }),
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
@@ -94,12 +99,10 @@ export const postApiSlice = apiSlice.injectEndpoints({
     }),
 
     likePost: builder.mutation<IPost, Pick<IPost, "id"> & { userId: number }>({
-      query: ({ id, userId }) => ({
+      query: ({ id }) => ({
         url: `/api/post/${id}/like`,
         method: "POST",
-        body: {
-          userId,
-        },
+        credentials: "include",
       }),
       onQueryStarted({ id, userId }, { dispatch, queryFulfilled, getState }) {
         const resultGetPosts = dispatch(
