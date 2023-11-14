@@ -159,20 +159,13 @@ async function generateRandomFriendship() {
 }
 
 async function seed(table: string, rows: number, schema: Function) {
-  const data = [];
-
   for (let i = 0; i < rows; i++) {
     console.log(`Generating row ${i + 1} for ${table} table`);
-    data.push(await schema());
+    const sql = `INSERT IGNORE INTO ${table} SET ?`;
+    connection.query(sql, await schema());
   }
 
-  const sql = `INSERT INTO ${table} SET ?`;
-
-  data.forEach((item) => {
-    connection.query(sql, item);
-  });
-
-  console.log(`Seeded ${data.length} rows into ${table} table`);
+  console.log(`Seeded ${rows} rows into ${table} table`);
 }
 
 await seed("user_profile", 100, generateRandomUser);
@@ -180,10 +173,10 @@ await seed("user_profile", 100, generateRandomUser);
 await seed("user_post", 100, generateRandomPost);
 // seed shared posts
 await seed("user_post", 50, generateRandomSharedPosts);
-await seed("post_like", 100, generatePostLike);
-await seed("post_comment", 100, generateRandomComment);
-await seed("comment_like", 100, generateCommentLike);
-await seed("friendship", 100, generateRandomFriendship);
+await seed("post_like", 10000, generatePostLike);
+await seed("post_comment", 1000, generateRandomComment);
+await seed("comment_like", 10000, generateCommentLike);
+await seed("friendship", 1000, generateRandomFriendship);
 
 connection.end((err: Error | null) => {
   if (err) throw err;
