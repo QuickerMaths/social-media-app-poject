@@ -1,6 +1,7 @@
 import authService from "../../services/auth/index.ts";
 import userDB from "../../data-access/user/index.ts";
 import { JwtPayload } from "jsonwebtoken";
+import InvalidTokenError from "../../utils/errors/InvalidTokenError.ts";
 
 export default function makeVerifyUseCase({
   auth,
@@ -16,9 +17,11 @@ export default function makeVerifyUseCase({
   }) {
     const decodedUser = auth.decodeToken({ token: requestAccessToken });
 
-    //TODO: custom error
     if (!decodedUser) {
-      throw new Error("Invalid Token");
+      throw new InvalidTokenError({
+        message: "Invalid Token",
+        operational: true
+      });
     }
 
     const user = await userDataBase.selectUserById({

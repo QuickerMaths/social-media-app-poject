@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import authService from "../services/auth/index.ts";
 import refreshTokenUseCase from "../use-cases/refresh-token/index.ts";
+import InvalidTokenError from "../utils/errors/InvalidTokenError.ts";
 
 const authMiddleware =
   (jwt: typeof authService.jwt) =>
@@ -8,9 +9,13 @@ const authMiddleware =
   async (req: Request, res: Response, next: NextFunction) => {
     const { accessToken, refreshToken } = req.cookies;
 
-    //TODO: custom error
     if (!accessToken && !refreshToken) {
-      next(new Error("Access token and refresh token are missing"));
+      next(
+        new InvalidTokenError({
+          message: "Access token and refresh token are missing",
+          operational: true
+        })
+      );
     }
 
     const decodedAccessToken = jwt.verifyToken({
@@ -18,7 +23,9 @@ const authMiddleware =
     });
 
     if (!decodedAccessToken) {
-      next(new Error("InvalidToken"));
+      next(
+        new InvalidTokenError({ message: "Invalid Token", operational: true })
+      );
     }
 
     if (decodedAccessToken === "expired") {

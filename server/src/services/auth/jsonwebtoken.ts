@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import config from "../../config/config.ts";
 import { VerifyErrors } from "jsonwebtoken";
 import { ITokenPayload } from "./types.ts";
+import InvalidTokenError from "../../utils/errors/InvalidTokenError.ts";
 
 export default function jwtService() {
   const verifyToken = ({ token }: { token: string }): any =>
@@ -20,7 +21,11 @@ export default function jwtService() {
       token,
       config.jwt.jwt_refresh_token,
       (err: VerifyErrors | null, decoded: any) => {
-        if (err) return err;
+        if (err)
+          throw new InvalidTokenError({
+            message: "Invalid token",
+            operational: true
+          });
 
         if (decoded) {
           const toSign = {

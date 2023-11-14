@@ -1,6 +1,7 @@
 import userDB from "../../data-access/user/index.ts";
 import refreshTokenUseCase from "../refresh-token/index.ts";
 import authService from "../../services/auth/index.ts";
+import UnauthorizedError from "../../utils/errors/UnauthorizedError.ts";
 
 export default function makeLoginUseCase({
   user,
@@ -19,23 +20,32 @@ export default function makeLoginUseCase({
     password: string;
   }) {
     const userFound = await user.selectUserByEmail({ email });
-    //TODO: custom error
     if (!userFound) {
-      throw new Error("User not found");
+      throw new UnauthorizedError({
+        message: "User not found",
+        operational: true
+      });
     }
 
     const isPasswordValid = auth.hash.compare({
       password,
       hashedPassword: userFound.password
     });
+
     if (!isPasswordValid) {
-      throw new Error("Invalid password");
+      throw new UnauthorizedError({
+        message: "Invalid password",
+        operational: true
+      });
     }
 
+    const { id, username, email: userEmail, friend_request_count } = userFound;
+
     const payload = {
-      id: userFound.id,
-      username: userFound.username,
-      email: userFound.email
+      id,
+      username,
+      email: userEmail,
+      friend_request_count
     };
 
     const accessToken = auth.jwt.generateToken({

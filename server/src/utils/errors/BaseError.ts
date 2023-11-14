@@ -1,28 +1,16 @@
-// export interface IBaseError {
-//   name: string;
-//   code: number;
-//   message: string;
-//   stack: string;
-//   isOperational: boolean;
-// }
+export type BaseErrorContent = {
+  message: string;
+  context?: { [key: string]: any };
+};
 
-export class BaseError extends Error {
-  public code: number;
-  public isOperational: boolean;
+export abstract class BaseError extends Error {
+  abstract readonly statusCode: number;
+  abstract readonly errors: BaseErrorContent[];
+  abstract readonly operational: boolean;
 
-  constructor(
-    name: string,
-    code: number,
-    message: string,
-    isOperational: boolean
-  ) {
+  constructor(message: string) {
     super(message);
-    Object.setPrototypeOf(this, new.target.prototype);
 
-    this.name = name;
-    this.code = code;
-    this.isOperational = isOperational;
-
-    Error.captureStackTrace(this);
+    Object.setPrototypeOf(this, BaseError.prototype);
   }
 }
