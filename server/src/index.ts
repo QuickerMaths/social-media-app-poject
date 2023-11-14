@@ -33,6 +33,10 @@ app.use((error: Error, _req: Request, res: Response, _next: NextFunction) => {
       }
     });
   }
+
+  if (error instanceof BaseError && !error.operational) {
+    process.exit(1);
+  }
 });
 
 // Uncaught exception handling
@@ -40,7 +44,9 @@ app.use((error: Error, _req: Request, res: Response, _next: NextFunction) => {
 process.on("uncaughtException", (error) => {
   logger().error(error.message);
 
-  process.exit(1);
+  if (error instanceof Error) {
+    process.exit(1);
+  }
 });
 
 // Connect to database and start server

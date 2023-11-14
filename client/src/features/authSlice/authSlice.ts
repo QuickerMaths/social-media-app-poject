@@ -43,17 +43,18 @@ export const authSlice = createSlice({
         state.username = null;
         state.userId = null;
         state.userImg = null;
-        state.friendsRequests = [];
+        state.friendRequestCount = 0;
       }
     );
     builder.addMatcher(
       authApiSlice.endpoints.loginUser.matchFulfilled,
       (state, { payload }) => {
-        const { id, username, avatar_url } = payload;
+        const { id, username, avatar_url, friend_request_count } = payload;
 
         state.username = username;
         state.userId = id;
         state.userImg = avatar_url;
+        state.friendRequestCount = friend_request_count;
       }
     );
   },

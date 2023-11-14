@@ -39,13 +39,12 @@ export default function makeLoginUseCase({
       });
     }
 
-    const { id, username, email: userEmail, friend_request_count } = userFound;
+    const { id, username, email: userEmail } = userFound;
 
     const payload = {
       id,
       username,
-      email: userEmail,
-      friend_request_count
+      email: userEmail
     };
 
     const accessToken = auth.jwt.generateToken({
