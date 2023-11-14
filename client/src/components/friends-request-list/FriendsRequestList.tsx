@@ -22,7 +22,6 @@ const FriendsRequestList = () => {
   const {
     data: friendsRequests,
     isLoading,
-    isFetching,
     isSuccess,
     isError,
     error,
@@ -31,7 +30,7 @@ const FriendsRequestList = () => {
 
   let content;
 
-  if (isLoading || isFetching) {
+  if (isLoading) {
     content = <Spinner size={125} />;
   } else if (isError) {
     content = <QueryError error={error as string} refetch={refetch} />;
@@ -50,7 +49,7 @@ const FriendsRequestList = () => {
       </ul>
     );
   }
-  //TODO: figure out how to add smooth animation
+
   return (
     <section className="friends-request-list">
       <button

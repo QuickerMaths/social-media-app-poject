@@ -11,7 +11,7 @@ const initialState: IAuthSliceState = {
   username: null,
   userId: null,
   userImg: null,
-  friendsRequests: [],
+  friendRequestCount: 0,
 };
 
 export const authSlice = createSlice({
@@ -21,16 +21,20 @@ export const authSlice = createSlice({
     setProfileImage: (state, action: PayloadAction<string | null>) => {
       state.userImg = action.payload;
     },
+    decrementFriendRequestCount: (state) => {
+      state.friendRequestCount--;
+    },
   },
   extraReducers: (builder) => {
     builder.addMatcher(
       authApiSlice.endpoints.userAuthorization.matchFulfilled,
       (state, { payload }) => {
-        const { id, username, avatar_url } = payload;
+        const { id, username, avatar_url, friend_request_count } = payload;
 
         state.username = username;
         state.userId = id;
         state.userImg = avatar_url;
+        state.friendRequestCount = friend_request_count;
       }
     );
     builder.addMatcher(
@@ -55,5 +59,6 @@ export const authSlice = createSlice({
   },
 });
 
-export const { setProfileImage } = authSlice.actions;
+export const { setProfileImage, decrementFriendRequestCount } =
+  authSlice.actions;
 export default authSlice.reducer;

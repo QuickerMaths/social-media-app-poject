@@ -8,13 +8,15 @@ import useToastCreator from "../../../hooks/useToastCreator";
 import { useRejectFriendRequestMutation } from "../../../features/apiSlice/userApiSlice/userApiSlice";
 import { IUserPartial } from "../../../pages/user-profile/types";
 import { RootState } from "../../../redux/store";
-import { useAppSelector } from "../../../hooks/reduxHooks";
+import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
+import { decrementFriendRequestCount } from "../../../features/authSlice/authSlice";
 
 interface Props {
   request: IUserPartial;
 }
 
 const RejectButton: React.FC<Props> = ({ request: { id } }) => {
+  const dispatch = useAppDispatch();
   const { userId: loggedInUserId } = useAppSelector(
     (state: RootState) => state.auth
   );
@@ -27,12 +29,13 @@ const RejectButton: React.FC<Props> = ({ request: { id } }) => {
   return (
     <button
       className="request__button request__button--reject"
-      onClick={() =>
+      onClick={() => {
         rejectFriendRequest({
           loggedInUserId,
           requesterId: id,
-        })
-      }
+        });
+        dispatch(decrementFriendRequestCount());
+      }}
       disabled={isRejecting}
     >
       {isRejecting ? "Rejecting..." : "Reject"}

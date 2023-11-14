@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS `user_profile`(
     `city` VARCHAR(255) NULL,
     `street` TEXT NULL,
     `postal_code` VARCHAR(255) NULL,
+    `friend_request_count` BIGINT NOT NULL DEFAULT '0',
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -209,4 +210,47 @@ END;
 $$
 
 DELIMITER ;
+
+DELIMITER $$
+
+CREATE TRIGGER increment_friend_request_count_on_insert
+AFTER INSERT ON friendship
+FOR EACH ROW
+BEGIN
+    UPDATE user_profile
+    SET friend_request_count = friend_request_count + 1
+    WHERE id = NEW.profile_responder_id;
+END;
+$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE TRIGGER decrement_friend_request_count_on_update
+AFTER UPDATE ON friendship
+FOR EACH ROW
+BEGIN
+    UPDATE user_profile
+    SET friend_request_count = friend_request_count - 1
+    WHERE id = NEW.profile_responder_id;
+END;
+$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE TRIGGER decrement_friend_request_count_on_delete
+AFTER DELETE ON friendship
+FOR EACH ROW
+BEGIN
+    UPDATE user_profile
+    SET friend_request_count = friend_request_count - 1
+    WHERE id = OLD.profile_responder_id;
+END;
+$$
+
+DELIMITER ;
+
 

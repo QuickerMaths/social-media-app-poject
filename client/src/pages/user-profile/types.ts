@@ -14,6 +14,7 @@ export type IUser = {
   postal_code?: string;
   friends: IUserPartial[] | null;
   friendship_status: number | null;
+  friend_request_count: number;
   created_at: string;
 };
 

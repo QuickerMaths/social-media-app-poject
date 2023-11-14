@@ -13,9 +13,10 @@ import { closeModal, openModal } from "../../features/modalSlice/modalSlice";
 const Sidebar = () => {
   const dispatch = useAppDispatch();
 
-  const { userId, friendsRequests } = useAppSelector(
+  const { userId, friendRequestCount } = useAppSelector(
     (state: RootState) => state.auth
   );
+
   const { modals } = useAppSelector((state: RootState) => state.modal);
 
   return (
@@ -72,13 +73,9 @@ const Sidebar = () => {
                     onClick={() => dispatch(openModal("friends-request-list"))}
                   >
                     Requests
-                    {friendsRequests.length > 0 && (
-                      <p className="sidebar__friends-requests-count">
-                        {friendsRequests.length > 9
-                          ? "9+"
-                          : friendsRequests.length}
-                      </p>
-                    )}
+                    <p className="sidebar__friends-requests-count">
+                      {friendRequestCount > 9 ? "9+" : friendRequestCount}
+                    </p>
                   </div>
                 </li>
               </>

@@ -277,7 +277,6 @@ export default function makeUserDB({ db }: { db: typeof connection }) {
       [requesterId, loggedInUserId, loggedInUserId, requesterId]
     );
 
-    console.log((record as UserRequestDataType[])[0]);
     return (record as UserRequestDataType[])[0];
   }
 

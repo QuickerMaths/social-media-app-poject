@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   postPage: 1,
   commentPage: 1,
+  friendRequestPage: 1,
 };
 
 const paginationSlice = createSlice({
@@ -14,6 +15,9 @@ const paginationSlice = createSlice({
     },
     setCommentPage: (state, action) => {
       state.commentPage = action.payload;
+    },
+    setFriendRequestPage: (state, action) => {
+      state.friendRequestPage = action.payload;
     },
   },
 });
