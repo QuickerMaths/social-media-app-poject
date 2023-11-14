@@ -5,7 +5,7 @@ import refreshTokenUseCase from "../use-cases/refresh-token/index.ts";
 const authMiddleware =
   (jwt: typeof authService.jwt) =>
   (verifyRefreshToken: typeof refreshTokenUseCase.verifyRefreshTokenUseCase) =>
-  (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const { accessToken, refreshToken } = req.cookies;
 
     //TODO: custom error
@@ -18,19 +18,21 @@ const authMiddleware =
     });
 
     if (!decodedAccessToken) {
-      next(new Error("Access token is invalid"));
+      next(new Error("InvalidToken"));
     }
 
     if (decodedAccessToken === "expired") {
-      const newAccessToken = verifyRefreshToken({
+      await verifyRefreshToken({
         requestToken: refreshToken
-      });
-
-      res.cookie("accessToken", newAccessToken, {
-        httpOnly: true,
-        sameSite: "none",
-        secure: true
-      });
+      })
+        .then((newAccessToken) =>
+          res.cookie("accessToken", newAccessToken, {
+            httpOnly: true,
+            sameSite: "none",
+            secure: true
+          })
+        )
+        .catch(next);
     }
 
     req.user = decodedAccessToken;

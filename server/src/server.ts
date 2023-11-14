@@ -1,12 +1,10 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import logger from "./helpers/logger.ts";
 import postRouter from "./route/post.route.ts";
 import userRouter from "./route/user.route.ts";
 import commentRouter from "./route/comment.route.ts";
 import authRouter from "./route/auth.route.ts";
-import userDB from "./data-access/user/index.ts";
 
 function createServer() {
   const app = express();

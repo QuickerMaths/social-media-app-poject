@@ -12,7 +12,8 @@ const loginUseCase = makeLoginUseCase({
   auth: authService
 });
 const verifyUseCase = makeVerifyUseCase({
-  auth: authService.jwt
+  auth: authService.jwt,
+  userDataBase: userDB
 });
 const logoutUseCase = makeLogoutUseCase({
   db: refreshTokenDb

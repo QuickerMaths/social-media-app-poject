@@ -23,8 +23,9 @@ export default function makeVerifyRefreshTokenUseCase({
       userId: decodedToken.id
     });
 
-    if (!isTokenInDB) throw new Error("Invalid token");
-    if (isTokenInDB.token !== requestToken) throw new Error("Invalid token");
+    if (!isTokenInDB || isTokenInDB.token !== requestToken) {
+      throw new Error("Invalid token");
+    }
 
     const verificationResult = auth.jwt.verifyRefreshToken({
       token: requestToken
@@ -32,7 +33,7 @@ export default function makeVerifyRefreshTokenUseCase({
 
     if (verificationResult instanceof Error) {
       await db.deleteRefreshToken({ token: isTokenInDB.token });
-      throw new Error("Invalid refresh token.");
+      throw new Error("Invalid token");
     }
     return {
       accessToken: verificationResult
