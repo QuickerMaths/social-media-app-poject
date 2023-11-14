@@ -12,5 +12,6 @@ export default interface IUserProfile {
   city?: string;
   street?: string;
   postal_code?: string;
+  friend_request_count: number;
   createdAt: Date;
 }
