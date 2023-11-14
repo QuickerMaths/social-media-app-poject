@@ -139,6 +139,8 @@ export const userApiSlice = apiSlice.injectEndpoints({
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
+      invalidatesTags: (_result, error, req) =>
+        error ? [] : [{ type: "User", id: req.loggedInUserId }],
     }),
     rejectFriendRequest: builder.mutation<
       {},
