@@ -7,13 +7,13 @@ import { AiOutlineClose } from "react-icons/ai";
 // Internal dependencies
 
 import InputField from "../../components/inputField/InputField";
+import Spinner from "../../utilities/spinner/Spinner";
+import useToastCreator from "../../hooks/useToastCreator";
 import addressValidation from "../../validation/addressValidation";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
 import { closeModal } from "../../features/modalSlice/modalSlice";
 import { useUpdateUserMutation } from "../../features/apiSlice/userApiSlice/userApiSlice";
-import useToastCreator from "../../hooks/useToastCreator";
-import Spinner from "../../utilities/spinner/Spinner";
 
 const UserDetailsModal = () => {
   const dispatch = useAppDispatch();
@@ -24,7 +24,7 @@ const UserDetailsModal = () => {
     useUpdateUserMutation();
 
   if (isError) useToastCreator(error as string, "error");
-
+  //TODO: fix validation
   const { handleChange, handleBlur, errors, touched, values, handleSubmit } =
     useFormik({
       initialValues: {
@@ -33,8 +33,9 @@ const UserDetailsModal = () => {
         state: "",
         postal_code: "",
       },
-      validationSchema: addressValidation,
+      // validationSchema: addressValidation,
       onSubmit: async (values) => {
+        console.log(values);
         await updateUser({
           userId: userId as number,
           userUpdateData: values,
@@ -44,7 +45,6 @@ const UserDetailsModal = () => {
       },
     });
 
-  //TODO: for some reason, submiting form is not working at all
   let content;
 
   if (isUpdating) {
