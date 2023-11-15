@@ -1,10 +1,12 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import morgan from "morgan";
 import postRouter from "./route/post.route.ts";
 import userRouter from "./route/user.route.ts";
 import commentRouter from "./route/comment.route.ts";
 import authRouter from "./route/auth.route.ts";
+import logger from "./helpers/logger.ts";
 
 function createServer() {
   const app = express();
@@ -18,6 +20,15 @@ function createServer() {
     })
   );
   app.use(cookieParser());
+  app.use(
+    morgan("tiny", {
+      stream: {
+        write: (text: string) => {
+          logger().info(text);
+        }
+      }
+    })
+  );
 
   app.use("/api/post", postRouter);
   app.use("/api/user", userRouter);
