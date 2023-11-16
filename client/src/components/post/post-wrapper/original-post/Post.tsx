@@ -49,7 +49,7 @@ const Post: React.FC<Props> = ({ post }) => {
       )}
 
       {modals[`${id}repost`] && <CreateRePostModal post={post} />}
-      {modals[`${id}details`] && <PostDetailsModal post={post} />}
+      {modals[`${id}details`] && <PostDetailsModal id={id} />}
     </>
   );
 };

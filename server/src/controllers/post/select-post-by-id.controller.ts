@@ -7,9 +7,8 @@ export default function makeSelectPostByIdController({
 }) {
   return async function selectPostByIdController(httpRequest: any) {
     const { page, pageSize } = httpRequest.query;
-    const postId = httpRequest.params?.postId;
-    // is used to check if the user that is logged in has liked the post
-    const loggedInUserId = httpRequest?.user?.id;
+    const postId = httpRequest.params.postId;
+    const loggedInUserId = httpRequest.user.id;
 
     const post = await useCase({
       loggedInUserId,

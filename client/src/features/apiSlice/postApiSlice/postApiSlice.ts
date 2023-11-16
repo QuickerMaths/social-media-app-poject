@@ -13,8 +13,7 @@ import {
 } from "../../../hooks/reduxHooks";
 import { IPost } from "../../../components/post/types";
 import { ICreatePostParams, IErrorResponse } from "../types";
-
-//TODO: after implementing authorization on backend, add loggedInUserId to get endpoints to check if user liked post
+import { number } from "yup";
 
 export const postApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -46,6 +45,17 @@ export const postApiSlice = apiSlice.injectEndpoints({
     }),
 
     //TODO: write getPostById query, with paginated comments
+    getPostById: builder.query<
+      IPost,
+      Pick<IPost, "id"> & { page: number | void }
+    >({
+      query: ({ id, page }) => ({
+        method: "GET",
+        url: `/api/post/${id}?page=${page}&pageSize=10`,
+        credentials: "include",
+      }),
+      providesTags: (_result, _error, { id }) => [{ type: "Post", id }],
+    }),
 
     createPost: builder.mutation<IPost, ICreatePostParams>({
       query: ({ post_text, media_location, shared_post_id }) => ({
@@ -143,6 +153,7 @@ export const postApiSlice = apiSlice.injectEndpoints({
 export const {
   useGetPostsQuery,
   useGetPostsByUserQuery,
+  useGetPostByIdQuery,
   useCreatePostMutation,
   useDeletePostMutation,
   useUpdatePostMutation,

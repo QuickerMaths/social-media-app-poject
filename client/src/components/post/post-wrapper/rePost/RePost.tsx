@@ -19,7 +19,7 @@ interface Props {
 }
 
 const RePost: React.FC<Props> = ({ rePost }) => {
-  const { comments, comment_count, shared_post, id: postId } = rePost;
+  const { comments, comment_count, shared_post, id } = rePost;
 
   const dispatch = useAppDispatch();
   const { modals } = useAppSelector((state: RootState) => state.modal);
@@ -57,14 +57,14 @@ const RePost: React.FC<Props> = ({ rePost }) => {
           {comment_count > 2 && (
             <button
               className="post__see-more"
-              onClick={() => dispatch(openModal(`${postId}details`))}
+              onClick={() => dispatch(openModal(`${id}details`))}
             >
               See more
             </button>
           )}
         </>
       )}
-      {modals[`${postId}details`] && <PostDetailsModal post={rePost} />}
+      {modals[`${id}details`] && <PostDetailsModal id={id} />}
     </>
   );
 };
