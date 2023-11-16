@@ -32,13 +32,13 @@ const authMiddleware =
       await verifyRefreshToken({
         requestToken: refreshToken
       })
-        .then((newAccessToken) =>
+        .then((newAccessToken) => {
           res.cookie("accessToken", newAccessToken, {
             httpOnly: true,
             sameSite: "none",
             secure: true
-          })
-        )
+          });
+        })
         .catch(next);
     }
 

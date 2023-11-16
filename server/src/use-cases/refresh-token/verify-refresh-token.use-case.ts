@@ -37,6 +37,8 @@ export default function makeVerifyRefreshTokenUseCase({
       token: requestToken
     });
 
+    console.log(verificationResult);
+
     if (verificationResult instanceof InvalidTokenError) {
       await db.deleteRefreshToken({ token: isTokenInDB.token });
       throw new InvalidTokenError({

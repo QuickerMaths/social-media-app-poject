@@ -7,6 +7,7 @@ export default function makeCreatePostController({
 }) {
   return async function createPostController(httpRequest: any) {
     const loggedInUserId = httpRequest.user.id;
+
     const postCreateData = httpRequest.body;
 
     const createdPost = await useCase({

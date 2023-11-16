@@ -22,7 +22,7 @@ export default function jwtService() {
       config.jwt.jwt_refresh_token,
       (err: VerifyErrors | null, decoded: any) => {
         if (err)
-          throw new InvalidTokenError({
+          return new InvalidTokenError({
             message: "Invalid token",
             operational: true
           });

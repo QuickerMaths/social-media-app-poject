@@ -13,15 +13,6 @@ const app = createServer();
 app.use((error: Error, _req: Request, res: Response, _next: NextFunction) => {
   logger().error(error.message);
 
-  if (error instanceof BaseError) {
-    return res.status(error.statusCode).send({
-      statusCode: error.statusCode,
-      body: {
-        error: error.message
-      }
-    });
-  }
-
   if (error instanceof InvalidTokenError) {
     res.clearCookie("refreshToken");
     res.clearCookie("accessToken");
@@ -30,6 +21,15 @@ app.use((error: Error, _req: Request, res: Response, _next: NextFunction) => {
       statusCode: 401,
       body: {
         error: "Invalid token"
+      }
+    });
+  }
+
+  if (error instanceof BaseError) {
+    return res.status(error.statusCode).send({
+      statusCode: error.statusCode,
+      body: {
+        error: error.message
       }
     });
   }

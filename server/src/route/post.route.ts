@@ -32,7 +32,7 @@ router
     readCredentialsMiddleware,
     expressCallback(selectPostByIdController)
   )
-  .post("/", readCredentialsMiddleware, expressCallback(createPostController))
+  .post("/", authMiddleware, expressCallback(createPostController))
   .patch("/:postId", authMiddleware, expressCallback(updatePostController))
   .delete("/:postId", authMiddleware, expressCallback(deletePostController))
   .post("/:postId/like", authMiddleware, expressCallback(likePostController));
