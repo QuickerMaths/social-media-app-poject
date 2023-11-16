@@ -59,8 +59,14 @@ export default function makePostDb({ db }: { db: typeof connection }) {
           ROW_NUMBER() OVER (PARTITION BY id ORDER BY is_liked DESC) AS rn
           FROM CTE
         ) AS Ranked
-        WHERE rn = 1`
-          : `SELECT * FROM CTE`
+        WHERE rn = 1
+        ORDER BY created_at DESC
+        `
+          : `
+          SELECT *
+           FROM CTE 
+           ORDER BY created_at DESC
+          `
       }
       LIMIT ?
       OFFSET ?;
@@ -135,8 +141,9 @@ export default function makePostDb({ db }: { db: typeof connection }) {
           ROW_NUMBER() OVER (PARTITION BY id ORDER BY is_liked DESC) AS rn
           FROM CTE
         ) AS Ranked
-        WHERE rn = 1`
-          : `SELECT * FROM CTE`
+        WHERE rn = 1
+        ORDER BY created_at DESC`
+          : `SELECT * FROM CTE ORDER BY created_at DESC`
       }
       LIMIT ?
       OFFSET ?;
