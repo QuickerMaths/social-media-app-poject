@@ -28,7 +28,7 @@ router
     expressCallback(selectAllPostsByUserIdController)
   )
   .get(
-    "/:postId/",
+    "/:postId",
     readCredentialsMiddleware,
     expressCallback(selectPostByIdController)
   )

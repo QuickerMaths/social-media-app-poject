@@ -2,7 +2,6 @@
 
 import React from "react";
 import moment from "moment";
-import { EntityState } from "@reduxjs/toolkit";
 
 // Internal dependencies
 
@@ -14,7 +13,6 @@ import { IPost } from "../../types";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/reduxHooks";
 import { RootState } from "../../../../redux/store";
 import { openModal } from "../../../../features/modalSlice/modalSlice";
-import { IComment } from "../../../comment/types";
 
 interface Props {
   rePost: IPost;

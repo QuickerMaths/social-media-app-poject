@@ -17,7 +17,6 @@ import { IPost } from "../../../components/post/types";
 
 export const commentApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    //TODO: after implementing authorization on backend, change userId to loggedInUserId
     createComment: builder.mutation<
       IComment,
       Pick<IComment, "comment_text"> & Pick<IPost, "id">
