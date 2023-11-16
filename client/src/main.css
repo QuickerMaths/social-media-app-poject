@@ -1809,6 +1809,9 @@ input {
   margin-top: 10px;
   padding-bottom: 20px;
 }
+.post-details-modal__comment-input-container {
+  min-width: 100%;
+}
 .post-details-modal__form {
   display: flex;
   justify-content: center;

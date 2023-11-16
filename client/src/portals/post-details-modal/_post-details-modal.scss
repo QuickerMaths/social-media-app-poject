@@ -129,6 +129,10 @@
     padding-bottom: 20px;
   }
 
+  &__comment-input-container {
+    min-width: 100%;
+  }
+
   &__form {
     @include flex-center;
     gap: 20px;
