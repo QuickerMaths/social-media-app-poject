@@ -69,7 +69,7 @@ async function generateRandomSharedPosts() {
     updated_at: faker.date.past({ years: 1 })
   };
 }
-//TODO: ensure that post_id and profile_id are unique pair
+
 async function generatePostLike() {
   const [profile_id] = await connection.query(
     "SELECT id FROM user_profile ORDER BY RAND() LIMIT 1"

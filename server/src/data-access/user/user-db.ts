@@ -8,8 +8,6 @@ import {
 } from "./types.ts";
 
 export default function makeUserDB({ db }: { db: typeof connection }) {
-  //TODO: when user is logged in, query should also return friendship status of both selected and logged in user
-  //TODO: should also return 4 friends of selected user to display on profile page
   async function selectUserById({
     userId,
     loggedInUserId

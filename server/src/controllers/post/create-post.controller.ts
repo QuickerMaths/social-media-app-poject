@@ -6,7 +6,6 @@ export default function makeCreatePostController({
   useCase: typeof postUseCase.createPostUseCase;
 }) {
   return async function createPostController(httpRequest: any) {
-    //TODO: get userId from auth middleware
     const loggedInUserId = httpRequest.user.id;
     const postCreateData = httpRequest.body;
 
