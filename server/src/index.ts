@@ -12,7 +12,6 @@ const app = createServer();
 
 app.use((error: Error, _req: Request, res: Response, _next: NextFunction) => {
   logger().error(error.message);
-  console.log(error.stack);
 
   if (error instanceof InvalidTokenError) {
     res.clearCookie("refreshToken");

@@ -1348,15 +1348,14 @@ input {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  align-items: flex-start;
   gap: 25px;
-  width: 90%;
+  width: 95%;
   margin-top: 30px;
 }
 @media (min-width: 768px) {
   .user-profile__posts-list {
-    width: 80%;
-    margin-top: 50px;
+    width: 90%;
+    margin-top: 20px;
   }
 }
 .user-profile__no-posts-msg {

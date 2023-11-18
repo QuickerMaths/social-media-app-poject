@@ -1,7 +1,11 @@
 // External dependencies
 
 import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
-import { SerializedError } from "@reduxjs/toolkit";
+import {
+  EntityState,
+  SerializedError,
+  createEntityAdapter,
+} from "@reduxjs/toolkit";
 
 // Internal dependencies
 
@@ -9,42 +13,76 @@ import { apiSlice } from "../apiSlice";
 import {
   applyOptimisticPostUpdate,
   errorTransformer,
-  providesList,
 } from "../../../hooks/reduxHooks";
 import { IPost } from "../../../components/post/types";
 import { ICreatePostParams, IErrorResponse } from "../types";
-import { number } from "yup";
+
+export const postAdapter = createEntityAdapter<IPost>({
+  selectId: (post) => post.id,
+});
 
 export const postApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getPosts: builder.query<IPost[], { page: number | void }>({
+    getPosts: builder.query<EntityState<IPost>, { page: number | void }>({
       query: ({ page = 1 }) => ({
         method: "GET",
-        url: `/api/post?page=${page}&pageSize=20`,
+        url: `/api/post?page=${page}&pageSize=1`,
         credentials: "include",
       }),
+      transformResponse: (response: IPost[]) => {
+        console.log(response);
+        return postAdapter.setAll(postAdapter.getInitialState(), response);
+      },
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
-      providesTags: (result, _error, _arg) => providesList(result, "Post"),
+      forceRefetch: ({ currentArg, previousArg }) => {
+        return currentArg !== previousArg;
+      },
+      serializeQueryArgs: ({ endpointName }) => {
+        return endpointName;
+      },
+
+      merge: (currentCache, newItems) => {
+        return postAdapter.addMany(
+          currentCache,
+          postAdapter.getSelectors().selectAll(newItems)
+        );
+      },
+      // providesTags: (result, _error, _arg) => providesList(result?.ids, "Post"),
     }),
 
     getPostsByUser: builder.query<
-      IPost[],
+      EntityState<IPost>,
       { userId: number; page: number | void }
     >({
       query: ({ userId, page = 1 }) => ({
         method: "GET",
-        url: `/api/post/user/${userId}?page=${page}&pageSize=20`,
+        url: `/api/post/user/${userId}?page=${page}&pageSize=1`,
         credentials: "include",
       }),
+      transformResponse: (response: IPost[]) => {
+        return postAdapter.setAll(postAdapter.getInitialState(), response);
+      },
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
-      providesTags: (result, _error, _arg) => providesList(result, "Post"),
+      forceRefetch: ({ currentArg, previousArg }) => {
+        return currentArg !== previousArg;
+      },
+      serializeQueryArgs: ({ endpointName }) => {
+        return endpointName;
+      },
+
+      merge: (currentCache, newItems) => {
+        return postAdapter.addMany(
+          currentCache,
+          postAdapter.getSelectors().selectAll(newItems)
+        );
+      },
+      // providesTags: (result, _error, _arg) => providesList(result, "Post"),
     }),
 
-    //TODO: write getPostById query, with paginated comments
     getPostById: builder.query<
       IPost,
       Pick<IPost, "id"> & { page: number | void }
@@ -71,8 +109,21 @@ export const postApiSlice = apiSlice.injectEndpoints({
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
-
-      invalidatesTags: (_result, error, _req) => (error ? [] : ["Post"]),
+      onQueryStarted(_arg, { dispatch, getState, queryFulfilled }) {
+        queryFulfilled.then((result) => {
+          dispatch(
+            postApiSlice.util.updateQueryData(
+              "getPosts",
+              //@ts-ignore
+              { page: getState().pagination.postPage },
+              (draft) => {
+                postAdapter.addOne(draft, result.data);
+              }
+            )
+          );
+        });
+      },
+      // invalidatesTags: (_result, error, _req) => (error ? [] : ["Post"]),
     }),
 
     deletePost: builder.mutation<{}, Pick<IPost, "id">>({
@@ -84,8 +135,20 @@ export const postApiSlice = apiSlice.injectEndpoints({
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
-      invalidatesTags: (_result, error, { id }) =>
-        error ? [] : [{ type: "Post", id }],
+      onCacheEntryAdded({ id }, { dispatch, getState }) {
+        dispatch(
+          postApiSlice.util.updateQueryData(
+            "getPosts",
+            //@ts-ignore
+            { page: getState().pagination.postPage },
+            (draft) => {
+              postAdapter.removeOne(draft, id);
+            }
+          )
+        );
+      },
+      // invalidatesTags: (_result, error, { id }) =>
+      //   error ? [] : [{ type: "Post", id }],
     }),
 
     updatePost: builder.mutation<

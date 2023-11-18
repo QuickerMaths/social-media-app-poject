@@ -8,8 +8,13 @@ import TextArea from "../../components/textArea/TextArea";
 import Spinner from "../../utilities/spinner/Spinner";
 import PostWrapper from "../../components/post/post-wrapper/PostWrapper";
 import QueryError from "../../utilities/error/QueryError";
-import { useGetPostsQuery } from "../../features/apiSlice/postApiSlice/postApiSlice";
+import useLastRef from "../../hooks/useLastRef";
+import {
+  postAdapter,
+  useGetPostsQuery,
+} from "../../features/apiSlice/postApiSlice/postApiSlice";
 import { RootState } from "../../redux/store";
+import { setPostPage } from "../../features/paginationSlice/paginationSlice";
 
 const HomePage = () => {
   const { postPage } = useAppSelector((state: RootState) => state.pagination);
@@ -22,7 +27,35 @@ const HomePage = () => {
     isSuccess,
     error,
     refetch,
-  } = useGetPostsQuery({ page: postPage });
+  } = useGetPostsQuery(
+    { page: postPage },
+    {
+      selectFromResult: ({
+        data,
+        isLoading,
+        isFetching,
+        isSuccess,
+        isError,
+        error,
+      }) => ({
+        data: postAdapter
+          .getSelectors()
+          .selectAll(data ?? postAdapter.getInitialState()),
+        isLoading,
+        isFetching,
+        isSuccess,
+        isError,
+        error,
+      }),
+    }
+  );
+
+  const lastPostRef = useLastRef({
+    isLoading,
+    isFetching,
+    page: postPage,
+    actionToDispatch: setPostPage,
+  });
 
   let content;
 
@@ -33,11 +66,20 @@ const HomePage = () => {
   } else if (isSuccess) {
     content = (
       <>
-        <ul className="home-page__posts-list">
-          {posts.map((post) => (
-            <PostWrapper key={post.id} post={post} userId={undefined} />
-          ))}
-        </ul>
+        {posts.length > 0 ? (
+          <ul className="home-page__posts-list">
+            {posts.map((post, index) => {
+              if (posts.length === index + 1) {
+                return (
+                  <PostWrapper ref={lastPostRef} key={post.id} post={post} />
+                );
+              }
+              return <PostWrapper key={post.id} post={post} />;
+            })}
+          </ul>
+        ) : (
+          <p className="home-page__no-posts-msg">No posts yet...</p>
+        )}
       </>
     );
   }

@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   postPage: 1,
@@ -10,7 +10,7 @@ const paginationSlice = createSlice({
   name: "pagination",
   initialState,
   reducers: {
-    setPostPage: (state, action) => {
+    setPostPage: (state, action: PayloadAction<number>) => {
       state.postPage = action.payload;
     },
     setCommentPage: (state, action) => {
@@ -23,3 +23,5 @@ const paginationSlice = createSlice({
 });
 
 export default paginationSlice.reducer;
+export const { setPostPage, setCommentPage, setFriendRequestPage } =
+  paginationSlice.actions;

@@ -1,6 +1,6 @@
 // External dependencies
 
-import { SerializedError } from "@reduxjs/toolkit";
+import { SerializedError, EntityState } from "@reduxjs/toolkit";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
 import { MaybeDrafted } from "@reduxjs/toolkit/dist/query/core/buildThunks";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
@@ -48,7 +48,7 @@ export const errorTransformer = (
 };
 
 type IOptimisticUpdateParams = {
-  draft: MaybeDrafted<IPost[]>;
+  draft: MaybeDrafted<EntityState<IPost>>;
   postId: number;
   commentId?: number;
 };
@@ -57,7 +57,7 @@ export function applyOptimisticPostUpdate({
   draft,
   postId,
 }: IOptimisticUpdateParams) {
-  const post = draft.find((post) => post.id === postId);
+  const post = draft.entities[postId];
   if (post) {
     if (post.is_liked) {
       post.is_liked = false;
@@ -75,7 +75,7 @@ export function applyOptimisticCommentUpdate({
   commentId,
 }: IOptimisticUpdateParams) {
   if (commentId) {
-    const post = draft.find((post) => post.id === postId);
+    const post = draft.entities[postId];
 
     if (post) {
       const comment = post.comments.find((comment) => comment.id === commentId);

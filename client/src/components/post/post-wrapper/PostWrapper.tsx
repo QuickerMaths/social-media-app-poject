@@ -16,10 +16,9 @@ import { IPost } from "../types";
 
 interface Props {
   post: IPost;
-  userId: number | undefined;
 }
 
-const PostWrapper: React.FC<Props> = ({ post }) => {
+const PostWrapper = React.forwardRef<HTMLLIElement, Props>(({ post }, ref) => {
   const { userId: activeUserId } = useAppSelector(
     (state: RootState) => state.auth
   );
@@ -28,7 +27,7 @@ const PostWrapper: React.FC<Props> = ({ post }) => {
   const { is_shared, post_text, created_at, profile_id, post_owner, id } = post;
 
   return (
-    <li className="post">
+    <li className="post" ref={ref}>
       <div className="post__top-container">
         <PostOwner post_owner={post_owner} />
         {profile_id === activeUserId ? (
@@ -44,6 +43,6 @@ const PostWrapper: React.FC<Props> = ({ post }) => {
       {is_shared ? <RePost rePost={post} /> : <Post post={post} />}
     </li>
   );
-};
+});
 
 export default PostWrapper;
