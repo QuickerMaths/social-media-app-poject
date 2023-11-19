@@ -14,13 +14,18 @@ import {
   applyOptimisticPostUpdate,
   errorTransformer,
 } from "../../../hooks/reduxHooks";
-import { IPost } from "../../../components/post/types";
+import {
+  IPost,
+  IPostWithNormalizedComments,
+} from "../../../components/post/types";
 import {
   ICreatePostParams,
   IErrorResponse,
   IMetaData,
   IResponse,
 } from "../types";
+import { commentAdapter } from "../commentApiSlice/commentApiSlice";
+import { IComment } from "../../../components/comment/types";
 
 export const postAdapter = createEntityAdapter<IPost>({
   selectId: (post) => post.id,
@@ -68,7 +73,7 @@ export const postApiSlice = apiSlice.injectEndpoints({
     >({
       query: ({ userId, page = 1 }) => ({
         method: "GET",
-        url: `/api/post/user/${userId}?page=${page}&pageSize=2`,
+        url: `/api/post/user/${userId}?page=${page}&pageSize=10`,
         credentials: "include",
       }),
       transformResponse: (response: IResponse<IPost[]>) => {
@@ -95,18 +100,42 @@ export const postApiSlice = apiSlice.injectEndpoints({
     }),
 
     getPostById: builder.query<
-      IPost,
+      IPostWithNormalizedComments,
       Pick<IPost, "id"> & { page: number | void }
     >({
       query: ({ id, page }) => ({
         method: "GET",
-        url: `/api/post/${id}?page=${page}&pageSize=10`,
+        url: `/api/post/${id}?page=${page}&pageSize=3`,
         credentials: "include",
       }),
-      transformResponse: (response: IResponse<IPost>) => response.data,
+      transformResponse: (response: IResponse<IPost>) => {
+        const normalizedComments = commentAdapter.setAll(
+          commentAdapter.getInitialState({ meta: { ...response.meta } }),
+          response.data.comments as IComment[]
+        );
+        return {
+          ...response.data,
+          comments: normalizedComments,
+        };
+      },
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
+      forceRefetch: ({ currentArg, previousArg }) => {
+        return currentArg !== previousArg;
+      },
+      serializeQueryArgs: ({ endpointName, queryArgs }) => {
+        return endpointName + queryArgs.id;
+      },
+      merge: (currentCache, newItems) => {
+        return {
+          ...currentCache,
+          comments: commentAdapter.upsertMany(
+            { ...currentCache.comments, meta: { ...newItems.comments.meta } },
+            commentAdapter.getSelectors().selectAll(newItems.comments)
+          ),
+        };
+      },
     }),
 
     createPost: builder.mutation<IResponse<IPost>, ICreatePostParams>({

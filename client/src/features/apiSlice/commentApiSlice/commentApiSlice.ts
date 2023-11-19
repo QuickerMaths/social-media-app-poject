@@ -1,7 +1,7 @@
 // External dependencies
 
 import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
-import { SerializedError } from "@reduxjs/toolkit";
+import { SerializedError, createEntityAdapter } from "@reduxjs/toolkit";
 
 // Internal dependencies
 
@@ -16,6 +16,12 @@ import {
 import { IPost } from "../../../components/post/types";
 
 //TODO: use optimistic updated instead of invalidating tags
+
+export const commentAdapter = createEntityAdapter<IComment>({
+  selectId: (comment) => comment.id,
+  sortComparer: (a, b) =>
+    new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+});
 
 export const commentApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({

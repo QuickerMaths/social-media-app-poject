@@ -56,7 +56,7 @@ const MainRight = () => {
     isLoading,
     isFetching,
     page: currentPage,
-    userId: +userId,
+    id: +userId,
     actionToDispatch: setUserPostPage,
     hasNextPage: data.meta?.hasNextPage as boolean,
   });

@@ -17,7 +17,7 @@ import { useLikeCommentMutation } from "../../features/apiSlice/commentApiSlice/
 interface Props {
   comment: IComment;
 }
-const Comment: React.FC<Props> = ({ comment }) => {
+const Comment = React.forwardRef<HTMLLIElement, Props>(({ comment }, ref) => {
   const { userId: loggedInUserId } = useAppSelector(
     (state: RootState) => state.auth
   );
@@ -40,7 +40,7 @@ const Comment: React.FC<Props> = ({ comment }) => {
   };
 
   return (
-    <li className="comment">
+    <li className="comment" ref={ref}>
       <div className="comment__top-container">
         <CommentOwner comment_owner={comment_owner} />
         <CommentEdit comment={comment} />
@@ -61,6 +61,6 @@ const Comment: React.FC<Props> = ({ comment }) => {
       </button>
     </li>
   );
-};
+});
 
 export default Comment;

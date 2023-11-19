@@ -4,7 +4,7 @@ import { IPaginationSliceState } from "./types";
 const initialState: IPaginationSliceState = {
   postPage: 1,
   userPostPage: {},
-  commentPage: 1,
+  commentPage: {},
   friendRequestPage: 1,
 };
 
@@ -17,13 +17,17 @@ const paginationSlice = createSlice({
     },
     setUserPostPage: (
       state,
-      action: PayloadAction<{ userId: number; page: number }>
+      action: PayloadAction<{ id: number; page: number }>
     ) => {
-      const { userId, page } = action.payload;
-      state.userPostPage[userId] = page;
+      const { id, page } = action.payload;
+      state.userPostPage[id] = page;
     },
-    setCommentPage: (state, action: PayloadAction<number>) => {
-      state.commentPage = action.payload;
+    setCommentPage: (
+      state,
+      action: PayloadAction<{ id: number; page: number }>
+    ) => {
+      const { id, page } = action.payload;
+      state.commentPage[id] = page;
     },
     setFriendRequestPage: (state, action: PayloadAction<number>) => {
       state.friendRequestPage = action.payload;

@@ -8,7 +8,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 // Internal dependencies
 
 import { IErrorResponse, isIErrorResponse } from "../features/apiSlice/types";
-import { IPost } from "../components/post/types";
+import { IPost, IPostWithNormalizedComments } from "../components/post/types";
 import { RootState, AppDispatch } from "../redux/store";
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
@@ -37,7 +37,7 @@ export const errorTransformer = (
   error: FetchBaseQueryError | IErrorResponse | SerializedError
 ): string | undefined => {
   if (isIErrorResponse(error)) {
-    return error.data.data.error;
+    return error.data.error;
   }
 
   if ("status" in error) {
@@ -51,6 +51,11 @@ type IOptimisticUpdateParams = {
   draft: MaybeDrafted<EntityState<IPost>>;
   postId: number;
   commentId?: number;
+};
+
+type IOptimisticPostByIdCommentUpdate = {
+  draft: MaybeDrafted<IPostWithNormalizedComments>;
+  commentId: number;
 };
 
 export function applyOptimisticPostUpdate({
@@ -88,6 +93,23 @@ export function applyOptimisticCommentUpdate({
           comment.like_count++;
         }
       }
+    }
+  }
+}
+
+export function applyOptimisticPostByIdCommentUpdate({
+  draft,
+  commentId,
+}: IOptimisticPostByIdCommentUpdate) {
+  const comment = draft.comments.entities[commentId];
+
+  if (comment) {
+    if (comment.is_liked) {
+      comment.is_liked = false;
+      comment.like_count--;
+    } else {
+      comment.is_liked = true;
+      comment.like_count++;
     }
   }
 }
