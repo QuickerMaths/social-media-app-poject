@@ -16,20 +16,22 @@ export type IRegisterProps = {
   password: string;
 };
 
-export type IResolveFriendRequestProps = {
-  userId: string;
-  userToAddId: string;
-  action: "accept" | "reject";
-  requestId: string;
+// TODO: test type
+
+export type IResponse<T> = {
+  data: T;
+  meta: IMetaData;
+};
+
+export type IMetaData = {
+  totalPages?: number;
+  hasNextPage?: boolean;
 };
 
 export type IErrorResponse = {
   status: string;
   data: {
-    data: {
-      error: string;
-      status: string;
-    };
+    error: string;
   };
 };
 

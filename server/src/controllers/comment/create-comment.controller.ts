@@ -9,14 +9,14 @@ export default function makeCreateCommentController({
     const loggedInUserId = httpRequest.user.id;
     const commentCreateData = httpRequest.body;
 
-    const updatedComment = await useCase({
+    const createdComment = await useCase({
       userId: loggedInUserId,
       commentCreateData
     });
 
     return {
       statusCode: 204,
-      body: updatedComment
+      body: createdComment
     };
   };
 }

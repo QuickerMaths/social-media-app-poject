@@ -5,7 +5,6 @@ import { useAppSelector } from "../../hooks/reduxHooks";
 // Internal dependencies
 
 import TextArea from "../../components/textArea/TextArea";
-import Spinner from "../../utilities/spinner/Spinner";
 import PostWrapper from "../../components/post/post-wrapper/PostWrapper";
 import QueryError from "../../utilities/error/QueryError";
 import useLastRef from "../../hooks/useLastRef";
@@ -19,72 +18,68 @@ import { setPostPage } from "../../features/paginationSlice/paginationSlice";
 const HomePage = () => {
   const { postPage } = useAppSelector((state: RootState) => state.pagination);
 
-  const {
-    data: posts,
-    isLoading,
-    isFetching,
-    isError,
-    isSuccess,
-    error,
-    refetch,
-  } = useGetPostsQuery(
-    { page: postPage },
-    {
-      selectFromResult: ({
-        data,
-        isLoading,
-        isFetching,
-        isSuccess,
-        isError,
-        error,
-      }) => ({
-        data: postAdapter
-          .getSelectors()
-          .selectAll(data ?? postAdapter.getInitialState()),
-        isLoading,
-        isFetching,
-        isSuccess,
-        isError,
-        error,
-      }),
-    }
-  );
+  const { data, isLoading, isFetching, isError, isSuccess, error, refetch } =
+    useGetPostsQuery(
+      { page: postPage },
+      {
+        selectFromResult: ({
+          data,
+          isLoading,
+          isFetching,
+          isSuccess,
+          isError,
+          error,
+        }) => ({
+          data: {
+            posts: postAdapter
+              .getSelectors()
+              .selectAll(data ?? postAdapter.getInitialState()),
+            meta: data?.meta,
+          },
+          isLoading,
+          isFetching,
+          isSuccess,
+          isError,
+          error,
+        }),
+      }
+    );
 
   const lastPostRef = useLastRef({
     isLoading,
     isFetching,
     page: postPage,
     actionToDispatch: setPostPage,
+    hasNextPage: data.meta?.hasNextPage as boolean,
   });
 
   let content;
 
-  if (isLoading || isFetching) {
-    content = <Spinner size={155} />;
-  } else if (isError) {
+  if (isError) {
     content = <QueryError error={error as string} refetch={refetch} />;
   } else if (isSuccess) {
     content = (
       <>
-        {posts.length > 0 ? (
-          <ul className="home-page__posts-list">
-            {posts.map((post, index) => {
-              if (posts.length === index + 1) {
-                return (
-                  <PostWrapper ref={lastPostRef} key={post.id} post={post} />
-                );
-              }
-              return <PostWrapper key={post.id} post={post} />;
-            })}
-          </ul>
+        {data.posts.length > 0 ? (
+          <>
+            <ul className="home-page__posts-list">
+              {data.posts.map((post, index) => {
+                if (data.posts.length === index + 1) {
+                  return (
+                    <PostWrapper ref={lastPostRef} key={post.id} post={post} />
+                  );
+                }
+                return <PostWrapper key={post.id} post={post} />;
+              })}
+            </ul>
+            {isLoading || (isFetching && <p>Loading...</p>)}
+          </>
         ) : (
           <p className="home-page__no-posts-msg">No posts yet...</p>
         )}
       </>
     );
   }
-
-  //TODO: forceRefetch from Rtk query to create infinite scroll
 
   return (
     <section className="home-page">

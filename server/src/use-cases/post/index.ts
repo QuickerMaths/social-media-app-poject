@@ -7,14 +7,17 @@ import makeCreatePostUseCase from "./create-post.use-case.ts";
 import makeUpdatePostUseCase from "./update-post.use-case.ts";
 import makeDeletePostUseCase from "./delete-post.use-case.ts";
 import makeLikePostUseCase from "./like-post.use-case.ts";
+import paginationMetadata from "../../helpers/pagiationMetadata.ts";
 
 const selectAllPostsUseCase = makeSelectAllPostsUseCase({
   postDataBase: postDb,
-  commentDataBase: commentDb
+  commentDataBase: commentDb,
+  paginationMetadata
 });
 const selectAllPostsByUserIdUseCase = makeSelectAllPostsByUserIdUseCase({
   postDataBase: postDb,
-  commentDataBase: commentDb
+  commentDataBase: commentDb,
+  paginationMetadata
 });
 const selectPostByIdUseCase = makeSelectPostByIdUseCase({
   postDataBase: postDb,

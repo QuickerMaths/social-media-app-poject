@@ -8,7 +8,7 @@ import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
 import { errorTransformer } from "../../../hooks/reduxHooks";
 import { IUser, IUserPartial } from "../../../pages/user-profile/types";
 import { apiSlice } from "../apiSlice";
-import { IErrorResponse } from "../types";
+import { IErrorResponse, IResponse } from "../types";
 import { IUserUpdateData } from "../../../pages/user-profile/types";
 
 export const userApiSlice = apiSlice.injectEndpoints({
@@ -19,6 +19,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         url: `/api/user?page=${page}&pageSize=20`,
         credentials: "include",
       }),
+      transformResponse: (response: IResponse<IUserPartial[]>) => response.data,
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
@@ -30,6 +31,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         url: `/api/user/${userId}`,
         credentials: "include",
       }),
+      transformResponse: (response: IResponse<IUser>) => response.data,
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
@@ -47,6 +49,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         url: `/api/user/${userId}/friends?page=${page}&pageSize=20`,
         credentials: "include",
       }),
+      transformResponse: (response: IResponse<IUserPartial[]>) => response.data,
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
@@ -64,22 +67,26 @@ export const userApiSlice = apiSlice.injectEndpoints({
           body: userUpdateData,
         };
       },
+      transformResponse: (response: IResponse<IUser>) => response.data,
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
       invalidatesTags: (_result, error, req) =>
         error ? [] : [{ type: "User", id: req.userId }],
     }),
+
     getAllRequests: builder.query<IUserPartial[], { userId: number }>({
       query: ({ userId }) => ({
         method: "GET",
         url: `/api/user/${userId}/requests`,
         credentials: "include",
       }),
+      transformResponse: (response: IResponse<IUserPartial[]>) => response.data,
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
     }),
+
     sendFriendRequest: builder.mutation<IUserPartial, { responderId: number }>({
       query: ({ responderId }) => ({
         method: "POST",
@@ -98,10 +105,12 @@ export const userApiSlice = apiSlice.injectEndpoints({
         );
         queryFulfilled.catch(result.undo);
       },
+      transformResponse: (response: IResponse<IUserPartial>) => response.data,
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
     }),
+
     acceptFriendRequest: builder.mutation<
       IUserPartial,
       { requesterId: number; loggedInUserId: number }
@@ -136,12 +145,14 @@ export const userApiSlice = apiSlice.injectEndpoints({
           queryFulfilled.catch(resultGetAllRequests.undo),
         ]);
       },
+      transformResponse: (response: IResponse<IUserPartial>) => response.data,
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
       invalidatesTags: (_result, error, req) =>
         error ? [] : [{ type: "User", id: req.loggedInUserId }],
     }),
+
     rejectFriendRequest: builder.mutation<
       {},
       { requesterId: number; loggedInUserId: number }
@@ -180,6 +191,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
     }),
+
     deleteFriendship: builder.mutation<{}, { requesterId: number }>({
       query: ({ requesterId }) => ({
         method: "DELETE",

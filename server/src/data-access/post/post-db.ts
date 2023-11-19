@@ -250,7 +250,27 @@ export default function makePostDb({ db }: { db: typeof connection }) {
     }
 
     const [postRecord] = await db.query(
-      "SELECT * FROM user_post WHERE id = ?",
+      `SELECT 
+            up.*,
+            json_object(
+              'id', upr.id,
+              'username', upr.username,
+               'avatar_url', upr.avatar_url
+            ) AS post_owner,
+            CASE
+            WHEN up.is_shared = 1 THEN JSON_OBJECT(
+                'post_owner', JSON_OBJECT('id', spr.id, 'username', spr.username, 'avatar_url', spr.avatar_url),
+                'post_text', sp.post_text,
+                'media_location', sp.media_location,
+                'created_at', sp.created_at
+            )
+            ELSE NULL 
+            END AS shared_post
+        FROM user_post up
+          LEFT JOIN user_post sp ON up.shared_post_id = sp.id
+          LEFT JOIN user_profile upr ON up.profile_id = upr.id
+          LEFT JOIN user_profile spr ON sp.profile_id = spr.id
+        WHERE up.id = ?`,
       [(result as ResultSetHeader).insertId]
     );
 
@@ -318,6 +338,29 @@ export default function makePostDb({ db }: { db: typeof connection }) {
     return (postRecord as IUserPost[])[0];
   }
 
+  async function countPosts() {
+    const sql = `
+    SELECT COUNT(*) AS post_count
+    FROM user_post
+    `;
+
+    const [result] = await db.query(sql);
+
+    return (result as { post_count: number }[])[0].post_count;
+  }
+
+  async function countPostsByUserId({ userId }: { userId: number }) {
+    const sql = `
+    SELECT COUNT(*) AS post_count
+    FROM user_post
+    WHERE profile_id = ?
+    `;
+
+    const [result] = await db.query(sql, [userId]);
+
+    return (result as { post_count: number }[])[0].post_count;
+  }
+
   return Object.freeze({
     selectAllPosts,
     selectPostsByUserId,
@@ -325,6 +368,8 @@ export default function makePostDb({ db }: { db: typeof connection }) {
     createPost,
     updatePost,
     deletePost,
-    likePost
+    likePost,
+    countPosts,
+    countPostsByUserId
   });
 }

@@ -7,13 +7,15 @@ import { SerializedError } from "@reduxjs/toolkit";
 
 import { apiSlice } from "../apiSlice";
 import { IComment } from "../../../components/comment/types";
-import { IErrorResponse } from "../types";
+import { IErrorResponse, IResponse } from "../types";
 import { postApiSlice } from "../postApiSlice/postApiSlice";
 import {
   applyOptimisticCommentUpdate,
   errorTransformer,
 } from "../../../hooks/reduxHooks";
 import { IPost } from "../../../components/post/types";
+
+//TODO: use optimistic updated instead of invalidating tags
 
 export const commentApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -37,20 +39,18 @@ export const commentApiSlice = apiSlice.injectEndpoints({
         error ? [] : [{ type: "Post", id: arg.id }],
     }),
 
-    deleteComment: builder.mutation<IComment, Pick<IComment, "id" | "post_id">>(
-      {
-        query: ({ id }) => ({
-          url: `/api/comment/${id}`,
-          method: "DELETE",
-          credentials: "include",
-        }),
-        transformErrorResponse: (
-          error: FetchBaseQueryError | IErrorResponse | SerializedError
-        ) => errorTransformer(error),
-        invalidatesTags: (_result, error, arg) =>
-          error ? [] : [{ type: "Post", id: arg.post_id }],
-      }
-    ),
+    deleteComment: builder.mutation<{}, Pick<IComment, "id" | "post_id">>({
+      query: ({ id }) => ({
+        url: `/api/comment/${id}`,
+        method: "DELETE",
+        credentials: "include",
+      }),
+      transformErrorResponse: (
+        error: FetchBaseQueryError | IErrorResponse | SerializedError
+      ) => errorTransformer(error),
+      invalidatesTags: (_result, error, arg) =>
+        error ? [] : [{ type: "Post", id: arg.post_id }],
+    }),
 
     likeComment: builder.mutation<
       IComment,
@@ -99,6 +99,7 @@ export const commentApiSlice = apiSlice.injectEndpoints({
           queryFulfilled.catch(resultGetPostsByUser.undo),
         ]);
       },
+      transformResponse: (response: IResponse<IComment>) => response.data,
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),

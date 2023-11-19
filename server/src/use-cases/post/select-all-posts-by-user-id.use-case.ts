@@ -3,10 +3,12 @@ import postDb from "../../data-access/post/index.ts";
 
 export default function makeSelectAllPostsByUserIdUseCase({
   postDataBase,
-  commentDataBase
+  commentDataBase,
+  paginationMetadata
 }: {
   postDataBase: typeof postDb;
   commentDataBase: typeof commentDb;
+  paginationMetadata: Function;
 }) {
   return async function selectAllPostsByUserIdUseCase({
     userId,
@@ -19,6 +21,13 @@ export default function makeSelectAllPostsByUserIdUseCase({
     page: number;
     pageSize: number;
   }) {
+    const postCount = await postDataBase.countPostsByUserId({ userId });
+    const meta = paginationMetadata({
+      currentPage: page,
+      pageSize,
+      total: postCount
+    });
+
     const posts = await postDataBase.selectPostsByUserId({
       userId,
       loggedInUserId,
@@ -44,6 +53,6 @@ export default function makeSelectAllPostsByUserIdUseCase({
       });
     }
 
-    return postsWithComments;
+    return { posts: postsWithComments, meta };
   };
 }

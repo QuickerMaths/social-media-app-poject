@@ -35,7 +35,6 @@ const UserDetailsModal = () => {
       },
       // validationSchema: addressValidation,
       onSubmit: async (values) => {
-        console.log(values);
         await updateUser({
           userId: userId as number,
           userUpdateData: values,

@@ -6,6 +6,7 @@ interface IController {
 interface IResponse {
   statusCode: number;
   body: any;
+  meta?: any;
   cookies?: { name: string; value: string; options: any }[];
 }
 
@@ -33,7 +34,11 @@ export default (controller: IController) =>
           res.clearCookie("accessToken");
         }
 
-        return res.status(httpResponse.statusCode).send(httpResponse.body);
+        //TODO: test version
+        return res.status(httpResponse.statusCode).send({
+          data: httpResponse.body,
+          meta: httpResponse.meta || {}
+        });
       })
       .catch(next);
   };

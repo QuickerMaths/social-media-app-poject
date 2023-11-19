@@ -12,7 +12,7 @@ export default function makeSelectAllPostsByUserIdController({
     // is used to check if the user that is logged in has liked any of the posts
     const loggedInUserId = httpRequest?.user?.id;
 
-    const posts = await useCase({
+    const { posts, meta } = await useCase({
       page: +page || 1,
       pageSize: +pageSize || 10,
       userId,
@@ -21,7 +21,8 @@ export default function makeSelectAllPostsByUserIdController({
 
     return {
       statusCode: 200,
-      body: posts
+      body: posts,
+      meta
     };
   };
 }

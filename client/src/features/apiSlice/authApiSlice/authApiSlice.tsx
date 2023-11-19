@@ -4,7 +4,12 @@ import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
 import { errorTransformer } from "../../../hooks/reduxHooks";
 import { IUser } from "../../../pages/user-profile/types";
 import { apiSlice } from "../apiSlice";
-import { IAuthProps, IErrorResponse, IRegisterProps } from "../types";
+import {
+  IAuthProps,
+  IErrorResponse,
+  IRegisterProps,
+  IResponse,
+} from "../types";
 
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -13,6 +18,10 @@ export const authApiSlice = apiSlice.injectEndpoints({
         url: "/api/auth/me",
         credentials: "include",
       }),
+      transformResponse: (response: IResponse<IUser>) => response.data,
+      transformErrorResponse: (
+        error: FetchBaseQueryError | IErrorResponse | SerializedError
+      ) => errorTransformer(error),
     }),
 
     logoutUser: builder.mutation<{}, undefined>({
@@ -36,6 +45,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
           password,
         },
       }),
+      transformResponse: (response: IResponse<IUser>) => response.data,
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
@@ -51,6 +61,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
           password,
         },
       }),
+      transformResponse: (response: IResponse<IUser>) => response.data,
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
