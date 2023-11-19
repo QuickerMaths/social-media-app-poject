@@ -24,6 +24,8 @@ import {
 
 export const postAdapter = createEntityAdapter<IPost>({
   selectId: (post) => post.id,
+  sortComparer: (a, b) =>
+    new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
 });
 
 export const postApiSlice = apiSlice.injectEndpoints({
@@ -121,14 +123,30 @@ export const postApiSlice = apiSlice.injectEndpoints({
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
-      onQueryStarted(_arg, { dispatch, getState, queryFulfilled }) {
-        queryFulfilled.then((result) => {
-          console.log(result);
+      async onQueryStarted({ userId }, { dispatch, getState, queryFulfilled }) {
+        await queryFulfilled.then((result) => {
+          dispatch(
+            postApiSlice.util.updateQueryData(
+              "getPostsByUser",
+              {
+                //@ts-ignore
+                page: getState().pagination.userPostPage,
+                userId,
+              },
+              (draft) => {
+                postAdapter.addOne(draft, result.data.data);
+              }
+            )
+          );
+        });
+        await queryFulfilled.then((result) => {
           dispatch(
             postApiSlice.util.updateQueryData(
               "getPosts",
-              //@ts-ignore
-              { page: getState().pagination.postPage },
+              {
+                //@ts-ignore
+                page: getState().pagination.postPage,
+              },
               (draft) => {
                 postAdapter.addOne(draft, result.data.data);
               }
@@ -158,6 +176,20 @@ export const postApiSlice = apiSlice.injectEndpoints({
             }
           )
         );
+        dispatch(
+          postApiSlice.util.updateQueryData(
+            "getPostsByUser",
+            {
+              //@ts-ignore
+              page: getState().pagination.postPage,
+              //@ts-ignore
+              userId: getState().auth.userId,
+            },
+            (draft) => {
+              postAdapter.removeOne(draft, id);
+            }
+          )
+        );
       },
     }),
 
@@ -177,8 +209,44 @@ export const postApiSlice = apiSlice.injectEndpoints({
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
-      invalidatesTags: (_result, error, { id }) =>
-        error ? [] : [{ type: "Post", id }],
+      async onQueryStarted(_arg, { dispatch, queryFulfilled, getState }) {
+        await queryFulfilled.then((result) => {
+          dispatch(
+            postApiSlice.util.updateQueryData(
+              "getPostsByUser",
+              {
+                //@ts-ignore
+                page: getState().pagination.userPostPage,
+                //@ts-ignore
+                userId: getState().auth.userId,
+              },
+              (draft) => {
+                postAdapter.updateOne(draft, {
+                  id: result.data.data.id,
+                  changes: result.data.data,
+                });
+              }
+            )
+          );
+        });
+        await queryFulfilled.then((result) => {
+          dispatch(
+            postApiSlice.util.updateQueryData(
+              "getPosts",
+              {
+                //@ts-ignore
+                page: getState().pagination.postPage,
+              },
+              (draft) => {
+                postAdapter.updateOne(draft, {
+                  id: result.data.data.id,
+                  changes: result.data.data,
+                });
+              }
+            )
+          );
+        });
+      },
     }),
 
     likePost: builder.mutation<
