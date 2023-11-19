@@ -352,8 +352,8 @@ export default function makePostDb({ db }: { db: typeof connection }) {
   async function countPostsByUserId({ userId }: { userId: number }) {
     const sql = `
     SELECT COUNT(*) AS post_count
-    FROM user_post
-    WHERE profile_id = ?
+      FROM user_post
+      WHERE profile_id = ?
     `;
 
     const [result] = await db.query(sql, [userId]);

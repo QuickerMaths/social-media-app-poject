@@ -10,7 +10,7 @@ export default function makeSelectPostByIdController({
     const postId = httpRequest.params.postId;
     const loggedInUserId = httpRequest.user.id;
 
-    const post = await useCase({
+    const { post, meta } = await useCase({
       loggedInUserId,
       postId,
       page: +page || 1,
@@ -19,7 +19,8 @@ export default function makeSelectPostByIdController({
 
     return {
       statusCode: 200,
-      body: post
+      body: post,
+      meta
     };
   };
 }

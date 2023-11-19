@@ -21,7 +21,8 @@ const selectAllPostsByUserIdUseCase = makeSelectAllPostsByUserIdUseCase({
 });
 const selectPostByIdUseCase = makeSelectPostByIdUseCase({
   postDataBase: postDb,
-  commentDataBase: commentDb
+  commentDataBase: commentDb,
+  paginationMetadata
 });
 const createPostUseCase = makeCreatePostUseCase({
   postDataBase: postDb

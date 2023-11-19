@@ -156,11 +156,25 @@ export default function makeCommentDb({ db }: { db: typeof connection }) {
     return (commentRecord as IPostComment[])[0];
   }
 
+  async function countAllComments({ postId }: { postId: number }) {
+    const [result] = await db.query(
+      `
+      SELECT COUNT(*) AS comment_count 
+        FROM post_comment 
+        WHERE post_id = ?;
+    `,
+      [postId]
+    );
+
+    return (result as { comment_count: number }[])[0].comment_count;
+  }
+
   return Object.freeze({
     selectCommentsByPostId,
     createComment,
     updateComment,
     deleteComment,
-    likeComment
+    likeComment,
+    countAllComments
   });
 }
