@@ -194,8 +194,8 @@ export const postApiSlice = apiSlice.injectEndpoints({
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
-      onCacheEntryAdded({ id }, { dispatch, getState }) {
-        dispatch(
+      onQueryStarted({ id }, { dispatch, getState, queryFulfilled }) {
+        const getPostsResult = dispatch(
           postApiSlice.util.updateQueryData(
             "getPosts",
             //@ts-ignore
@@ -205,7 +205,7 @@ export const postApiSlice = apiSlice.injectEndpoints({
             }
           )
         );
-        dispatch(
+        const getPostByUserResult = dispatch(
           postApiSlice.util.updateQueryData(
             "getPostsByUser",
             {
@@ -219,6 +219,10 @@ export const postApiSlice = apiSlice.injectEndpoints({
             }
           )
         );
+        Promise.all([
+          queryFulfilled.catch(getPostsResult.undo),
+          queryFulfilled.catch(getPostByUserResult.undo),
+        ]);
       },
     }),
 
