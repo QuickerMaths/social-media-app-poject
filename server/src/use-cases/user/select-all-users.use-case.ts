@@ -1,9 +1,11 @@
 import userDB from "../../data-access/user/index.ts";
 
 export default function makeSelectAllUsersUseCase({
-  userDataBase
+  userDataBase,
+  paginationMetadata
 }: {
   userDataBase: typeof userDB;
+  paginationMetadata: Function;
 }) {
   return async function selectAllUsersUseCase({
     page,
@@ -12,8 +14,11 @@ export default function makeSelectAllUsersUseCase({
     page: number;
     pageSize: number;
   }) {
+    const total = await userDataBase.countAllUsers();
+    const meta = paginationMetadata({ total, page, pageSize });
+
     const selectedUsers = await userDataBase.selectAllUsers({ page, pageSize });
 
-    return selectedUsers;
+    return { selectedUsers, meta };
   };
 }

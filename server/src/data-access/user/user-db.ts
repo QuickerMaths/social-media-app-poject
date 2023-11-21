@@ -304,6 +304,30 @@ export default function makeUserDB({ db }: { db: typeof connection }) {
     return {};
   }
 
+  async function countAllUsers() {
+    const sql = `
+    SELECT COUNT(*) AS count FROM user_profile;
+    `;
+
+    const [result] = await db.query(sql);
+
+    return (result as { count: number }[])[0].count;
+  }
+
+  async function countAllFriendsRequestByUserId({
+    userId
+  }: {
+    userId: number;
+  }) {
+    const sql = `
+    SELECT COUNT(*) AS count FROM friendship WHERE profile_responder_id = ? AND status_id = 2;
+    `;
+
+    const [result] = await db.query(sql, [userId]);
+
+    return (result as { count: number }[])[0].count;
+  }
+
   return Object.freeze({
     selectUserById,
     selectUserByEmail,
@@ -316,6 +340,8 @@ export default function makeUserDB({ db }: { db: typeof connection }) {
     selectAllUserRequests,
     insertFriendshipRecord,
     updateFriendshipRecord,
-    deleteFriendshipRecord
+    deleteFriendshipRecord,
+    countAllUsers,
+    countAllFriendsRequestByUserId
   });
 }

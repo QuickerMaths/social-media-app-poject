@@ -8,14 +8,15 @@ export default function makeSelectAllUsersController({
   return async function selectAllUsersController(httpRequest: any) {
     const { page, pageSize } = httpRequest.query;
 
-    const selectedUsers = await useCase({
+    const { selectedUsers, meta } = await useCase({
       page: +page || 1,
       pageSize: +pageSize || 10
     });
 
     return {
       statusCode: 200,
-      body: selectedUsers
+      body: selectedUsers,
+      meta
     };
   };
 }

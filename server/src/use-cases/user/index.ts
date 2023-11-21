@@ -11,12 +11,14 @@ import makeAcceptFriendRequestUseCase from "./accept-friend-request.use-case.ts"
 import makeRejectFriendRequestUseCase from "./reject-friend-request.use-case.ts";
 import makeDeleteFriendshipUseCase from "./delete-friendship.use-case.ts";
 import authService from "../../services/auth/index.ts";
+import paginationMetadata from "../../helpers/pagiationMetadata.ts";
 
 const selectUserByIdUseCase = makeSelectUserByIdUseCase({
   userDataBase: userDB
 });
 const selectAllUsersUseCase = makeSelectAllUsersUseCase({
-  userDataBase: userDB
+  userDataBase: userDB,
+  paginationMetadata
 });
 const selectAllUserFriendsUseCase = makeSelectAllUserFriendsUseCase({
   userDataBase: userDB
