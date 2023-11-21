@@ -9,7 +9,7 @@ export default function makeSelectAllUserFriendsController({
     const userId = httpRequest.params.userId;
     const { page, pageSize } = httpRequest.query;
 
-    const selectedUserFriends = await useCase({
+    const { selectedUserFriends, meta } = await useCase({
       userId,
       page: +page || 1,
       pageSize: +pageSize || 10
@@ -17,7 +17,8 @@ export default function makeSelectAllUserFriendsController({
 
     return {
       statusCode: 200,
-      body: selectedUserFriends
+      body: selectedUserFriends,
+      meta
     };
   };
 }

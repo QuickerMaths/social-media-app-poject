@@ -314,13 +314,30 @@ export default function makeUserDB({ db }: { db: typeof connection }) {
     return (result as { count: number }[])[0].count;
   }
 
+  async function countAllUserFriends({ userId }: { userId: number }) {
+    const sql = `
+    SELECT COUNT(*) AS count 
+      FROM friendship 
+      WHERE profile_responder_id = ? 
+      OR profile_request_id = ? 
+      AND status_id = 1
+    `;
+
+    const [result] = await db.query(sql, [userId, userId]);
+
+    return (result as { count: number }[])[0].count;
+  }
+
   async function countAllFriendsRequestByUserId({
     userId
   }: {
     userId: number;
   }) {
     const sql = `
-    SELECT COUNT(*) AS count FROM friendship WHERE profile_responder_id = ? AND status_id = 2;
+    SELECT COUNT(*) AS count 
+      FROM friendship 
+      WHERE profile_responder_id = ? 
+      AND status_id = 2;
     `;
 
     const [result] = await db.query(sql, [userId]);
@@ -342,6 +359,7 @@ export default function makeUserDB({ db }: { db: typeof connection }) {
     updateFriendshipRecord,
     deleteFriendshipRecord,
     countAllUsers,
+    countAllUserFriends,
     countAllFriendsRequestByUserId
   });
 }

@@ -1,9 +1,11 @@
 import userDB from "../../data-access/user/index.ts";
 
 export default function makeSelectAllUserFriendsUseCase({
-  userDataBase
+  userDataBase,
+  paginationMetadata
 }: {
   userDataBase: typeof userDB;
+  paginationMetadata: Function;
 }) {
   return async function selectAllUserFriendsUseCase({
     userId,
@@ -14,12 +16,16 @@ export default function makeSelectAllUserFriendsUseCase({
     page: number;
     pageSize: number;
   }) {
+    const total = await userDataBase.countAllUserFriends({ userId });
+
+    const meta = paginationMetadata({ currentPage: page, pageSize, total });
+
     const selectedUserFriends = await userDataBase.selectAllUserFriends({
       userId,
       page,
       pageSize
     });
 
-    return selectedUserFriends;
+    return { selectedUserFriends, meta };
   };
 }

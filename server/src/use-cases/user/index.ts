@@ -21,7 +21,8 @@ const selectAllUsersUseCase = makeSelectAllUsersUseCase({
   paginationMetadata
 });
 const selectAllUserFriendsUseCase = makeSelectAllUserFriendsUseCase({
-  userDataBase: userDB
+  userDataBase: userDB,
+  paginationMetadata
 });
 const createUserUseCase = makeCreateUserUseCase({
   userDataBase: userDB,
