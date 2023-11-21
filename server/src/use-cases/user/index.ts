@@ -31,7 +31,8 @@ const createUserUseCase = makeCreateUserUseCase({
 const updateUserUseCase = makeUpdateUserUseCase({ userDataBase: userDB });
 const deleteUserUseCase = makeDeleteUserUseCase({ userDataBase: userDB });
 const selectAllRequestsUseCase = makeSelectAllRequestsUseCase({
-  userDataBase: userDB
+  userDataBase: userDB,
+  paginationMetadata
 });
 const sendFriendRequestUseCase = makeSendFriendRequestUseCase({
   userDataBase: userDB

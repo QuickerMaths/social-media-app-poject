@@ -1,17 +1,29 @@
 import userDB from "../../data-access/user/index.ts";
 
 export default function makeSelectAllRequestsUseCase({
-  userDataBase
+  userDataBase,
+  paginationMetadata
 }: {
   userDataBase: typeof userDB;
+  paginationMetadata: Function;
 }) {
   return async function selectAllRequestsUseCase({
-    userId
+    userId,
+    page,
+    pageSize
   }: {
     userId: number;
+    page: number;
+    pageSize: number;
   }) {
-    const result = await userDataBase.selectAllUserRequests({ userId });
+    const total = await userDataBase.countAllFriendsRequestByUserId({ userId });
+    const meta = paginationMetadata({ total, currentPage: page, pageSize });
 
-    return result;
+    const requests = await userDataBase.selectAllUserRequests({ userId });
+
+    return {
+      requests,
+      meta
+    };
   };
 }
