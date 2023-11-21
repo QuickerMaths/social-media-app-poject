@@ -37,6 +37,13 @@ app.use((error: Error, _req: Request, res: Response, _next: NextFunction) => {
   if (error instanceof BaseError && !error.operational) {
     process.exit(1);
   }
+
+  return res.status(500).send({
+    statusCode: 500,
+    body: {
+      error: "Internal server error"
+    }
+  });
 });
 
 // Uncaught exception handling

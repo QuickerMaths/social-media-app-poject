@@ -2,6 +2,7 @@
 
 import React from "react";
 import moment from "moment";
+import { useParams } from "react-router";
 import { AiOutlineDelete } from "react-icons/ai";
 
 // Internal dependencies
@@ -20,6 +21,7 @@ interface Props {
 const CommentEdit: React.FC<Props> = ({
   comment: { profile_id, id, post_id, created_at },
 }) => {
+  const { userId } = useParams();
   const { userId: activeUserId } = useAppSelector(
     (state: RootState) => state.auth
   );
@@ -38,7 +40,7 @@ const CommentEdit: React.FC<Props> = ({
           ) : (
             <button
               className="comment__edit-button"
-              onClick={() => deleteComment({ id, post_id })}
+              onClick={() => deleteComment({ id, post_id, userId: +userId! })}
             >
               <AiOutlineDelete className="comment__edit-icon" />
             </button>

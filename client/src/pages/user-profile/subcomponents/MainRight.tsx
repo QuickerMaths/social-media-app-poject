@@ -2,7 +2,6 @@
 
 import { Navigate, useParams } from "react-router";
 import { skipToken } from "@reduxjs/toolkit/dist/query";
-import { useSelector } from "react-redux";
 
 // Internal dependencies
 
@@ -16,10 +15,16 @@ import {
 } from "../../../features/apiSlice/postApiSlice/postApiSlice";
 import { RootState } from "../../../redux/store";
 import { setUserPostPage } from "../../../features/paginationSlice/paginationSlice";
+import { useAppSelector } from "../../../hooks/reduxHooks";
 
 const MainRight = () => {
-  const { userPostPage } = useSelector((state: RootState) => state.pagination);
   const { userId } = useParams();
+  const { userPostPage } = useAppSelector(
+    (state: RootState) => state.pagination
+  );
+  const { userId: loggedInUserId } = useAppSelector(
+    (state: RootState) => state.auth
+  );
 
   if (!userId) return <Navigate to="/" />;
   const currentPage = userPostPage[+userId] || 1;
@@ -91,7 +96,7 @@ const MainRight = () => {
 
   return (
     <div className="user-profile__main-right">
-      <TextArea />
+      {+userId === loggedInUserId && <TextArea />}
       {content}
     </div>
   );

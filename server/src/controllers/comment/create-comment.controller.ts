@@ -15,7 +15,7 @@ export default function makeCreateCommentController({
     });
 
     return {
-      statusCode: 204,
+      statusCode: 201,
       body: createdComment
     };
   };

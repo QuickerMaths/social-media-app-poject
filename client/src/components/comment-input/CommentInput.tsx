@@ -9,12 +9,14 @@ import Spinner from "../../utilities/spinner/Spinner";
 import useToastCreator from "../../hooks/useToastCreator";
 import { IPost } from "../post/types";
 import { useCreateCommentMutation } from "../../features/apiSlice/commentApiSlice/commentApiSlice";
+import { useParams } from "react-router";
 
 interface Props {
   post: IPost;
 }
 
 const CommentInput: React.FC<Props> = ({ post }) => {
+  const { userId } = useParams();
   const { id } = post;
   const [createComment, { isLoading: isUpdating, error, isError }] =
     useCreateCommentMutation();
@@ -26,8 +28,10 @@ const CommentInput: React.FC<Props> = ({ post }) => {
     onSubmit: async ({ comment_text }) => {
       await createComment({
         comment_text,
+        userId: +userId!,
         id,
       });
+
       if (isError) useToastCreator(error as string, "error");
       if (!isUpdating && !isError) {
         comment_text = "";

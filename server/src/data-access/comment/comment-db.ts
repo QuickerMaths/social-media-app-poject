@@ -85,7 +85,17 @@ export default function makeCommentDb({ db }: { db: typeof connection }) {
     const [result] = await db.query(sql, [userId, post_id, comment_text]);
 
     const [commentRecord] = await db.query(
-      "SELECT * FROM post_comment WHERE id = ?",
+      `SELECT 
+          pc.*,
+          json_object(
+            'id', up.id, 
+            'username', up.username, 
+            'avatar_url', up.avatar_url
+          ) AS comment_owner
+          FROM post_comment pc
+            LEFT JOIN user_profile up ON pc.profile_id = up.id
+          WHERE pc.id = ?
+          `,
       [(result as ResultSetHeader).insertId]
     );
 
@@ -108,7 +118,17 @@ export default function makeCommentDb({ db }: { db: typeof connection }) {
     await db.query(sql, [{ ...commentUpdateData }, commentId]);
 
     const [commentRecord] = await db.query(
-      "SELECT * FROM post_comment WHERE id = ?",
+      `SELECT 
+          pc.*,
+          json_object(
+            'id', up.id, 
+            'username', up.username, 
+            'avatar_url', up.avatar_url
+          ) AS comment_owner
+          FROM post_comment pc
+            LEFT JOIN user_profile up ON pc.profile_id = up.id
+          WHERE pc.id = ?
+          `,
       [commentId]
     );
 

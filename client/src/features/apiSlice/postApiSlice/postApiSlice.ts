@@ -167,8 +167,6 @@ export const postApiSlice = apiSlice.injectEndpoints({
               }
             )
           );
-        });
-        await queryFulfilled.then((result) => {
           dispatch(
             postApiSlice.util.updateQueryData(
               "getPosts",
