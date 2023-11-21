@@ -20,6 +20,11 @@ export const userAdapter = createEntityAdapter<IUserPartial>({
   sortComparer: (a, b) => a.id - b.id,
 });
 
+export const userFriendAdapter = createEntityAdapter<IUserPartial>({
+  selectId: (user) => user.id,
+  sortComparer: (a, b) => a.id - b.id,
+});
+
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getAllUsers: builder.query<
@@ -70,18 +75,35 @@ export const userApiSlice = apiSlice.injectEndpoints({
     }),
 
     getAllUserFriends: builder.query<
-      IUserPartial[],
+      EntityState<IUserPartial> & { meta: IMetaData },
       { userId: number; page: number }
     >({
       query: ({ userId, page = 1 }) => ({
         method: "GET",
-        url: `/api/user/${userId}/friends?page=${page}&pageSize=20`,
+        url: `/api/user/${userId}/friends?page=${page}&pageSize=3`,
         credentials: "include",
       }),
-      transformResponse: (response: IResponse<IUserPartial[]>) => response.data,
+      transformResponse: (response: IResponse<IUserPartial[]>) => {
+        return userFriendAdapter.setAll(
+          userFriendAdapter.getInitialState({ meta: { ...response.meta } }),
+          response.data
+        );
+      },
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
+      forceRefetch: ({ currentArg, previousArg }) => {
+        return currentArg !== previousArg;
+      },
+      serializeQueryArgs: ({ endpointName, queryArgs }) => {
+        return endpointName + queryArgs.userId;
+      },
+      merge: (currentCache, newItems) => {
+        return userFriendAdapter.upsertMany(
+          { ...currentCache, meta: { ...newItems.meta } },
+          userFriendAdapter.getSelectors().selectAll(newItems)
+        );
+      },
     }),
 
     updateUser: builder.mutation<

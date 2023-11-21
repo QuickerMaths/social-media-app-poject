@@ -1,7 +1,6 @@
 // External dependencies
 
 import ReactDOM from "react-dom";
-import { skipToken } from "@reduxjs/toolkit/dist/query";
 import { AiOutlineClose } from "react-icons/ai";
 import { useParams } from "react-router";
 
@@ -9,22 +8,25 @@ import { useParams } from "react-router";
 
 import Friend from "../../components/friend/Friend";
 import QueryError from "../../utilities/error/QueryError";
-import Spinner from "../../utilities/spinner/Spinner";
-import { useGetAllUserFriendsQuery } from "../../features/apiSlice/userApiSlice/userApiSlice";
+import useLastRef from "../../hooks/useLastRef";
+import {
+  useGetAllUserFriendsQuery,
+  userFriendAdapter,
+} from "../../features/apiSlice/userApiSlice/userApiSlice";
 import { closeModal } from "../../features/modalSlice/modalSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { RootState } from "../../redux/store";
+import { setUserFriendsPage } from "../../features/paginationSlice/paginationSlice";
 
 const UserFriendsModal = () => {
   const dispatch = useAppDispatch();
-
   const { userId } = useParams();
   const numberUserId = +(userId ?? "");
-
   const { modals } = useAppSelector((state: RootState) => state.modal);
-
-  //TODO: user friend pagination
-  const page = 1;
+  const { userFriendsPage } = useAppSelector(
+    (state: RootState) => state.pagination
+  );
+  const currentPage = userFriendsPage[numberUserId] || 1;
 
   const {
     data: friends,
@@ -34,21 +36,60 @@ const UserFriendsModal = () => {
     isError,
     error,
     refetch,
-  } = useGetAllUserFriendsQuery({ userId: numberUserId, page } ?? skipToken);
+  } = useGetAllUserFriendsQuery(
+    { userId: numberUserId, page: currentPage },
+    {
+      selectFromResult: ({
+        data,
+        isLoading,
+        isFetching,
+        isSuccess,
+        isError,
+        error,
+      }) => ({
+        data: {
+          friends: userFriendAdapter
+            .getSelectors()
+            .selectAll(data ?? userFriendAdapter.getInitialState()),
+          meta: data?.meta,
+        },
+        isLoading,
+        isFetching,
+        isSuccess,
+        isError,
+        error,
+      }),
+    }
+  );
+
+  const lastFriendRef = useLastRef({
+    isLoading,
+    isFetching,
+    page: currentPage,
+    id: numberUserId,
+    actionToDispatch: setUserFriendsPage,
+    hasNextPage: friends?.meta?.hasNextPage as boolean,
+  });
 
   let content;
 
-  if (isLoading || isFetching) {
-    content = <Spinner size={125} />;
-  } else if (isError) {
+  if (isError) {
     content = <QueryError error={error as string} refetch={refetch} />;
   } else if (isSuccess) {
     content = (
-      <ul className="user-friends-modal__list-modal">
-        {friends.map((friend) => (
-          <Friend key={friend.id} friend={friend} />
-        ))}
-      </ul>
+      <>
+        <ul className="user-friends-modal__list-modal">
+          {friends.friends.map((friend, index) => {
+            if (friends.friends.length === index + 1) {
+              return (
+                <Friend key={friend.id} friend={friend} ref={lastFriendRef} />
+              );
+            }
+            return <Friend key={friend.id} friend={friend} />;
+          })}
+        </ul>
+        {isLoading || (isFetching && <p>Loading...</p>)}
+      </>
     );
   }
 

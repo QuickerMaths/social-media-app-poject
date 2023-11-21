@@ -7,7 +7,9 @@ type IActionToDispatchWithUserId = ActionCreatorWithPayload<
     id: number;
     page: number;
   },
-  "pagination/setUserPostPage" | "pagination/setCommentPage"
+  | "pagination/setUserPostPage"
+  | "pagination/setCommentPage"
+  | "pagination/setUserFriendsPage"
 >;
 
 type IActionToDispatch = ActionCreatorWithPayload<
@@ -32,19 +34,20 @@ const useLastRef = ({
   id,
   actionToDispatch,
   hasNextPage,
-}: Props): ((instance: HTMLLIElement | null) => void) => {
+}: Props): ((instance: HTMLLIElement | HTMLAnchorElement | null) => void) => {
   const dispatch = useAppDispatch();
 
   const intObs = useRef<IntersectionObserver | null>(null);
   const lastPostRef = useCallback(
-    (post: HTMLLIElement | null) => {
+    (post: HTMLLIElement | HTMLAnchorElement | null) => {
       if (isLoading || isFetching) return;
       if (intObs.current) intObs.current.disconnect();
       intObs.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasNextPage) {
           if (
             (id && actionToDispatch.type === "pagination/setUserPostPage") ||
-            actionToDispatch.type === "pagination/setCommentPage"
+            actionToDispatch.type === "pagination/setCommentPage" ||
+            actionToDispatch.type === "pagination/setUserFriendsPage"
           ) {
             dispatch(actionToDispatch({ id: id as number, page: page + 1 }));
           } else if (

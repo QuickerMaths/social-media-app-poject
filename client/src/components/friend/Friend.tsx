@@ -17,14 +17,14 @@ import { IUserPartial } from "../../pages/user-profile/types";
 interface Props {
   friend: IUserPartial;
 }
-const Friend: React.FC<Props> = ({ friend }) => {
+const Friend = React.forwardRef<HTMLAnchorElement, Props>(({ friend }, ref) => {
   const dispatch = useAppDispatch();
   const { modals } = useAppSelector((state: RootState) => state.modal);
 
   const { id, avatar_url } = friend;
 
   return (
-    <Link to={`/user/${id}`}>
+    <Link to={`/user/${id}`} ref={ref}>
       <img
         src={avatar_url || defaultImg}
         alt="user profile"
@@ -37,6 +37,6 @@ const Friend: React.FC<Props> = ({ friend }) => {
       />
     </Link>
   );
-};
+});
 
 export default Friend;
