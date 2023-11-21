@@ -15,7 +15,7 @@ export default function makeSelectAllUsersUseCase({
     pageSize: number;
   }) {
     const total = await userDataBase.countAllUsers();
-    const meta = paginationMetadata({ total, page, pageSize });
+    const meta = paginationMetadata({ total, currentPage: page, pageSize });
 
     const selectedUsers = await userDataBase.selectAllUsers({ page, pageSize });
 

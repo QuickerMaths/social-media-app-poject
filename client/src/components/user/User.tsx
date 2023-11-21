@@ -15,9 +15,10 @@ interface Props {
   user: IUserPartial;
 }
 
-const User: React.FC<Props> = ({ user: { username, id, avatar_url } }) => {
+const User = React.forwardRef<HTMLLIElement, Props>(({ user }, ref) => {
+  const { id, avatar_url, username } = user;
   return (
-    <li className="user">
+    <li className="user" ref={ref}>
       <Link to={`/user/${id}`} className="user__link">
         <img
           className="user__img"
@@ -28,6 +29,6 @@ const User: React.FC<Props> = ({ user: { username, id, avatar_url } }) => {
       </Link>
     </li>
   );
-};
+});
 
 export default User;

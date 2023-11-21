@@ -1,6 +1,10 @@
 // External dependencies
 
-import { SerializedError } from "@reduxjs/toolkit";
+import {
+  EntityState,
+  SerializedError,
+  createEntityAdapter,
+} from "@reduxjs/toolkit";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
 
 // Internal dependencies
@@ -8,21 +12,46 @@ import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
 import { errorTransformer } from "../../../hooks/reduxHooks";
 import { IUser, IUserPartial } from "../../../pages/user-profile/types";
 import { apiSlice } from "../apiSlice";
-import { IErrorResponse, IResponse } from "../types";
+import { IErrorResponse, IMetaData, IResponse } from "../types";
 import { IUserUpdateData } from "../../../pages/user-profile/types";
+
+export const userAdapter = createEntityAdapter<IUserPartial>({
+  selectId: (user) => user.id,
+  sortComparer: (a, b) => a.id - b.id,
+});
 
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getAllUsers: builder.query<IUserPartial[], { page: number }>({
+    getAllUsers: builder.query<
+      EntityState<IUserPartial> & { meta: IMetaData },
+      { page: number }
+    >({
       query: ({ page = 1 }) => ({
         method: "GET",
         url: `/api/user?page=${page}&pageSize=20`,
         credentials: "include",
       }),
-      transformResponse: (response: IResponse<IUserPartial[]>) => response.data,
+      transformResponse: (response: IResponse<IUserPartial[]>) => {
+        return userAdapter.setAll(
+          userAdapter.getInitialState({ meta: { ...response.meta } }),
+          response.data
+        );
+      },
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
+      forceRefetch: ({ currentArg, previousArg }) => {
+        return currentArg !== previousArg;
+      },
+      serializeQueryArgs: ({ endpointName }) => {
+        return endpointName;
+      },
+      merge: (currentCache, newItems) => {
+        return userAdapter.upsertMany(
+          { ...currentCache, meta: { ...newItems.meta } },
+          userAdapter.getSelectors().selectAll(newItems)
+        );
+      },
     }),
 
     getUserById: builder.query<IUser, { userId: number }>({

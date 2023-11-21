@@ -12,7 +12,9 @@ type IActionToDispatchWithUserId = ActionCreatorWithPayload<
 
 type IActionToDispatch = ActionCreatorWithPayload<
   number,
-  "pagination/setPostPage" | "pagination/setFriendRequestPage"
+  | "pagination/setPostPage"
+  | "pagination/setFriendRequestPage"
+  | "pagination/setUserPage"
 >;
 interface Props {
   isLoading: boolean;
@@ -47,7 +49,8 @@ const useLastRef = ({
             dispatch(actionToDispatch({ id: id as number, page: page + 1 }));
           } else if (
             actionToDispatch.type === "pagination/setPostPage" ||
-            actionToDispatch.type === "pagination/setFriendRequestPage"
+            actionToDispatch.type === "pagination/setFriendRequestPage" ||
+            actionToDispatch.type === "pagination/setUserPage"
           ) {
             dispatch(actionToDispatch(page + 1));
           }

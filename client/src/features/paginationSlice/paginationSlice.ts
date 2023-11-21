@@ -5,6 +5,7 @@ const initialState: IPaginationSliceState = {
   postPage: 1,
   userPostPage: {},
   commentPage: {},
+  userPage: 1,
   friendRequestPage: 1,
 };
 
@@ -29,6 +30,9 @@ const paginationSlice = createSlice({
       const { id, page } = action.payload;
       state.commentPage[id] = page;
     },
+    setUserPage: (state, action: PayloadAction<number>) => {
+      state.userPage = action.payload;
+    },
     setFriendRequestPage: (state, action: PayloadAction<number>) => {
       state.friendRequestPage = action.payload;
     },
@@ -40,5 +44,6 @@ export const {
   setPostPage,
   setUserPostPage,
   setCommentPage,
+  setUserPage,
   setFriendRequestPage,
 } = paginationSlice.actions;
