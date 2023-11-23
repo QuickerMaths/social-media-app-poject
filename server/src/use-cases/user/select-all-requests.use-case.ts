@@ -19,7 +19,11 @@ export default function makeSelectAllRequestsUseCase({
     const total = await userDataBase.countAllFriendsRequestByUserId({ userId });
     const meta = paginationMetadata({ total, currentPage: page, pageSize });
 
-    const requests = await userDataBase.selectAllUserRequests({ userId });
+    const requests = await userDataBase.selectAllUserRequests({
+      userId,
+      page,
+      pageSize
+    });
 
     return {
       requests,

@@ -206,15 +206,32 @@ export default function makeUserDB({ db }: { db: typeof connection }) {
     return {};
   }
 
-  async function selectAllUserRequests({ userId }: { userId: number }) {
+  async function selectAllUserRequests({
+    userId,
+    page,
+    pageSize
+  }: {
+    userId: number;
+    page: number;
+    pageSize: number;
+  }) {
+    const offset = (page - 1) * pageSize;
+    const limit = pageSize;
+
     const sql = `
     SELECT up.id, up.username, up.avatar_url 
       FROM friendship f
         JOIN user_profile up ON up.id = f.profile_request_id
       WHERE f.profile_responder_id = ? AND f.status_id = 2
+      LIMIT ?
+      OFFSET ?
     `;
 
-    const [result] = await db.query(sql, [userId, userId]);
+    const [result] = await db.query(sql, [
+      userId,
+      Number(limit),
+      Number(offset)
+    ]);
 
     return result as IUserProfile[];
   }

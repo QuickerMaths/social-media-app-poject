@@ -25,6 +25,11 @@ export const userFriendAdapter = createEntityAdapter<IUserPartial>({
   sortComparer: (a, b) => a.id - b.id,
 });
 
+export const userFriendRequestAdapter = createEntityAdapter<IUserPartial>({
+  selectId: (user) => user.id,
+  sortComparer: (a, b) => a.id - b.id,
+});
+
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getAllUsers: builder.query<
@@ -69,9 +74,6 @@ export const userApiSlice = apiSlice.injectEndpoints({
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
-      providesTags: (_result, _error, { userId }) => [
-        { type: "User", id: userId },
-      ],
     }),
 
     getAllUserFriends: builder.query<
@@ -80,7 +82,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
     >({
       query: ({ userId, page = 1 }) => ({
         method: "GET",
-        url: `/api/user/${userId}/friends?page=${page}&pageSize=3`,
+        url: `/api/user/${userId}/friends?page=${page}&pageSize=5`,
         credentials: "include",
       }),
       transformResponse: (response: IResponse<IUserPartial[]>) => {
@@ -118,24 +120,46 @@ export const userApiSlice = apiSlice.injectEndpoints({
           body: userUpdateData,
         };
       },
+
+      //TODO: update cache manualy
       transformResponse: (response: IResponse<IUser>) => response.data,
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
-      invalidatesTags: (_result, error, req) =>
-        error ? [] : [{ type: "User", id: req.userId }],
     }),
 
-    getAllRequests: builder.query<IUserPartial[], { userId: number }>({
-      query: ({ userId }) => ({
+    getAllRequests: builder.query<
+      EntityState<IUserPartial> & { meta: IMetaData },
+      { userId: number; page: number }
+    >({
+      query: ({ userId, page = 1 }) => ({
         method: "GET",
-        url: `/api/user/${userId}/requests`,
+        url: `/api/user/${userId}/requests?page=${page}&pageSize=3`,
         credentials: "include",
       }),
-      transformResponse: (response: IResponse<IUserPartial[]>) => response.data,
+      transformResponse: (response: IResponse<IUserPartial[]>) => {
+        return userFriendRequestAdapter.setAll(
+          userFriendRequestAdapter.getInitialState({
+            meta: { ...response.meta },
+          }),
+          response.data
+        );
+      },
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
+      forceRefetch: ({ currentArg, previousArg }) => {
+        return currentArg !== previousArg;
+      },
+      serializeQueryArgs: ({ endpointName }) => {
+        return endpointName;
+      },
+      merge: (currentCache, newItems) => {
+        return userFriendRequestAdapter.upsertMany(
+          { ...currentCache, meta: { ...newItems.meta } },
+          userFriendRequestAdapter.getSelectors().selectAll(newItems)
+        );
+      },
     }),
 
     sendFriendRequest: builder.mutation<IUserPartial, { responderId: number }>({
@@ -164,7 +188,12 @@ export const userApiSlice = apiSlice.injectEndpoints({
 
     acceptFriendRequest: builder.mutation<
       IUserPartial,
-      { requesterId: number; loggedInUserId: number }
+      {
+        requesterId: number;
+        loggedInUserId: number;
+        requesterUsername: string;
+        requesterAvatarUrl: string;
+      }
     >({
       query: ({ requesterId }) => ({
         method: "PATCH",
@@ -172,36 +201,75 @@ export const userApiSlice = apiSlice.injectEndpoints({
         credentials: "include",
       }),
       onQueryStarted: (
-        { requesterId, loggedInUserId },
-        { dispatch, queryFulfilled }
+        { requesterId, loggedInUserId, requesterUsername, requesterAvatarUrl },
+        { dispatch, queryFulfilled, getState }
       ) => {
         const resultGetUserById = dispatch(
           userApiSlice.util.updateQueryData(
             "getUserById",
+            { userId: requesterId },
+            (draft) => ({
+              ...draft,
+              friends:
+                draft.friends && draft.friends.length < 10
+                  ? [
+                      ...draft.friends,
+                      {
+                        id: loggedInUserId,
+                        //@ts-ignore
+                        username: getState().auth.username,
+                        //@ts-ignore
+                        avatar_url: getState().auth.Img,
+                      },
+                    ]
+                  : draft.friends,
+              friendship_status: 1,
+            })
+          )
+        );
+        const resultLoggedInUser = dispatch(
+          userApiSlice.util.updateQueryData(
+            "getUserById",
             { userId: loggedInUserId },
-            (draft) => {
-              draft.friendship_status = 1;
-            }
+            (draft) => ({
+              ...draft,
+              friends:
+                draft.friends && draft.friends.length < 10
+                  ? [
+                      ...draft.friends,
+                      {
+                        id: requesterId,
+                        username: requesterUsername,
+                        avatar_url: requesterAvatarUrl,
+                      },
+                    ]
+                  : draft.friends,
+            })
           )
         );
         const resultGetAllRequests = dispatch(
           userApiSlice.util.updateQueryData(
             "getAllRequests",
-            { userId: loggedInUserId },
-            (draft) => draft.filter((item) => item.id !== requesterId)
+            {
+              userId: loggedInUserId,
+              //@ts-ignore
+              page: getState().pagination.friendRequestPage,
+            },
+            (draft) => {
+              userFriendRequestAdapter.removeOne(draft, requesterId);
+            }
           )
         );
         Promise.all([
           queryFulfilled.catch(resultGetUserById.undo),
           queryFulfilled.catch(resultGetAllRequests.undo),
+          queryFulfilled.catch(resultLoggedInUser.undo),
         ]);
       },
       transformResponse: (response: IResponse<IUserPartial>) => response.data,
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
-      invalidatesTags: (_result, error, req) =>
-        error ? [] : [{ type: "User", id: req.loggedInUserId }],
     }),
 
     rejectFriendRequest: builder.mutation<
@@ -215,22 +283,29 @@ export const userApiSlice = apiSlice.injectEndpoints({
       }),
       onQueryStarted: (
         { requesterId, loggedInUserId },
-        { dispatch, queryFulfilled }
+        { dispatch, queryFulfilled, getState }
       ) => {
         const resultGetUserById = dispatch(
           userApiSlice.util.updateQueryData(
             "getUserById",
-            { userId: loggedInUserId },
-            (draft) => {
-              draft.friendship_status = 1;
-            }
+            { userId: requesterId },
+            (draft) => ({
+              ...draft,
+              friendship_status: null,
+            })
           )
         );
         const resultGetAllRequests = dispatch(
           userApiSlice.util.updateQueryData(
             "getAllRequests",
-            { userId: loggedInUserId },
-            (draft) => draft.filter((item) => item.id !== requesterId)
+            {
+              userId: loggedInUserId,
+              //@ts-ignore
+              page: getState().pagination.friendRequestPage,
+            },
+            (draft) => {
+              userFriendRequestAdapter.removeOne(draft, requesterId);
+            }
           )
         );
         Promise.all([
@@ -249,18 +324,44 @@ export const userApiSlice = apiSlice.injectEndpoints({
         url: `/api/user/${requesterId}/delete-friendship`,
         credentials: "include",
       }),
-      onQueryStarted: ({ requesterId }, { dispatch, queryFulfilled }) => {
+      onQueryStarted: (
+        { requesterId },
+        { dispatch, queryFulfilled, getState }
+      ) => {
         const resultGetUserById = dispatch(
           userApiSlice.util.updateQueryData(
             "getUserById",
             { userId: requesterId },
-            (draft) => {
-              draft.friendship_status = null;
-            }
+            (draft) => ({
+              ...draft,
+              friendship_status: null,
+              friends:
+                draft.friends &&
+                draft.friends.filter(
+                  //@ts-ignore
+                  (friend) => friend.id !== getState().auth.userId
+                ),
+            })
+          )
+        );
+        const resultLoggedInUser = dispatch(
+          userApiSlice.util.updateQueryData(
+            "getUserById",
+            //@ts-ignore
+            { userId: getState().auth.userId },
+            (draft) => ({
+              ...draft,
+              friends:
+                draft.friends &&
+                draft.friends.filter((friend) => friend.id !== requesterId),
+            })
           )
         );
 
-        Promise.all([queryFulfilled.catch(resultGetUserById.undo)]);
+        Promise.all([
+          queryFulfilled.catch(resultGetUserById.undo),
+          queryFulfilled.catch(resultLoggedInUser.undo),
+        ]);
       },
     }),
   }),

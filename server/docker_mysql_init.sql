@@ -245,9 +245,11 @@ CREATE TRIGGER decrement_friend_request_count_on_delete
 AFTER DELETE ON friendship
 FOR EACH ROW
 BEGIN
+  IF(OLD.status_id = 2) THEN
     UPDATE user_profile
     SET friend_request_count = friend_request_count - 1
     WHERE id = OLD.profile_responder_id;
+  END IF;
 END;
 $$
 

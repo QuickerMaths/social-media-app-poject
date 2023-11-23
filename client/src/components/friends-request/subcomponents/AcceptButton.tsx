@@ -15,7 +15,9 @@ interface Props {
   request: IUserPartial;
 }
 
-const AcceptButton: React.FC<Props> = ({ request: { id } }) => {
+const AcceptButton: React.FC<Props> = ({
+  request: { id, username, avatar_url },
+}) => {
   const dispatch = useAppDispatch();
   const { userId: loggedInUserId } = useAppSelector(
     (state: RootState) => state.auth
@@ -31,6 +33,8 @@ const AcceptButton: React.FC<Props> = ({ request: { id } }) => {
       onClick={() => {
         acceptFriendRequest({
           requesterId: id,
+          requesterUsername: username,
+          requesterAvatarUrl: avatar_url,
           loggedInUserId,
         });
         dispatch(decrementFriendRequestCount());
