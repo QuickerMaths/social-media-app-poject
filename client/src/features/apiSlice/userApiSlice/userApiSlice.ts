@@ -120,12 +120,26 @@ export const userApiSlice = apiSlice.injectEndpoints({
           body: userUpdateData,
         };
       },
-
-      //TODO: update cache manualy
       transformResponse: (response: IResponse<IUser>) => response.data,
       transformErrorResponse: (
         error: FetchBaseQueryError | IErrorResponse | SerializedError
       ) => errorTransformer(error),
+      onQueryStarted: (
+        { userId, userUpdateData },
+        { dispatch, queryFulfilled }
+      ) => {
+        const resultGetUserById = dispatch(
+          userApiSlice.util.updateQueryData(
+            "getUserById",
+            { userId },
+            (draft) => ({
+              ...draft,
+              ...userUpdateData,
+            })
+          )
+        );
+        queryFulfilled.catch(resultGetUserById.undo);
+      },
     }),
 
     getAllRequests: builder.query<
