@@ -102,3 +102,4 @@ npm run seed:db
 - [ ] image processing
 - [ ] email verification
 - [ ] update authentication flow 
+- [ ] tests
