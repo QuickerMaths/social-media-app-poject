@@ -95,3 +95,10 @@ npm run start:dev
 # if you want u can also seed the database with dummy data by running
 npm run seed:db
 ```
+
+# TODO:
+- [ ] input validation on backend
+- [ ] image uploading
+- [ ] image processing
+- [ ] email verification
+- [ ] update authentication flow 
